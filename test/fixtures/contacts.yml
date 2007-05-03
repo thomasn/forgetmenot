@@ -1,0 +1,19 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+thomas:
+  id: 1
+  first_name: Thomas
+  last_name: Nichols
+  email: thomas@nexus10.com
+  phone_number: +44..
+renat:
+  id: 2
+  first_name: Renat
+  last_name: Akhmerov
+  email: renat@brainhouse.ru
+  phone_number: +7 905 984 2469
+yura:
+  id: 3
+  first_name: Yury
+  last_name: Kotlyarov
+  email: yura@brainhouse.ru
+  phone_number: +7 905 758 1491
