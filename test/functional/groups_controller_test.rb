@@ -30,9 +30,11 @@ class GroupsControllerTest < Test::Unit::TestCase
     assert_not_nil assigns(:groups)
     
     assert_select 'th', 'Contacts'
-    assert_select 'a[href="/contacts/show/3"]', 'Yury Kotlyarov'
-    assert_select 'a[href="/contacts/show/2"]', 'Renat Akhmerov'
-    
+
+    assert_select "div[style='display: none']" do
+      assert_select 'a[href="/contacts/show/3"]', 'Yury Kotlyarov'
+      assert_select 'a[href="/contacts/show/2"]', 'Renat Akhmerov'
+    end
   end
   
   def test_show
@@ -43,6 +45,21 @@ class GroupsControllerTest < Test::Unit::TestCase
 
     assert_not_nil assigns(:group)
     assert assigns(:group).valid?
+    
+    assert_select 'h2'
+    assert_select 'h2', 'Contacts'
+    assert_select 'a[href^="/contacts/show/"]', 2
+    assert_select 'a[href="/contacts/show/3"]', 'Yury Kotlyarov'
+    assert_select 'a[href="/contacts/show/2"]', 'Renat Akhmerov'
+    
+    get :show, :id => groups(:empty_group).id
+    assert_select 'h2', { :text => 'Contacts', :count => 0 }, 'There is no contacts for empty group'
+    assert_select 'a[href^="/contacts/show/"]', false
+    
+    get :show, :id => groups(:nexus10).id
+    assert_select 'h2', { :text => 'Contacts', :count => 1 }
+    assert_select 'a[href^="/contacts/show/"]', 1
+
   end
 
   def test_new

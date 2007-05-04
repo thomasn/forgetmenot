@@ -1,7 +1,18 @@
 <% for column in Group.content_columns %>
 <p>
-  <b><%= column.human_name %>:</b> <%=h @group.send(column.name) %>
+    <b><%= column.human_name %>:</b> <%=h @group.send(column.name) %>
 </p>
+<% end %>
+
+<% if @group.contacts.size > 0 %>
+<h2> Contacts </h2>
+<ul>
+    <% for c in @group.contacts %>
+    <li>
+        <%= link_to( "#{c.first_name} #{c.last_name}", :controller => 'contacts', :action => 'show', :id => c.id) %> 
+    </li>
+    <% end %>
+</ul>
 <% end %>
 
 <%= link_to 'Edit', :action => 'edit', :id => @group %> |
