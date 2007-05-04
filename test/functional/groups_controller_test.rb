@@ -5,7 +5,7 @@ require 'groups_controller'
 class GroupsController; def rescue_action(e) raise e end; end
 
 class GroupsControllerTest < Test::Unit::TestCase
-  fixtures :groups
+  fixtures :groups, :contacts, :contacts_groups
 
   def setup
     @controller = GroupsController.new
@@ -30,8 +30,8 @@ class GroupsControllerTest < Test::Unit::TestCase
     assert_not_nil assigns(:groups)
     
     assert_select 'th', 'Contacts'
-    assert_select 'a[href]', 'Yury Kotlyarov'
-    assert_select 'a', 'Renatka Akhmerov'
+    assert_select 'a[href="/contacts/show/3"]', 'Yury Kotlyarov'
+    assert_select 'a[href="/contacts/show/2"]', 'Renat Akhmerov'
     
   end
   
