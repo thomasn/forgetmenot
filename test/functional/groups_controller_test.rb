@@ -28,8 +28,13 @@ class GroupsControllerTest < Test::Unit::TestCase
     assert_template 'list'
 
     assert_not_nil assigns(:groups)
+    
+    assert_select 'th', 'Contacts'
+    assert_select 'a[href]', 'Yury Kotlyarov'
+    assert_select 'a', 'Renatka Akhmerov'
+    
   end
-
+  
   def test_show
     get :show, :id => @first_id
 

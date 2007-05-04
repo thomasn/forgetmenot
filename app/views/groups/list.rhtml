@@ -1,22 +1,38 @@
 <h1>Listing groups</h1>
 
 <table>
-  <tr>
-  <% for column in Group.content_columns %>
-    <th><%= column.human_name %></th>
-  <% end %>
-  </tr>
-  
-<% for group in @groups %>
-  <tr>
-  <% for column in Group.content_columns %>
-    <td><%=h group.send(column.name) %></td>
-  <% end %>
-    <td><%= link_to 'Show', :action => 'show', :id => group %></td>
-    <td><%= link_to 'Edit', :action => 'edit', :id => group %></td>
-    <td><%= link_to 'Destroy', { :action => 'destroy', :id => group }, :confirm => 'Are you sure?', :method => :post %></td>
-  </tr>
-<% end %>
+    <tr>
+        <% for column in Group.content_columns %>
+        <th><%= column.human_name %></th>
+        <% end %>
+        <% for association in Group.reflect_on_all_associations %>
+        <th><%= association.class_name.pluralize %></th>
+        <% end %>
+        
+        
+        <th></th>  
+    </tr>
+    
+    
+    <% for group in @groups %>
+    <tr>
+        <% for column in Group.content_columns %>
+        <td><%=h group.send(column.name) %></td>
+        <% end %>
+        <% for association in Group.reflect_on_all_associations %>
+        <td>
+            <%= group.send(association.name).collect {|c| 
+            link_to( "#{c.first_name} #{c.last_name}", :controller => 'contacts', :action => 'show', :id => c.id) 
+            }.join(', ')
+            %>
+        </td>
+        <% end %>
+        
+        <td><%= link_to 'Show', :action => 'show', :id => group %></td>
+        <td><%= link_to 'Edit', :action => 'edit', :id => group %></td>
+        <td><%= link_to 'Destroy', { :action => 'destroy', :id => group }, :confirm => 'Are you sure?', :method => :post %></td>
+    </tr>
+    <% end %>
 </table>
 
 <%= link_to 'Previous page', { :page => @group_pages.current.previous } if @group_pages.current.previous %>
