@@ -1,8 +1,36 @@
 <h1>Editing group</h1>
 
 <% form_tag :action => 'update', :id => @group do %>
-  <%= render :partial => 'form' %>
-  <%= submit_tag 'Edit' %>
+    <%= render :partial => 'form' %>
+
+    <% if Contact.count > 0 %>
+        <h2> Manage contacts </h2>
+        <div id="group_contacts">
+            <%# TODO: what's the best name for this: Group's Contacts or Group Contacts %>
+            <h3> Group contacts </h3>
+            <%= select('group', 'contact_ids',
+                @group.contacts.collect {|c| ["#{c.first_name} #{c.last_name}", c.id]}, {},
+                { :multiple => true, :size => 10, :id => 'select_group_contacts' })
+            %>
+        </div>
+        
+        <%= button_to_function "< Add selected", "addSelected()" %>
+        <%= button_to_function "<< Add all", "addAll()" %>
+        <%= button_to_function "Remove selected >", "removeSelected()" %>
+        <%= button_to_function "Remove all >>", "removeAll()" %>
+        
+        <div id="other_contacts">
+            <%# TODO: what's the best name for this: Other Contacts or Unused Contacts %>
+            <h3> Other contacts </h3>
+            <%= select_tag('other_contacts',
+                (Contact.find(:all)-@group.contacts).collect {|c| "<option value='#{c.id}'>#{c.first_name} #{c.last_name}</option>"}.join,
+                { :multiple => true, :size => 10, :id => 'select_other_contacts' })
+            %>
+        </div>
+    <% end %>
+    
+    <br />
+    <%= submit_tag 'Edit', :onclick => 'selectAllOptions()' %>
 <% end %>
 
 <%= link_to 'Show', :action => 'show', :id => @group %> |

@@ -57,7 +57,7 @@ class GroupsControllerTest < Test::Unit::TestCase
     assert_select 'a[href^="/contacts/show/"]', false
     
     get :show, :id => groups(:nexus10).id
-    assert_select 'h2', { :text => 'Contacts', :count => 1 }
+    assert_select 'h2', 'Contacts'
     assert_select 'a[href^="/contacts/show/"]', 1
 
   end
@@ -90,6 +90,27 @@ class GroupsControllerTest < Test::Unit::TestCase
 
     assert_not_nil assigns(:group)
     assert assigns(:group).valid?
+    
+    assert_select 'h2', 'Manage contacts'
+    assert_select 'div#group_contacts' do
+      assert_select 'h3', 'Group contacts'
+      assert_select 'select' do
+        assert_select 'option', Group.find(@first_id).contacts.size
+      end
+    end
+
+    assert_select 'div#other_contacts' do
+      assert_select 'h3', 'Other contacts'
+      assert_select 'select' do
+        assert_select 'option', Contact.count - Group.find(@first_id).contacts.size
+      end
+    end
+    
+    assert_select 'input[type=button][value="&lt; Add selected"]'
+    assert_select 'input[type=button][value="&lt;&lt; Add all"]'
+    assert_select 'input[type=button][value="Remove selected &gt;"]'
+    assert_select 'input[type=button][value="Remove all &gt;&gt;"]'
+    
   end
 
   def test_update
