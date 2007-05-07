@@ -1,9 +1,1 @@
-<h1>Editing contact</h1>
-
-<% form_tag :action => 'update', :id => @contact do %>
-  <%= render :partial => 'form' %>
-  <%= submit_tag 'Edit' %>
-<% end %>
-
-<%= link_to 'Show', :action => 'show', :id => @contact %> |
-<%= link_to 'Back', :action => 'list' %>
+<%= render :partial => 'shared/edit', :locals => { :class_name => 'Contact', :object => @contact } %>

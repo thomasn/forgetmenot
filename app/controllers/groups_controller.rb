@@ -34,9 +34,6 @@ class GroupsController < ApplicationController
 
   def edit
     @group = Group.find(params[:id])
-    @group_contacts = @group.contacts.collect {|c| ["#{c.first_name} #{c.last_name}", c.id]}
-    # other options will be used for select_tag. we need to pass string with options instead of array
-    @other_contacts = @other_contacts = (Contact.find(:all)-@group.contacts).collect {|c| "<option value='#{c.id}'>#{c.first_name} #{c.last_name}</option>"}.join
   end
 
   def update

@@ -1,0 +1,81 @@
+<% parent = class_name.tableize.singularize %>
+
+<script type="text/javascript">
+function addSelected(associated) {
+    moveOptions($('select_other_' + associated), $('select_<%= parent %>_' + associated), true);
+}
+
+function addAll(associated) {
+    moveOptions($('select_other_' + associated), $('select_<%= parent %>_' + associated), false);
+}
+
+function removeSelected(associated) {
+    moveOptions($('select_<%= parent %>_' + associated), $('select_other_' + associated), true);
+}
+
+function removeAll(associated) {
+    moveOptions($('select_<%= parent %>_' + associated), $('select_other_' + associated), false);
+}
+
+function moveOptions(srcSelect, destSelect, selectedOnly) {
+    for (var i = 0; i < srcSelect.options.length; i++) {
+        var option = srcSelect.options[i];
+        if (selectedOnly == false || option.selected) {
+            destSelect.options.add(option);
+            i--;
+        }
+    }
+}
+
+function selectAllOptions() {
+    <% get_associations(class_name).each do |association| %>
+    <% select = "select_#{parent}_#{association.name.to_s}" %>
+    for (var i = 0; $('<%= select %>').options.length; i++) {
+    $('<%= select %>').options[i].selected = true;
+    }
+    <% end %>
+}
+</script>
+
+<h1>Editing <%= class_name.humanize %></h1>
+
+<% form_tag :action => 'update', :id => object do %>
+<%= render :partial => 'form' %>
+
+<% get_associations(class_name).each do |association| %>
+    <% associated = association.name.to_s %>
+    
+    <h2>Manage <%= association.name.to_s.humanize %></h2>
+    <div>
+    <div style="float: left">
+        <h3><%= "#{class_name.humanize} #{association.name.to_s.humanize}" %></h3>
+        <%= select(parent, "#{association.name.to_s.singularize}_ids",
+            object.send(association.name).collect {|c| [c.display_name, c.id]}, {},
+            { :multiple => true, :size => 10, :id => "select_#{parent}_#{association.name}" })
+        %>
+    </div>
+    
+    <div style="float: left;">
+    <%= button_to_function "< Add selected", "addSelected('#{associated}')" %><br />
+    <%= button_to_function "<< Add all", "addAll('#{associated}')" %><br />
+    <%= button_to_function "Remove selected >", "removeSelected('#{associated}')" %><br />
+    <%= button_to_function "Remove all >>", "removeAll('#{associated}')" %>
+    </div>
+
+    <div style="">
+        <h3>Other <%= association.name.to_s.humanize %></h3>
+        <%= select_tag("other_#{association.name}",
+            (eval(association.class_name).find(:all)-object.send(association.name)).collect {|c|
+                "<option value='#{c.id}'>#{c.display_name}</option>"}.join,
+            { :multiple => true, :size => 10, :id => "select_other_#{association.name}" })
+        %>
+    </div>
+    </div>
+<% end %>
+
+<br />
+<%= submit_tag 'Edit', :onclick => "selectAllOptions()" %>
+<% end %>
+
+<%= link_to 'Show', :action => 'show', :id => object %> |
+<%= link_to 'Back', :action => 'list' %>

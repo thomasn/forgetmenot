@@ -4,8 +4,7 @@
 </p>
 <% end %>
 
-<% for association in eval(class_name).reflect_on_all_associations %>
-<% if object.send(association.name).size > 0 %>
+<% get_associations(class_name).each do |association| %>
 <h2><%= association.name.to_s.humanize %></h2>
 <ul>
     <% for c in object.send(association.name) %>
@@ -14,7 +13,6 @@
     </li>
     <% end %>
 </ul>
-<% end %>
 <% end %>
 
 <%= link_to 'Edit', :action => 'edit', :id => object %> |

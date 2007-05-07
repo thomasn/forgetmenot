@@ -91,19 +91,15 @@ class GroupsControllerTest < Test::Unit::TestCase
     assert_not_nil assigns(:group)
     assert assigns(:group).valid?
     
-    assert_select 'h2', 'Manage contacts'
-    assert_select 'div#group_contacts' do
-      assert_select 'h3', 'Group contacts'
-      assert_select 'select' do
-        assert_select 'option', Group.find(@first_id).contacts.size
-      end
+    assert_select 'h2', 'Manage Contacts'
+    assert_select 'h3', 'Group Contacts'
+    assert_select 'select#select_group_contacts' do
+      assert_select 'option', Group.find(@first_id).contacts.size
     end
 
-    assert_select 'div#other_contacts' do
-      assert_select 'h3', 'Other contacts'
-      assert_select 'select' do
-        assert_select 'option', Contact.count - Group.find(@first_id).contacts.size
-      end
+    assert_select 'h3', 'Other Contacts'
+    assert_select 'select#select_other_contacts' do
+      assert_select 'option', Contact.count - Group.find(@first_id).contacts.size
     end
     
     assert_select 'input[type=button][value="&lt; Add selected"]'

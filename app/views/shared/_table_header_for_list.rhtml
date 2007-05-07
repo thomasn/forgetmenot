@@ -2,7 +2,7 @@
     <% for column in eval(class_name).content_columns %>
     <th><%= column.human_name %></th>
     <% end %>
-    <% for association in eval(class_name).reflect_on_all_associations %>
+    <% get_associations(class_name).each do |association| %>
     <th><%= association.name.to_s.humanize %></th>
     <% end %>
 </tr>

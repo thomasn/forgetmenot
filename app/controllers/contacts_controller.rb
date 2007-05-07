@@ -39,6 +39,8 @@ class ContactsController < ApplicationController
 
   def update
     @contact = Contact.find(params[:id])
+    # if there is no contact_ids params then we drop all contacts from the group
+    params[:contact][:group_ids] = [] if params[:contact][:group_ids].nil?
     if @contact.update_attributes(params[:contact])
       flash[:notice] = 'Contact was successfully updated.'
       redirect_to :action => 'show', :id => @contact
