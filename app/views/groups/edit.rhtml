@@ -9,7 +9,7 @@
             <%# TODO: what's the best name for this: Group's Contacts or Group Contacts %>
             <h3> Group contacts </h3>
             <%= select('group', 'contact_ids',
-                @group.contacts.collect {|c| ["#{c.first_name} #{c.last_name}", c.id]}, {},
+                @group_contacts, {},
                 { :multiple => true, :size => 10, :id => 'select_group_contacts' })
             %>
         </div>
@@ -23,7 +23,7 @@
             <%# TODO: what's the best name for this: Other Contacts or Unused Contacts %>
             <h3> Other contacts </h3>
             <%= select_tag('other_contacts',
-                (Contact.find(:all)-@group.contacts).collect {|c| "<option value='#{c.id}'>#{c.first_name} #{c.last_name}</option>"}.join,
+                @other_contacts,
                 { :multiple => true, :size => 10, :id => 'select_other_contacts' })
             %>
         </div>

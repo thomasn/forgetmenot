@@ -113,12 +113,41 @@ class GroupsControllerTest < Test::Unit::TestCase
     
   end
 
-  def test_update
-    post :update, :id => @first_id
+  def test_update_with_empty_contact_ids
+    assert_equal 2, Group.find(@first_id).contacts.size
+    
+    post :update, :id => @first_id, :group => { :name => 'BrainHouse LLC.'}
     assert_response :redirect
     assert_redirected_to :action => 'show', :id => @first_id
+    
+    assert_equal 0, Group.find(@first_id).contacts.size
   end
 
+  def test_update_with_different_contact_id
+    assert_equal 1, groups(:nexus10).contacts.size
+    assert_equal contacts(:thomas), groups(:nexus10).contacts[0]
+    
+    post :update, :id => groups(:nexus10).id, :group => { :name => 'Nexus 11', :contact_ids => ["4"] }
+    assert_response :redirect
+    assert_redirected_to :action => 'show', :id => groups(:nexus10).id
+    
+    assert_equal 1, Group.find(groups(:nexus10).id).contacts.size
+    assert_equal contacts(:martin), Group.find(groups(:nexus10).id).contacts[0]
+  end
+
+  def test_update_with_several_contact_ids
+    assert_equal 1, groups(:nexus10).contacts.size
+    assert_equal contacts(:thomas), groups(:nexus10).contacts[0]
+    
+    post :update, :id => groups(:nexus10).id, :group => { :name => 'Nexus 11', :contact_ids => ["1", "4"] }, :commit => "Edit"
+    assert_response :redirect
+    assert_redirected_to :action => 'show', :id => groups(:nexus10).id
+    
+    assert_equal 2, Group.find(groups(:nexus10).id).contacts.size
+    assert Group.find(groups(:nexus10).id).contacts.include?(contacts(:thomas))
+    assert Group.find(groups(:nexus10).id).contacts.include?(contacts(:martin))
+  end
+  
   def test_destroy
     assert_nothing_raised {
       Group.find(@first_id)

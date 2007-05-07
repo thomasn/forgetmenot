@@ -20,7 +20,7 @@ class ContactsControllerTest < Test::Unit::TestCase
     assert_response :success
 
     assert_not_nil assigns(:contacts)
-    assert_equal 3, assigns(:contacts).size
+    assert_equal 4, assigns(:contacts).size
     assert_not_nil assigns(:contact_pages)
     
     assert_template 'list'
@@ -32,7 +32,7 @@ class ContactsControllerTest < Test::Unit::TestCase
     assert_response :success
     
     assert_not_nil assigns(:contacts)
-    assert_equal 3, assigns(:contacts).size
+    assert_equal 4, assigns(:contacts).size
     assert_not_nil assigns(:contact_pages)
 
     assert_template 'list'

@@ -6,11 +6,8 @@
         <th><%= column.human_name %></th>
         <% end %>
         <% for association in Group.reflect_on_all_associations %>
-        <th><%= association.class_name.pluralize %></th>
+        <th><%= association.name.to_s.humanize %></th>
         <% end %>
-        
-        
-        <th></th>  
     </tr>
     
     
