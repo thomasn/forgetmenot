@@ -11,6 +11,11 @@ class GroupTest < Test::Unit::TestCase
     assert nexus10.errors.empty?
   end
   
+  def test_display_name
+    assert_equal 'Nexus 10', groups(:nexus10).display_name
+    assert_equal 'BrainHouse', groups(:brainhouse).display_name
+  end
+  
   def test_habtm_contacts
     brainhouse = groups(:brainhouse)
     assert_not_nil brainhouse.contacts

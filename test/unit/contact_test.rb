@@ -11,6 +11,18 @@ class ContactTest < Test::Unit::TestCase
     assert thomas.errors.empty?
   end                          
   
+  def test_display_name
+    assert_equal 'Yury Kotlyarov', contacts(:yura).display_name
+    assert_equal 'Renat Akhmerov', contacts(:renat).display_name
+    assert_equal 'Thomas Nichols', contacts(:thomas).display_name
+    c = Contact.create 
+    assert_equal ' ', c.display_name
+    c = Contact.create :last_name => 'last_name'
+    assert_equal ' last_name', c.display_name
+    c = Contact.create :first_name => 'first_name'
+    assert_equal 'first_name ', c.display_name
+  end
+
   def test_habtm_groups
     thomas = contacts(:thomas)
     assert_not_nil thomas.groups

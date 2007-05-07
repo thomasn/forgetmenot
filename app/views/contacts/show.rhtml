@@ -1,8 +1,1 @@
-<% for column in Contact.content_columns %>
-<p>
-  <b><%= column.human_name %>:</b> <%=h @contact.send(column.name) %>
-</p>
-<% end %>
-
-<%= link_to 'Edit', :action => 'edit', :id => @contact %> |
-<%= link_to 'Back', :action => 'list' %>
+<%= render :partial => 'shared/show', :locals => { :class_name => 'Contact', :object => @contact } %>

@@ -1,0 +1,21 @@
+<% for column in eval(class_name).content_columns %>
+<p>
+    <b><%= column.human_name %>:</b> <%=h object.send(column.name) %>
+</p>
+<% end %>
+
+<% for association in eval(class_name).reflect_on_all_associations %>
+<% if object.send(association.name).size > 0 %>
+<h2><%= association.name.to_s.humanize %></h2>
+<ul>
+    <% for c in object.send(association.name) %>
+    <li>
+        <%= link_to( c.display_name, :controller => association.name.to_s.pluralize, :action => 'show', :id => c.id) %> 
+    </li>
+    <% end %>
+</ul>
+<% end %>
+<% end %>
+
+<%= link_to 'Edit', :action => 'edit', :id => object %> |
+<%= link_to 'Back', :action => 'list' %>

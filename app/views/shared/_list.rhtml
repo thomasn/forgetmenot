@@ -1,0 +1,13 @@
+<h1>Listing <%= class_name.pluralize.downcase %></h1>
+
+<table>
+    <%= render :partial => 'shared/table_header_for_list', :locals => { :class_name => class_name } %>
+    <%= render :partial => 'shared/table_rows_for_list', :locals => { :class_name => class_name, :objects => objects } %>
+</table>
+
+<%= link_to 'Previous page', { :page => object_pages.current.previous } if object_pages.current.previous %>
+<%= link_to 'Next page', { :page => object_pages.current.next } if object_pages.current.next %> 
+
+<br />
+
+<%= link_to "New #{class_name.downcase}", :action => 'new' %>
