@@ -1,5 +1,6 @@
 class GroupsController < ApplicationController
   layout 'forgetmenot'
+  include ApplicationHelper
 
   def index
     list
@@ -19,32 +20,25 @@ class GroupsController < ApplicationController
   end
 
   def new
-    @group = Group.new
-  end
-
-  def create
     @group = Group.new(params[:group])
-    if @group.save
+    if request.post? && @group.save
       flash[:notice] = 'Group was successfully created.'
       redirect_to :action => 'list'
-    else
-      render :action => 'new'
     end
   end
 
   def edit
     @group = Group.find(params[:id])
-  end
-
-  def update
-    @group = Group.find(params[:id])
-    # if there is no contact_ids params then we drop all contacts from the group
-    params[:group][:contact_ids] = [] if params[:group][:contact_ids].nil?
-    if @group.update_attributes(params[:group])
-      flash[:notice] = 'Group was successfully updated.'
-      redirect_to :action => 'show', :id => @group
-    else
-      render :action => 'edit'
+    if request.post? 
+      # if there is no group_ids params then we drop all Groups from the group
+      get_multiple_associations('Group').each do |association|
+        associated = (association.name.to_s.singularize + '_ids').to_sym
+        params[:group][associated] = [] if params[:group][associated].nil?
+      end
+      if @group.update_attributes(params[:group])
+        flash[:notice] = 'Group was successfully updated.'
+        redirect_to :action => 'show', :id => @group
+      end
     end
   end
 

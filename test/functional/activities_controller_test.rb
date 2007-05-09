@@ -52,7 +52,7 @@ class ActivitiesControllerTest < Test::Unit::TestCase
   def test_create
     num_activities = Activity.count
 
-    post :create, :activity => {}
+    post :new, :activity => {}
 
     assert_response :redirect
     assert_redirected_to :action => 'list'
@@ -71,7 +71,7 @@ class ActivitiesControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    post :update, :id => @first_id, :activity => { :description => 'hey' }
+    post :edit, :id => @first_id, :activity => { :description => 'hey' }
     assert_response :redirect
     assert_redirected_to :action => 'show', :id => @first_id
   end

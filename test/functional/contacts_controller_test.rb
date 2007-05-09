@@ -60,7 +60,7 @@ class ContactsControllerTest < Test::Unit::TestCase
   def test_create
     num_contacts = Contact.count
 
-    post :create, :contact => {:first_name => 'Martin', :last_name => 'Griffins'}
+    post :new, :contact => {:first_name => 'Martin', :last_name => 'Griffins'}
 
     assert_response :redirect
     assert_redirected_to :action => 'list'
@@ -80,7 +80,7 @@ class ContactsControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    post :update, :id => @first_id, :contact => { :first_name => 'Tom' }
+    post :edit, :id => @first_id, :contact => { :first_name => 'Tom' }
     assert_response :redirect
     assert_redirected_to :action => 'show', :id => @first_id
     assert_not_nil Contact.find_by_first_name_and_last_name('Tom', 'Nichols')

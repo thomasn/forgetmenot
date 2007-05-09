@@ -3,7 +3,12 @@
     <% for column in eval(class_name).content_columns %>
     <td><%=h object.send(column.name) %></td>
     <% end %>
-    <% get_associations(class_name).each do |association| %>
+
+    <% get_single_associations(class_name).each do |association| %>
+    <td><%= object.send(association.name).display_name unless object.send(association.name).nil? %></td>
+    <% end %>
+    
+    <% get_multiple_associations(class_name).each do |association| %>
     <%= render :partial => 'shared/association_values', :locals => { :association => association, :parent => object }%>
     <% end %>
     

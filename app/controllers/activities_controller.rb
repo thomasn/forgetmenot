@@ -1,5 +1,6 @@
 class ActivitiesController < ApplicationController
   layout 'forgetmenot'
+  include ApplicationHelper
   
   def index
     list
@@ -19,33 +20,25 @@ class ActivitiesController < ApplicationController
   end
 
   def new
-    @activity = Activity.new
-  end
-
-  def create
     @activity = Activity.new(params[:activity])
-    if @activity.save
+    if request.post? && @activity.save
       flash[:notice] = 'Activity was successfully created.'
       redirect_to :action => 'list'
-    else
-      render :action => 'new'
     end
   end
 
   def edit
     @activity = Activity.find(params[:id])
-  end
-
-  def update
-    @activity = Activity.find(params[:id])
-    # if there is no contact_ids params then we drop all contacts from the activity
-    params[:activity][:contact_ids] = [] if params[:activity][:contact_ids].nil?
-   
-    if @activity.update_attributes(params[:activity])
-      flash[:notice] = 'Activity was successfully updated.'
-      redirect_to :action => 'show', :id => @activity
-    else
-      render :action => 'edit'
+    if request.post? 
+      # if there is no activity_ids params then we drop all Activities from the activity
+      get_multiple_associations('Activity').each do |association|
+        associated = (association.name.to_s.singularize + '_ids').to_sym
+        params[:activity][associated] = [] if params[:activity][associated].nil?
+      end
+      if @activity.update_attributes(params[:activity])
+        flash[:notice] = 'Activity was successfully updated.'
+        redirect_to :action => 'show', :id => @activity
+      end
     end
   end
 

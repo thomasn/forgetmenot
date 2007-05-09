@@ -3,8 +3,14 @@
     <b><%= column.human_name %>:</b> <%=h object.send(column.name) %>
 </p>
 <% end %>
-
-<% get_associations(class_name).each do |association| %>
+    
+<% get_single_associations(class_name).each do |association| %>
+<p>
+    <b><%= association.name.to_s.humanize %>:</b> <%= object.send(association.name).display_name unless object.send(association.name).nil? %>
+</p>
+<% end %>
+    
+<% get_multiple_associations(class_name).each do |association| %>
 <% if object.send(association.name).size > 0 %>
 <h2><%= association.name.to_s.humanize %></h2>
 <ul>

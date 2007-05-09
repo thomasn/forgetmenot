@@ -74,7 +74,7 @@ class GroupsControllerTest < Test::Unit::TestCase
   def test_create
     num_groups = Group.count
 
-    post :create, :group => {}
+    post :new, :group => {}
 
     assert_response :redirect
     assert_redirected_to :action => 'list'
@@ -92,7 +92,7 @@ class GroupsControllerTest < Test::Unit::TestCase
     assert assigns(:group).valid?
     
     assert_select 'h2', 'Manage Contacts'
-    assert_select 'h3', 'Group Contacts'
+    assert_select 'h3', 'Assigned Contacts'
     assert_select 'select#select_group_contacts' do
       assert_select 'option', Group.find(@first_id).contacts.size
     end
@@ -112,7 +112,7 @@ class GroupsControllerTest < Test::Unit::TestCase
   def test_update_with_empty_contact_ids
     assert_equal 2, Group.find(@first_id).contacts.size
     
-    post :update, :id => @first_id, :group => { :name => 'BrainHouse LLC.'}
+    post :edit, :id => @first_id, :group => { :name => 'BrainHouse LLC.'}
     assert_response :redirect
     assert_redirected_to :action => 'show', :id => @first_id
     
@@ -123,7 +123,7 @@ class GroupsControllerTest < Test::Unit::TestCase
     assert_equal 1, groups(:nexus10).contacts.size
     assert_equal contacts(:thomas), groups(:nexus10).contacts[0]
     
-    post :update, :id => groups(:nexus10).id, :group => { :name => 'Nexus 11', :contact_ids => ["4"] }
+    post :edit, :id => groups(:nexus10).id, :group => { :name => 'Nexus 11', :contact_ids => ["4"] }
     assert_response :redirect
     assert_redirected_to :action => 'show', :id => groups(:nexus10).id
     
@@ -135,7 +135,7 @@ class GroupsControllerTest < Test::Unit::TestCase
     assert_equal 1, groups(:nexus10).contacts.size
     assert_equal contacts(:thomas), groups(:nexus10).contacts[0]
     
-    post :update, :id => groups(:nexus10).id, :group => { :name => 'Nexus 11', :contact_ids => ["1", "4"] }, :commit => "Edit"
+    post :edit, :id => groups(:nexus10).id, :group => { :name => 'Nexus 11', :contact_ids => ["1", "4"] }, :commit => "Edit"
     assert_response :redirect
     assert_redirected_to :action => 'show', :id => groups(:nexus10).id
     

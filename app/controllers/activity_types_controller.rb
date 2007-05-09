@@ -1,5 +1,6 @@
 class ActivityTypesController < ApplicationController
   layout 'forgetmenot'
+  include ApplicationHelper
   
   def index
     list
@@ -19,30 +20,25 @@ class ActivityTypesController < ApplicationController
   end
 
   def new
-    @activity_type = ActivityType.new
-  end
-
-  def create
     @activity_type = ActivityType.new(params[:activity_type])
-    if @activity_type.save
-      flash[:notice] = 'ActivityType was successfully created.'
+    if request.post? && @activity_type.save
+      flash[:notice] = 'Activity type was successfully created.'
       redirect_to :action => 'list'
-    else
-      render :action => 'new'
     end
   end
 
   def edit
     @activity_type = ActivityType.find(params[:id])
-  end
-
-  def update
-    @activity_type = ActivityType.find(params[:id])
-    if @activity_type.update_attributes(params[:activity_type])
-      flash[:notice] = 'ActivityType was successfully updated.'
-      redirect_to :action => 'show', :id => @activity_type
-    else
-      render :action => 'edit'
+    if request.post? 
+      # if there is no activity_type_ids params then we drop all ActivityTypes from the activity_type
+      get_multiple_associations('ActivityType').each do |association|
+        associated = (association.name.to_s.singularize + '_ids').to_sym
+        params[:activity_type][associated] = [] if params[:activity_type][associated].nil?
+      end
+      if @activity_type.update_attributes(params[:activity_type])
+        flash[:notice] = 'Activity type was successfully updated.'
+        redirect_to :action => 'show', :id => @activity_type
+      end
     end
   end
 

@@ -1,6 +1,7 @@
 class ContactsController < ApplicationController
   
   layout 'forgetmenot'
+  include ApplicationHelper
   
   def index
     list
@@ -9,7 +10,7 @@ class ContactsController < ApplicationController
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :destroy, :create, :update ],
-         :redirect_to => { :action => :list }
+  :redirect_to => { :action => :list }
 
   def list
     @contact_pages, @contacts = paginate :contacts, :per_page => 10
@@ -20,32 +21,25 @@ class ContactsController < ApplicationController
   end
 
   def new
-    @contact = Contact.new
-  end
-
-  def create
     @contact = Contact.new(params[:contact])
-    if @contact.save
+    if request.post? && @contact.save
       flash[:notice] = 'Contact was successfully created.'
       redirect_to :action => 'list'
-    else
-      render :action => 'new'
     end
   end
 
   def edit
     @contact = Contact.find(params[:id])
-  end
-
-  def update
-    @contact = Contact.find(params[:id])
-    # if there is no contact_ids params then we drop all contacts from the group
-    params[:contact][:group_ids] = [] if params[:contact][:group_ids].nil?
-    if @contact.update_attributes(params[:contact])
-      flash[:notice] = 'Contact was successfully updated.'
-      redirect_to :action => 'show', :id => @contact
-    else
-      render :action => 'edit'
+    if request.post? 
+      # if there is no contact_ids params then we drop all contacts from the group
+      get_multiple_associations('Contact').each do |association|
+        associated = (association.name.to_s.singularize + '_ids').to_sym
+        params[:contact][associated] = [] if params[:contact][associated].nil?
+      end
+      if @contact.update_attributes(params[:contact])
+        flash[:notice] = 'Contact was successfully updated.'
+        redirect_to :action => 'show', :id => @contact
+      end
     end
   end
 

@@ -52,7 +52,7 @@ class ActivityTypesControllerTest < Test::Unit::TestCase
   def test_create
     num_activity_types = ActivityType.count
 
-    post :create, :activity_type => {}
+    post :new, :activity_type => {}
 
     assert_response :redirect
     assert_redirected_to :action => 'list'
@@ -71,7 +71,7 @@ class ActivityTypesControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    post :update, :id => @first_id
+    post :edit, :id => @first_id, :activity_type => {}
     assert_response :redirect
     assert_redirected_to :action => 'show', :id => @first_id
   end
