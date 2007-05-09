@@ -1,4 +1,4 @@
-<h1>Listing <%= class_name.pluralize.downcase %></h1>
+<h1>Listing <%= class_name.tableize.humanize.downcase  %></h1>
 
 <table>
     <%= render :partial => 'shared/table_header_for_list', :locals => { :class_name => class_name } %>
@@ -10,4 +10,4 @@
 
 <br />
 
-<%= link_to "New #{class_name.downcase}", :action => 'new' %>
+<%= link_to "New #{class_name.tableize.humanize.singularize.downcase}", :action => 'new' %>

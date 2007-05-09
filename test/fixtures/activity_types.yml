@@ -1,0 +1,19 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+email_in:
+  id: 1
+  name: Email in
+email_out:
+  id: 2
+  name: Email out
+call_in:
+  id: 3
+  name: Call in
+call_out:
+  id: 4
+  name: Call out
+visit:
+  id: 5
+  name: Visit
+purchase:
+  id: 6
+  name: Purchase

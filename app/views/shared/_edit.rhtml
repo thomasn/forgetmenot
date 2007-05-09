@@ -37,7 +37,7 @@ function selectAllOptions() {
 }
 </script>
 
-<h1>Editing <%= class_name.humanize %></h1>
+<h1>Editing <%= class_name.tableize.humanize.singularize.downcase %></h1>
 
 <% form_tag :action => 'update', :id => object do %>
 <%= render :partial => 'form' %>
@@ -46,8 +46,7 @@ function selectAllOptions() {
     <% associated = association.name.to_s %>
     
     <h2>Manage <%= association.name.to_s.humanize %></h2>
-    <div>
-    <div style="float: left">
+    <div style="float: left;">
         <h3><%= "#{class_name.humanize} #{association.name.to_s.humanize}" %></h3>
         <%= select(parent, "#{association.name.to_s.singularize}_ids",
             object.send(association.name).collect {|c| [c.display_name, c.id]}, {},
@@ -55,14 +54,16 @@ function selectAllOptions() {
         %>
     </div>
     
-    <div style="float: left;">
-    <%= button_to_function "< Add selected", "addSelected('#{associated}')" %><br />
-    <%= button_to_function "<< Add all", "addAll('#{associated}')" %><br />
-    <%= button_to_function "Remove selected >", "removeSelected('#{associated}')" %><br />
-    <%= button_to_function "Remove all >>", "removeAll('#{associated}')" %>
+    
+    <div style="float:left; position:relative; text-align:center; margin-top:60px; margin-right:20px; margin-left:20px;">
+        <%= button_to_function "< Add selected", "addSelected('#{associated}')" %><br />
+        <%= button_to_function "<< Add all", "addAll('#{associated}')" %><br />
+        <%= button_to_function "Remove selected >", "removeSelected('#{associated}')" %><br />
+        <%= button_to_function "Remove all >>", "removeAll('#{associated}')" %>
     </div>
+    
 
-    <div style="">
+    <div style="float: left;">
         <h3>Other <%= association.name.to_s.humanize %></h3>
         <%= select_tag("other_#{association.name}",
             (eval(association.class_name).find(:all)-object.send(association.name)).collect {|c|
@@ -70,7 +71,8 @@ function selectAllOptions() {
             { :multiple => true, :size => 10, :id => "select_other_#{association.name}" })
         %>
     </div>
-    </div>
+
+    <div style="clear:both"></div>
 <% end %>
 
 <br />

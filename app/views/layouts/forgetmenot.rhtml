@@ -12,12 +12,11 @@
         
         <div id="main_menu">
             <ul>
-                <li <%= "class='active'" if controller.controller_name == 'contacts' %>>
-                    <%= link_to 'Contacts', :controller => 'contacts' %>
+                <% ['contacts', 'groups', 'activities', 'activity_types'].each { |c| %>
+                <li <%= "class='active'" if controller.controller_name == c %>>
+                    <%= link_to c.humanize, :controller => c %>
                 </li>
-                <li <%= "class='active'" if controller.controller_name == 'groups' %>>
-                    <%= link_to 'Groups', :controller => 'groups' %>
-                </li>
+                <% } %>
             </ul>
         </div>   
         
