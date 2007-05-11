@@ -1,0 +1,13 @@
+<tr>
+    <% for column in entity_class.content_columns %>
+    <th><%= column.human_name %></th>
+    <% end %>
+
+    <% get_single_associations(entity_class_name).each do |association| %>
+    <th><%= association.name.to_s.humanize %></th>
+    <% end %>
+    
+    <% get_multiple_associations(entity_class_name).each do |association| %>
+    <th><%= association.name.to_s.humanize %></th>
+    <% end %>
+</tr>

@@ -17,3 +17,7 @@ visit:
 purchase:
   id: 6
   name: Purchase
+no_assigned_activities:
+  id: 7
+  name: No assigned activities
+  

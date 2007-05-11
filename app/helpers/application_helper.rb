@@ -8,4 +8,13 @@ module ApplicationHelper
   def get_single_associations(class_name)
     eval(class_name).reflect_on_all_associations(:belongs_to).collect {|a| a if eval(a.name.to_s.camelize.singularize).count > 0 }.compact
   end
+  
+  def get_table_names
+    ActiveRecord::Base.establish_connection
+    (ActiveRecord::Base.connection.tables - ['schema_info']).collect {|table|
+      table unless ActiveRecord::Base.connection.columns(table).collect { |column|
+        column if column.name == 'id'
+      }.compact.empty?
+    }.compact
+  end
 end

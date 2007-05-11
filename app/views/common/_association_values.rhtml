@@ -1,9 +1,9 @@
 <td>
-    <% id = "#{controller.controller_name}_#{parent.id}_#{association.name.to_s}" %>
+    <% id = "#{params[:table_name]}_#{object.id}_#{association.name.to_s}" %>
     <%= link_to_function "Show #{association.name.to_s.humanize}", "$('#{id}').show(); this.hide()", :id => "link_#{id}" %>
     <div id="<%= id %>" style="display: none">
         <%= link_to_function "Hide #{association.name.to_s.humanize}", "$('#{id}').hide(); $('link_#{id}').show()" %><br />
-        <%= parent.send(association.name).collect {|c| 
+        <%= object.send(association.name).collect {|c| 
         link_to( c.display_name, :controller => association.name.to_s.pluralize, :action => 'show', :id => c.id) 
         }.join('<br /> ')
         %>

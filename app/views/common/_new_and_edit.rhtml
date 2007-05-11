@@ -1,20 +1,18 @@
-<% parent = class_name.tableize.singularize %>
-
 <script type="text/javascript">
 function addSelected(associated) {
-    moveOptions($('select_other_' + associated), $('select_<%= parent %>_' + associated), true);
+    moveOptions($('select_other_' + associated), $('select_object_' + associated), true);
 }
 
 function addAll(associated) {
-    moveOptions($('select_other_' + associated), $('select_<%= parent %>_' + associated), false);
+    moveOptions($('select_other_' + associated), $('select_object_' + associated), false);
 }
 
 function removeSelected(associated) {
-    moveOptions($('select_<%= parent %>_' + associated), $('select_other_' + associated), true);
+    moveOptions($('select_object_' + associated), $('select_other_' + associated), true);
 }
 
 function removeAll(associated) {
-    moveOptions($('select_<%= parent %>_' + associated), $('select_other_' + associated), false);
+    moveOptions($('select_object_' + associated), $('select_other_' + associated), false);
 }
 
 function moveOptions(srcSelect, destSelect, selectedOnly) {
@@ -28,38 +26,39 @@ function moveOptions(srcSelect, destSelect, selectedOnly) {
 }
 
 function selectAllOptions() {
-    <% get_multiple_associations(class_name).each do |association| %>
-    <% select = "select_#{parent}_#{association.name.to_s}" %>
-    for (var i = 0; $('<%= select %>').options.length; i++) {
+    <% get_multiple_associations(entity_class_name).each do |association| -%>
+    <% select = "select_object_#{association.name.to_s}" -%>
+    for (var i = 0; i < $('<%= select %>').options.length; i++) {
     $('<%= select %>').options[i].selected = true;
     }
-    <% end %>
+    <% end -%>
 }
+
 </script>
 
-<h1><%= params[:action] == 'new' ? 'New' : 'Editing' %> <%= class_name.tableize.humanize.singularize.downcase %></h1>
+<h1><%= params[:action] == 'new' ? 'New' : 'Editing' %> <%= entity_human_name.downcase %></h1>
 
-<% form_tag :action => params[:action], :id => object do %>
+<% form_tag :action => params[:action], :id => @object do %>
 <%= render :partial => 'form' %>
 
-<% get_single_associations(class_name).each do |association| %>
+<% get_single_associations(entity_class_name).each do |association| %>
     <p><label for="<%= association.name %>"><%= association.name.to_s.humanize %></label><br/>
-    <%= select(parent, 
+    <%= select('object', 
             "#{association.name.to_s}_id", 
-            eval(association.class_name).find(:all).collect{|o| [o.display_name, o.id]}, 
+            association.class_name.constantize.find(:all).collect{|o| [o.display_name, o.id]}, 
             { :include_blank => true } ) %></p>
 <% end %>
 
-<% get_multiple_associations(class_name).each do |association| %>
+<% get_multiple_associations(entity_class_name).each do |association| %>
 
     <% associated = association.name.to_s %>
     
     <h2>Manage <%= association.name.to_s.humanize %></h2>
     <div style="float: left;">
         <h3><%= "Assigned #{association.name.to_s.humanize}" %></h3>
-        <%= select(parent, "#{association.name.to_s.singularize}_ids",
-            object.send(association.name).collect {|c| [c.display_name, c.id]}, {},
-            { :multiple => true, :size => 10, :id => "select_#{parent}_#{association.name}" })
+        <%= select('object', "#{association.name.to_s.singularize}_ids",
+            @object.send(association.name).collect {|c| [c.display_name, c.id]}, {},
+            { :multiple => true, :size => 10, :id => "select_object_#{association.name}" })
         %>
     </div>
     
@@ -73,7 +72,7 @@ function selectAllOptions() {
     <div style="float: left;">
         <h3>Other <%= association.name.to_s.humanize %></h3>
         <%= select_tag("other_#{association.name}",
-            (eval(association.class_name).find(:all)-object.send(association.name)).collect {|c|
+            (association.class_name.constantize.find(:all)-@object.send(association.name)).collect {|c|
                 "<option value='#{c.id}'>#{c.display_name}</option>"}.join,
             { :multiple => true, :size => 10, :id => "select_other_#{association.name}" })
         %>
@@ -86,5 +85,5 @@ function selectAllOptions() {
 <%= submit_tag (params[:action] == 'new' ? 'Create' : 'Update'), :onclick => "selectAllOptions()" %>
 <% end %>
 
-<%= link_to 'Show', :action => 'show', :id => object %> |
+<%= link_to 'Show', :action => 'show', :id => @object %> |
 <%= link_to 'Back', :action => 'list' %>

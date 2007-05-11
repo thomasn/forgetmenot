@@ -1,0 +1,13 @@
+<h1>Listing <%= entity_human_name.pluralize.downcase  %></h1>
+
+<table>
+    <%= render :partial => 'table_header_for_list' %>
+    <%= render :partial => 'table_rows_for_list' %>
+</table>
+
+<%= link_to 'Previous page', { :page => @object_pages.current.previous } if @object_pages.current.previous %>
+<%= link_to 'Next page', { :page => @object_pages.current.next } if @object_pages.current.next %> 
+
+<br />
+
+<%= link_to "New #{entity_human_name.downcase}", :action => 'new' %>

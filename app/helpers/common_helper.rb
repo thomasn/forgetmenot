@@ -1,0 +1,2 @@
+module CommonHelper
+end

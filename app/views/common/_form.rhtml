@@ -1,0 +1,5 @@
+<%= 
+    entity_class.content_columns.collect{ |column| 
+        "<p><label for=\"object_#{column.name}\">#{column.human_name}</label><br/>\n#{input('object', column.name)}</p>\n"
+    }.join("\n")
+%>
