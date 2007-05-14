@@ -6,7 +6,7 @@ yura_call_out:
   contact_id: 3
 thomas_call_in:
   activity_id: 2
-  contact_id: 
+  contact_id: 1
 martin_email_in:
   activity_id: 3
   contact_id: 4

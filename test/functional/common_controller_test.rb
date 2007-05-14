@@ -407,44 +407,56 @@ class CommonControllerTest < Test::Unit::TestCase
     assert_select 'a[href=/activity_types/list]', 'Back', :count => 1
   end  
   
-  
-=begin
-  def test_update_with_empty_contact_ids
-    assert_equal 2, Group.find(@first_id).contacts.size
+  def test_update__activities_with_empty_associated
+    assert_equal 2, Activity.find(activities(:renat_and_yura_call_out).id).contacts.size
+    assert_not_nil Activity.find(activities(:renat_and_yura_call_out).id).activity_type
     
-    post :edit, :id => @first_id, :group => { :name => 'BrainHouse LLC.'}
+    post :edit, :id => activities(:renat_and_yura_call_out).id, 
+      :object => { :description => 'new description', :activity_type_id => ''}, :table_name => 'activities'
     assert_response :redirect
-    assert_redirected_to :action => 'show', :id => @first_id
+    assert_redirected_to :action => 'show', :id => activities(:renat_and_yura_call_out).id
     
-    assert_equal 0, Group.find(@first_id).contacts.size
+    assert_equal 0, Activity.find(activities(:renat_and_yura_call_out).id).contacts.size
+    assert_nil Activity.find(activities(:renat_and_yura_call_out).id).activity_type
   end
 
-  def test_update_with_different_contact_id
-    assert_equal 1, groups(:nexus10).contacts.size
-    assert_equal contacts(:thomas), groups(:nexus10).contacts[0]
+  def test_update__activities_with_different_associated
+    assert_equal 2, Activity.find(activities(:renat_and_yura_call_out).id).contacts.size
+    assert_not_nil Activity.find(activities(:renat_and_yura_call_out).id).activity_type
+    assert_equal 4, Activity.find(activities(:renat_and_yura_call_out).id).activity_type.id
     
-    post :edit, :id => groups(:nexus10).id, :group => { :name => 'Nexus 11', :contact_ids => ["4"] }
+    post :edit, :id => activities(:renat_and_yura_call_out).id, 
+      :object => { :description => 'new description', :contact_ids => ["1", "3", "4"], :activity_type_id => '1'}, :table_name => 'activities'
     assert_response :redirect
-    assert_redirected_to :action => 'show', :id => groups(:nexus10).id
+    assert_redirected_to :action => 'show', :id => activities(:renat_and_yura_call_out).id
     
-    assert_equal 1, Group.find(groups(:nexus10).id).contacts.size
-    assert_equal contacts(:martin), Group.find(groups(:nexus10).id).contacts[0]
+    assert_equal 3, Activity.find(activities(:renat_and_yura_call_out).id).contacts.size
+    assert_not_nil Activity.find(activities(:renat_and_yura_call_out).id).activity_type
+    assert_equal 1, Activity.find(activities(:renat_and_yura_call_out).id).activity_type.id
   end
 
-  def test_update_with_several_contact_ids
-    assert_equal 1, groups(:nexus10).contacts.size
-    assert_equal contacts(:thomas), groups(:nexus10).contacts[0]
+  def test_update__activity_types_with_empty_associated
+    assert_equal 2, ActivityType.find(activity_types(:call_out).id).activities.size
     
-    post :edit, :id => groups(:nexus10).id, :group => { :name => 'Nexus 11', :contact_ids => ["1", "4"] }, :commit => "Edit"
+    post :edit, :id => activity_types(:call_out).id, 
+      :object => { :name => 'Call blabla' }, :table_name => 'activity_types'
     assert_response :redirect
-    assert_redirected_to :action => 'show', :id => groups(:nexus10).id
+    assert_redirected_to :action => 'show', :id => activity_types(:call_out).id
     
-    assert_equal 2, Group.find(groups(:nexus10).id).contacts.size
-    assert Group.find(groups(:nexus10).id).contacts.include?(contacts(:thomas))
-    assert Group.find(groups(:nexus10).id).contacts.include?(contacts(:martin))
+    assert_equal 0, ActivityType.find(activity_types(:call_out).id).activities.size
   end
-=end
-  
+
+  def test_update__activities_with_different_associated
+    assert_equal 2, ActivityType.find(activity_types(:call_out).id).activities.size
+    
+    post :edit, :id => activity_types(:call_out).id,
+      :object => { :name => 'Call blabla', :activity_ids => ["2", "3", "1"] }, :table_name => 'activity_types'
+    assert_response :redirect
+    assert_redirected_to :action => 'show', :id => activity_types(:call_out).id
+    
+    assert_equal 3, ActivityType.find(activity_types(:call_out).id).activities.size
+  end
+
   def test_destroy
     assert_nothing_raised {
       Activity.find(activities(:renat_and_yura_call_out).id)

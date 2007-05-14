@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class ContactTest < Test::Unit::TestCase
-  fixtures :contacts, :groups, :contacts_groups
+  fixtures :contacts, :groups, :contacts_groups, :activities, :activities_contacts
   
   def test_truth
     thomas = contacts(:thomas)
@@ -12,15 +12,13 @@ class ContactTest < Test::Unit::TestCase
   end                          
   
   def test_display_name
-    assert_equal 'Yury Kotlyarov', contacts(:yura).display_name
-    assert_equal 'Renat Akhmerov', contacts(:renat).display_name
-    assert_equal 'Thomas Nichols', contacts(:thomas).display_name
+    assert_equal contacts(:yura).first_name + ' ' + contacts(:yura).last_name, Contact.find(contacts(:yura).id).display_name
     c = Contact.create 
-    assert_equal ' ', c.display_name
+    assert_equal "contact ##{c.id}", c.display_name
     c = Contact.create :last_name => 'last_name'
-    assert_equal ' last_name', c.display_name
+    assert_equal 'last_name', c.display_name
     c = Contact.create :first_name => 'first_name'
-    assert_equal 'first_name ', c.display_name
+    assert_equal 'first_name', c.display_name
   end
 
   def test_habtm_groups
@@ -32,29 +30,28 @@ class ContactTest < Test::Unit::TestCase
     }
     assert !thomas.groups.include?(groups(:brainhouse))
     assert thomas.groups.include?(groups(:nexus10))
+  end
 
-    renat = contacts(:renat)
-    assert_not_nil renat.groups
-    assert_equal 1, renat.groups.size
-    renat.groups.each {|group|
-      subtest_group group
+  def test_habtm_activities
+    thomas = contacts(:thomas)
+    assert_not_nil thomas.activities
+    assert_equal 1, thomas.activities.size
+    thomas.activities.each {|a|
+      subtest_activity a
     }
-    assert renat.groups.include?(groups(:brainhouse))
-    assert !renat.groups.include?(groups(:nexus10))
-
-    yura = contacts(:yura)
-    assert_not_nil yura.groups
-    assert_equal 1, yura.groups.size
-    yura.groups.each {|group|
-      subtest_group group
-    }
-    assert yura.groups.include?(groups(:brainhouse))
-    assert !yura.groups.include?(groups(:nexus10))
+    assert !thomas.activities.include?(activities(:renat_and_yura_call_out))
+    assert thomas.activities.include?(activities(:thomas_call_in))
   end
   
   def subtest_group(group)
     assert_instance_of Group, group
     assert_valid group
     assert group.errors.empty?
+  end
+  
+  def subtest_activity(activity)
+    assert_instance_of Activity, activity
+    assert_valid activity
+    assert activity.errors.empty?
   end
 end

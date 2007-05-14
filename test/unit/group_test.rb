@@ -12,8 +12,10 @@ class GroupTest < Test::Unit::TestCase
   end
   
   def test_display_name
-    assert_equal 'Nexus 10', groups(:nexus10).display_name
-    assert_equal 'BrainHouse', groups(:brainhouse).display_name
+    assert_equal 'Nexus 10', Group.find(groups(:nexus10).id).display_name
+    
+    g = Group.create
+    assert_equal "group ##{g.id}", g.display_name
   end
   
   def test_habtm_contacts
@@ -26,16 +28,6 @@ class GroupTest < Test::Unit::TestCase
     assert brainhouse.contacts.include?(contacts(:renat))
     assert brainhouse.contacts.include?(contacts(:yura))
     assert !brainhouse.contacts.include?(contacts(:thomas))
-
-    nexus10 = groups(:nexus10)
-    assert_not_nil nexus10.contacts
-    assert_equal 1, nexus10.contacts.size
-    nexus10.contacts.each {|contact|
-      subtest_contact contact
-    }
-    assert !nexus10.contacts.include?(contacts(:renat))
-    assert !nexus10.contacts.include?(contacts(:yura))
-    assert nexus10.contacts.include?(contacts(:thomas))
   end
    
   def subtest_contact(contact)
@@ -43,8 +35,4 @@ class GroupTest < Test::Unit::TestCase
     assert_valid contact
     assert contact.errors.empty?
   end
-  
-  
-  
-  
 end
