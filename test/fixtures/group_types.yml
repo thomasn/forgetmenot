@@ -1,0 +1,10 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+family:
+  id: 1
+  name: Family
+prospect:
+  id: 2
+  name: Prospect
+supplier:
+  id: 3
+  name: Supplier

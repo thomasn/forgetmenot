@@ -33,7 +33,7 @@ class ContactTest < Test::Unit::TestCase
   end
 
   def test_habtm_activities
-    thomas = contacts(:thomas)
+    thomas = Contact.find(contacts(:thomas).id)
     assert_not_nil thomas.activities
     assert_equal 1, thomas.activities.size
     thomas.activities.each {|a|
@@ -41,6 +41,20 @@ class ContactTest < Test::Unit::TestCase
     }
     assert !thomas.activities.include?(activities(:renat_and_yura_call_out))
     assert thomas.activities.include?(activities(:thomas_call_in))
+  end
+  
+  def test_bt_addresses
+    thomas = Contact.find(contacts(:thomas).id)
+    assert_not_nil thomas.address
+    assert_equal 1, thomas.address.id
+    assert_not_nil thomas.address2
+    assert_equal 2, thomas.address2.id
+  end
+
+  def test_bt_lead_source
+    yura = Contact.find(contacts(:yura).id)
+    assert_not_nil yura.lead_source
+    assert_equal 2, yura.lead_source.id
   end
   
   def subtest_group(group)

@@ -1,0 +1,12 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+full_address:
+  id: 1
+  address1: Victoria Street
+  address2: 27
+  city: Worcester
+  state: Worcestershire
+  zip: 11111
+  country: UK
+  
+empty_address:
+  id: 2

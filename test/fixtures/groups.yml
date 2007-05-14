@@ -2,6 +2,9 @@
 brainhouse:
   id: 1
   name: BrainHouse
+  shipping_address_id: 1
+  billing_address_id: 2
+  group_type_id: 2
 nexus10:
   id: 2
   name: Nexus 10

@@ -1,0 +1,10 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+tv:
+  id: 1
+  name: TV
+internet:
+  id: 2
+  name: Internet
+newspaper:
+  id: 3
+  name: Newspaper

@@ -5,18 +5,22 @@ thomas:
   last_name: Nichols
   email: thomas@nexus10.com
   phone_number: +44..
+  address_id: 1
+  address2_id: 2
 renat:
   id: 2
   first_name: Renat
   last_name: Akhmerov
   email: renat@brainhouse.ru
   phone_number: +7 905 984 2469
+  lead_source_id: 2
 yura:
   id: 3
   first_name: Yury
   last_name: Kotlyarov
   email: yura@brainhouse.ru
   phone_number: +7 905 758 1491
+  lead_source_id: 2
 martin:
   id: 4
   first_name: Martin
