@@ -111,7 +111,7 @@ class CommonControllerTest < Test::Unit::TestCase
     assert_select 'b', 'Occured at:'
     assert_select 'b', 'Activity type:'
     
-    assert_select 'p', /Mon Jan 01 14:00:00 \+0600 2007/
+    assert_select 'p', /Mon Jan 01 14:00:00 \S+ 2007/
     assert_select 'p', /#{activities(:renat_and_yura_call_out).activity_type.display_name}/
     
     assert_select 'h2', 'Contacts'
