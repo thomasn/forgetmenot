@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class GroupTest < Test::Unit::TestCase
-  fixtures :groups, :contacts, :contacts_groups
+  fixtures :groups, :contacts, :contacts_groups, :group_types
 
   def test_truth
     nexus10 = groups(:nexus10)
