@@ -41,13 +41,6 @@ function selectAllOptions() {
 <% form_tag :action => params[:action], :id => @object do %>
 <%= render :partial => 'form' %>
 
-<% 
-referer = []
-if request.env['HTTP_REFERER'] =~ /\/(\w+)\/show\/(\d+)$/
-  referer << $1.classify.constantize.find($2)
-end 
-%>
-
 <% get_single_associations(entity_class_name).each do |association| %>
     <p><label for="<%= association.name %>"><%= association.name.to_s.humanize %></label><br/>
     <%= select('object', 
@@ -64,9 +57,9 @@ end
     <% 
         assigned = @object.send(association.name)
         other = association.class_name.constantize.find(:all)-@object.send(association.name)
-        if !$1.nil? && association.class_name == $1.classify
-          assigned += referer
-          other -= referer
+        if !referer.nil? && association.class_name == referer.class.to_s
+          assigned += [referer]
+          other -= [referer]
         end
     %>
     

@@ -19,4 +19,10 @@ module ApplicationHelper
       }.compact.empty?
     }.compact
   end
+  
+  def referer
+    if request.env['HTTP_REFERER'] =~ /\/(\w+)\/show\/(\d+)$/
+      $1.classify.constantize.find($2)
+    end 
+  end
 end

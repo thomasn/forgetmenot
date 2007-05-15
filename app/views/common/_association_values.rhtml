@@ -4,7 +4,7 @@
     <div id="<%= id %>" style="display: none">
         <%= link_to_function "Hide #{association.name.to_s.humanize}", "$('#{id}').hide(); $('link_#{id}').show()" %><br />
         <%= object.send(association.name).collect {|c| 
-        link_to( c.display_name, :controller => association.name.to_s.pluralize, :action => 'show', :id => c.id) 
+        link_to( c.display_name, :controller => association.class_name.tableize, :action => 'show', :id => c.id) 
         }.join('<br /> ')
         %>
     </div>

@@ -48,7 +48,11 @@ class CommonController < ApplicationController
 
   def destroy
     entity_class.find(params[:id]).destroy
-    redirect_to :action => 'list'
+    unless referer.nil?
+      redirect_to request.env['HTTP_REFERER']
+    else
+      redirect_to :action => 'list'
+    end
   end
   
   private 
