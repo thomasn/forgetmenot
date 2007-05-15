@@ -1,7 +1,13 @@
 <% for object in @objects %>
 <tr>
     <% for column in entity_class.content_columns %>
-    <td><%=h object.send(column.name) %></td>
+        <td>
+        <% if column.name == 'notes' -%>
+            <%= markdown object.send(column.name) -%>
+        <% else %>
+            <%= h object.send(column.name) -%>
+        <% end -%>
+        </td>
     <% end %>
 
     <% get_single_associations(entity_class_name, true).each do |association| %>

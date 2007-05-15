@@ -1,10 +1,16 @@
-<% for column in entity_class.content_columns %>
+<% for column in entity_class.content_columns -%>
 <p>
-    <b><%= column.human_name %>:</b> <%=h @object.send(column.name) %>
+    <% if column.name == 'notes' -%>
+        <b><%= column.human_name %>:</b> 
+        <%= markdown @object.send(column.name) -%>
+    <% else %>
+        <b><%= column.human_name %>:</b> 
+        <%= h @object.send(column.name) -%>
+    <% end -%>
 </p>
 <% end %>
     
-<% get_single_associations(entity_class_name, true).each do |association| %>
+<% get_single_associations(entity_class_name, true).each do |association| -%>
 <p>
     <b><%= association.name.to_s.humanize %>:</b> <%= @object.send(association.name).display_name unless @object.send(association.name).nil? %>
 </p>

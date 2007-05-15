@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'maruku'
+
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
   def get_multiple_associations(class_name, show_when_associated_table_is_empty = false)
@@ -25,4 +28,9 @@ module ApplicationHelper
       $1.classify.constantize.find($2)
     end 
   end
+  
+  def markdown(string)
+    Maruku.new(string).to_html
+  end
+
 end

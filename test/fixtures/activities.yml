@@ -3,23 +3,23 @@ renat_and_yura_call_out:
   id: 1
   time: 2007-01-01 14:00
   activity_type_id: 4
-  description: called Ron about EV site project
+  notes: called Ron about EV site project
 thomas_call_in:
   id: 2
   time: 2007-01-01 14:10
   activity_type_id: 3
-  description: called us to drink more vodka
+  notes: called us to drink more vodka
 martin_email_in:
   id: 3
   time: 2007-01-02 9:00
   activity_type_id: 1
-  description: asked thomas about Forgetmenot progress
+  notes: asked thomas about Forgetmenot progress
 no_contacts_assigned_activity:
   id: 4
   time: 2009-01-02 9:00
   activity_type_id: 4
-  description: without contacts
+  notes: without contacts
 no_activity_type_assigned:
   id: 5
   time: 2009-01-02 9:00
-  description: without activity type
+  notes: without activity type

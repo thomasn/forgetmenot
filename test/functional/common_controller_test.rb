@@ -50,7 +50,7 @@ class CommonControllerTest < Test::Unit::TestCase
     assert_select 'h1', 'Listing activities'
     
     assert_select 'th', 4
-    assert_select 'th', 'Description'
+    assert_select 'th', 'Notes'
     assert_select 'th', 'Activity type'
     assert_select 'th', 'Contacts'
     
@@ -163,7 +163,7 @@ class CommonControllerTest < Test::Unit::TestCase
     assert_not_nil assigns(:object)
     
     assert_select 'h1', 'New activity'
-    assert_select 'input#object_description[type=text]', 1
+    assert_select 'textarea#object_notes', 1
     assert_select 'select#object_activity_type_id', 1
     assert_select 'select#object_activity_type_id option', ActivityType.count + 1
     assert_select 'select#object_activity_type_id option[selected=selected]', 0
@@ -225,13 +225,13 @@ class CommonControllerTest < Test::Unit::TestCase
   def test_create__activity
     count = Activity.count
 
-    post :new, :object => { :description => 'AAA', :activity_type_id => '2', :contact_ids => ["1", "2"] }, :table_name => 'activities'
+    post :new, :object => { :notes => 'AAA', :activity_type_id => '2', :contact_ids => ["1", "2"] }, :table_name => 'activities'
 
     assert_response :redirect
     assert_redirected_to :action => 'list'
 
     assert_equal count + 1, Activity.count
-    a = Activity.find_by_description('AAA')
+    a = Activity.find_by_notes('AAA')
     assert_not_nil a
     assert_not_nil a.activity_type
     assert_equal 2, a.activity_type.id
@@ -243,13 +243,13 @@ class CommonControllerTest < Test::Unit::TestCase
   def test_create__activity_with_empty_associated
     count = Activity.count
 
-    post :new, :object => { :description => 'AAA' }, :table_name => 'activities'
+    post :new, :object => { :notes => 'AAA' }, :table_name => 'activities'
 
     assert_response :redirect
     assert_redirected_to :action => 'list'
 
     assert_equal count + 1, Activity.count
-    a = Activity.find_by_description('AAA')
+    a = Activity.find_by_notes('AAA')
     assert_not_nil a
     assert_nil a.activity_type
     assert_not_nil a.contacts
@@ -296,7 +296,7 @@ class CommonControllerTest < Test::Unit::TestCase
     assert_not_nil assigns(:object)
     
     assert_select 'h1', 'Editing activity'
-    assert_select 'input#object_description[type=text]', 1
+    assert_select 'textarea#object_notes', 1
     assert_select 'select#object_activity_type_id', 1
     assert_select 'select#object_activity_type_id option', ActivityType.count + 1
     assert_select 'select#object_activity_type_id option[selected=selected]', { :text => 'Call out', :count => 1 }
@@ -412,7 +412,7 @@ class CommonControllerTest < Test::Unit::TestCase
     assert_not_nil Activity.find(activities(:renat_and_yura_call_out).id).activity_type
     
     post :edit, :id => activities(:renat_and_yura_call_out).id, 
-      :object => { :description => 'new description', :activity_type_id => ''}, :table_name => 'activities'
+      :object => { :notes => 'new notes', :activity_type_id => ''}, :table_name => 'activities'
     assert_response :redirect
     assert_redirected_to :action => 'show', :id => activities(:renat_and_yura_call_out).id
     
@@ -426,7 +426,7 @@ class CommonControllerTest < Test::Unit::TestCase
     assert_equal 4, Activity.find(activities(:renat_and_yura_call_out).id).activity_type.id
     
     post :edit, :id => activities(:renat_and_yura_call_out).id, 
-      :object => { :description => 'new description', :contact_ids => ["1", "3", "4"], :activity_type_id => '1'}, :table_name => 'activities'
+      :object => { :notes => 'new notes', :contact_ids => ["1", "3", "4"], :activity_type_id => '1'}, :table_name => 'activities'
     assert_response :redirect
     assert_redirected_to :action => 'show', :id => activities(:renat_and_yura_call_out).id
     
@@ -470,5 +470,5 @@ class CommonControllerTest < Test::Unit::TestCase
       Activity.find(activities(:renat_and_yura_call_out).id)
     }
   end
-
+ 
 end
