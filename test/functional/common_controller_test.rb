@@ -66,7 +66,7 @@ class CommonControllerTest < Test::Unit::TestCase
     Activity.find(:all).each { |a|
       assert_select "td a[href=/activities/show/#{a.id}]", { :text => 'Show', :count => 1 }
       assert_select "td a[href=/activities/edit/#{a.id}]", { :text => 'Edit', :count => 1 }
-      assert_select "td a[href=/activities/destroy/#{a.id}]", { :text => 'Destroy', :count => 1 } 
+      assert_select "td a[href=/activities/destroy/#{a.id}]", { :text => 'Delete', :count => 1 } 
     }
   end
 
@@ -95,7 +95,7 @@ class CommonControllerTest < Test::Unit::TestCase
     ActivityType.find(:all).each { |t|
       assert_select "td a[href=/activity_types/show/#{t.id}]", { :text => 'Show', :count => 1 }
       assert_select "td a[href=/activity_types/edit/#{t.id}]", { :text => 'Edit', :count => 1 }
-      assert_select "td a[href=/activity_types/destroy/#{t.id}]", { :text => 'Destroy', :count => 1 } 
+      assert_select "td a[href=/activity_types/destroy/#{t.id}]", { :text => 'Delete', :count => 1 } 
     }
   end
   
@@ -123,7 +123,7 @@ class CommonControllerTest < Test::Unit::TestCase
     get :show, :table_name => 'activities', :id => activities(:no_contacts_assigned_activity).id
     assert_response :success
     assert_template 'show'
-    assert_select 'h2', { :text => 'Contacts', :count => 0 }, 'There is no contacts for empty activity'
+    assert_select 'h2', 'Contacts'
     assert_select 'a[href^="/contacts/show/"]', false
     
     get :show, :table_name => 'activities', :id => activities(:no_activity_type_assigned).id
@@ -151,7 +151,7 @@ class CommonControllerTest < Test::Unit::TestCase
     get :show, :table_name => 'activity_types', :id => activity_types(:no_assigned_activities).id
     assert_response :success
     assert_template 'show'
-    assert_select 'h2', { :text => 'Activities', :count => 0 }, 'There is no activities for empty activity type'
+    assert_select 'h2', 'Activities'
     assert_select 'a[href^="/activities/show/"]', false
   end
 

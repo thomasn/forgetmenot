@@ -4,15 +4,15 @@
 </p>
 <% end %>
     
-<% get_single_associations(entity_class_name).each do |association| %>
+<% get_single_associations(entity_class_name, true).each do |association| %>
 <p>
     <b><%= association.name.to_s.humanize %>:</b> <%= @object.send(association.name).display_name unless @object.send(association.name).nil? %>
 </p>
 <% end %>
     
-<% get_multiple_associations(entity_class_name).each do |association| %>
-<% if @object.send(association.name).size > 0 %>
+<% get_multiple_associations(entity_class_name, true).each do |association| %>
 <h2><%= association.name.to_s.humanize %></h2>
+<%= link_to "New #{association.name.to_s.singularize.humanize.downcase}", { :controller => association.class_name.tableize, :action => 'new' } %>
 <ul>
     <% for c in @object.send(association.name) %>
     <li>
@@ -20,7 +20,6 @@
     </li>
     <% end %>
 </ul>
-<% end %>
 <% end %>
 
 <%= link_to 'Edit', :action => 'edit', :id => @object %> |
