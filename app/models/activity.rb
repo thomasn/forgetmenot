@@ -4,7 +4,7 @@ class Activity < ActiveRecord::Base
   
   def display_name
     result = self.activity_type_id.nil? ? "activity ##{self.id}" : self.activity_type.display_name
-    result += ' at ' + self.occured_at.strftime('%d/%m/%y %H:%M') unless self.occured_at.nil?
+    result += ' at ' + self.time.strftime('%d/%m/%y %H:%M') unless self.time.nil?
     result
   end
 end

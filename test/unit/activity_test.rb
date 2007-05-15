@@ -14,12 +14,12 @@ class ActivityTest < Test::Unit::TestCase
 
   def test_display_name
     a = Activity.find(activities(:renat_and_yura_call_out).id)
-    assert_equal "#{a.activity_type.display_name} at #{a.occured_at.strftime('%d/%m/%y %H:%M')}", a.display_name
+    assert_equal "#{a.activity_type.display_name} at #{a.time.strftime('%d/%m/%y %H:%M')}", a.display_name
     
     a = Activity.create
     assert_equal "activity ##{a.id}", a.display_name
     now = Time.now
-    a = Activity.create :occured_at => now
+    a = Activity.create :time => now
     assert_equal "activity ##{a.id} at #{now.strftime('%d/%m/%y %H:%M')}", a.display_name
     a = Activity.create :activity_type_id => 1
     assert_equal 'Email in', a.display_name

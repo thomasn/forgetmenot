@@ -108,7 +108,7 @@ class CommonControllerTest < Test::Unit::TestCase
     assert_not_nil assigns(:object)
     assert assigns(:object).valid?
 
-    assert_select 'b', 'Occured at:'
+    assert_select 'b', 'Time:'
     assert_select 'b', 'Activity type:'
     
     assert_select 'p', /Mon Jan 01 14:00:00 \S+ 2007/

@@ -1,25 +1,25 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 renat_and_yura_call_out:
   id: 1
-  occured_at: 2007-01-01 14:00
+  time: 2007-01-01 14:00
   activity_type_id: 4
   description: called Ron about EV site project
 thomas_call_in:
   id: 2
-  occured_at: 2007-01-01 14:10
+  time: 2007-01-01 14:10
   activity_type_id: 3
   description: called us to drink more vodka
 martin_email_in:
   id: 3
-  occured_at: 2007-01-02 9:00
+  time: 2007-01-02 9:00
   activity_type_id: 1
   description: asked thomas about Forgetmenot progress
 no_contacts_assigned_activity:
   id: 4
-  occured_at: 2009-01-02 9:00
+  time: 2009-01-02 9:00
   activity_type_id: 4
   description: without contacts
 no_activity_type_assigned:
   id: 5
-  occured_at: 2009-01-02 9:00
+  time: 2009-01-02 9:00
   description: without activity type
