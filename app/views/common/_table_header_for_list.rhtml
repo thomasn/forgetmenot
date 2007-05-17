@@ -1,5 +1,5 @@
 <tr>
-    <% for column in entity_class.content_columns %>
+    <% get_entity_columns(entity_class).each do |column| %>
     <th><%= column.human_name %></th>
     <% end %>
 

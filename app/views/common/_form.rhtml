@@ -1,5 +1,5 @@
 <%= 
-    entity_class.content_columns.collect{ |column| 
+    get_entity_columns(entity_class).collect{ |column| 
         result = "<p><label for=\"object_#{column.name}\">#{column.human_name}</label>"
         result += " <i>Markdown available (<a href=\"http://maruku.rubyforge.org/#features\">see syntax details</a>)</i>" if column.name == 'notes'
         result += "<br/>\n#{input('object', column.name)}"

@@ -1,6 +1,6 @@
 <% for object in @objects %>
 <tr>
-    <% for column in entity_class.content_columns %>
+    <% get_entity_columns(entity_class).each do |column| %>
         <td>
         <% if column.name == 'notes' -%>
             <%= markdown object.send(column.name) -%>

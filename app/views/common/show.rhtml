@@ -1,4 +1,4 @@
-<% for column in entity_class.content_columns -%>
+<% get_entity_columns(entity_class).each do |column| -%>
 <p>
     <% if column.name == 'notes' -%>
         <b><%= column.human_name %>:</b> 
