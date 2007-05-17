@@ -1,5 +1,11 @@
 <h1>Listing <%= entity_human_name.pluralize.downcase  %></h1>
 
+<% if is_entity_hierarchical(entity_class) %>
+<div>
+    <%= get_hierarchy(entity_class) %>
+</div>
+<% end %>
+
 <table>
     <%= render :partial => 'table_header_for_list' %>
     <%= render :partial => 'table_rows_for_list' %>

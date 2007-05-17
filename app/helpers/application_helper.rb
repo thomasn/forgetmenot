@@ -39,4 +39,16 @@ module ApplicationHelper
     Maruku.new(string).to_html
   end
 
+  def is_entity_hierarchical(entity_class)
+    entity_class.columns.collect{ |c| c.name }.include?('parent_id')
+  end
+  
+  def get_hierarchy(entity_class)
+    "<ul>" + entity_class.find(:all, :conditions => 'parent_id IS NULL or parent_id = 0').collect {|root|
+      get_subtree(root) }.join("</ul><ul>") + "</ul>"
+  end
+  
+  def get_subtree(node)
+    %Q{<li>#{node.display_name} #{node.all_children.collect {|child| "<ul>#{get_subtree(child)}</ul>"}.join unless node.lft.nil?}</li>}
+  end
 end
