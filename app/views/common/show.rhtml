@@ -1,3 +1,5 @@
+<%= breadcrumbs(@object) %>
+
 <% get_entity_columns(entity_class).each do |column| -%>
 <p>
     <% if column.name == 'notes' -%>
@@ -9,7 +11,7 @@
     <% end -%>
 </p>
 <% end %>
-    
+  
 <% get_single_associations(entity_class_name, true).each do |association| -%>
 <p>
     <b><%= association.name.to_s.humanize %>:</b> <%= @object.send(association.name).display_name unless @object.send(association.name).nil? %>

@@ -14,7 +14,7 @@ class GroupTest < Test::Unit::TestCase
   def test_display_name
     assert_equal 'Nexus 10', Group.find(groups(:nexus10).id).display_name
     
-    g = Group.create
+    g = Group.create :parent_id => 0, :depth => 0
     assert_equal "group ##{g.id}", g.display_name
   end
   

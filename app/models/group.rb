@@ -4,7 +4,7 @@ class Group < ActiveRecord::Base
   belongs_to :shipping_address, :class_name => 'Address', :foreign_key => 'shipping_address_id'
   belongs_to :group_type
   
-  acts_as_nested_set
+  acts_as_threaded
   
   def display_name
     self.name.nil? ? "group ##{self.id}" : self.name

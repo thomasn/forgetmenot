@@ -12,11 +12,15 @@ class CommonController < ApplicationController
   end
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :destroy, :create, :update ],
-  :redirect_to => { :action => :list }
+  verify :method => :post, :only => [ :destroy], :redirect_to => { :action => :list }
 
   def list
-    @object_pages, @objects = paginate(params[:table_name].to_sym, :per_page => 10)
+    options = { :per_page => 10 }
+    if is_entity_hierarchical(entity_class)
+      options[:conditions] = ["parent_id = ? or id = ?", params[:parent_id], params[:parent_id]] unless params[:parent_id].nil?
+      options[:order] = "root_id, lft"
+    end
+    @object_pages, @objects = paginate(params[:table_name].to_sym, options)
   end
 
   def show
@@ -24,10 +28,16 @@ class CommonController < ApplicationController
   end
 
   def new
+    if is_entity_hierarchical(entity_class) && !params[:object].nil? && params[:object][:parent_id].empty? && request.post?
+      params[:object][:parent_id] = "0" 
+      params[:object][:depth] = "0"
+    end
     @object = entity_class.new(params[:object])
     if request.post? && @object.save
-      flash[:notice] = "#{entity_human_name} was successfully created."
-      redirect_to :action => 'list'
+        #@object.move_to_child_of(entity_class.find(parent_id)) unless parent_id.nil? || parent_id.empty?
+        #entity_class.find(parent_id).add_child(@object) if is_entity_hierarchical(entity_class)
+        flash[:notice] = "#{entity_human_name} was successfully created."
+        redirect_to :action => 'list'
     end
   end
 
@@ -38,6 +48,9 @@ class CommonController < ApplicationController
       get_multiple_associations(entity_class_name).each do |association|
         associated = (association.name.to_s.singularize + '_ids').to_sym
         params[:object][associated] = [] if params[:object][associated].nil?
+      end
+      if is_entity_hierarchical(entity_class)
+        entity_class.find(params[:object].delete(:parent_id)).add_child(@object)
       end
       if @object.update_attributes(params[:object])
         flash[:notice] = "#{entity_human_name} was successfully updated."

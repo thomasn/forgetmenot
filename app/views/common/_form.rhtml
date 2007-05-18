@@ -3,8 +3,15 @@
         result = "<p><label for=\"object_#{column.name}\">#{column.human_name}</label>"
         result += " <i>Markdown available (<a href=\"http://maruku.rubyforge.org/#features\">see syntax details</a>)</i>" if column.name == 'notes'
         result += "<br/>\n#{input('object', column.name)}"
-        result +="</p>\n"
-        result
+    result +="</p>\n"
+    result
     }.join("\n")
-    
 %>
+    
+<% if is_entity_hierarchical(entity_class) %>
+    <p><label for="object_parent_id">Parent <%= entity_human_name.downcase %></label><br/>
+
+    <%=  select('object', 'parent_id', entity_class.find(:all, :order => 'root_id, lft').collect {|e| ["#{('-' * e.depth)}#{e.display_name}", e.id] }, :include_blank => true)%>
+    
+    </p>
+<% end %>

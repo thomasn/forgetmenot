@@ -16,4 +16,8 @@
 
 <br />
 
-<%= link_to "New #{entity_human_name.downcase}", :action => 'new' %>
+<%= 
+    options = { :action => 'new' }
+    options['object[parent_id]'] = params[:parent_id] if params[:parent_id]
+    link_to "New #{entity_human_name.downcase}",  options
+%>
