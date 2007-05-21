@@ -49,7 +49,7 @@ class CommonControllerTest < Test::Unit::TestCase
     
     assert_select 'h1', 'Listing activities'
     
-    assert_select 'th', 4
+    assert_select 'th', 5
     assert_select 'th', 'Notes'
     assert_select 'th', 'Activity type'
     assert_select 'th', 'Contacts'
