@@ -19,7 +19,8 @@ function moveOptions(srcSelect, destSelect, selectedOnly) {
     for (var i = 0; i < srcSelect.options.length; i++) {
         var option = srcSelect.options[i];
         if (selectedOnly == false || option.selected) {
-            destSelect.options.add(option);
+            destSelect.options[destSelect.length] = new Option(option.text, option.value);
+            srcSelect.remove(i);
             i--;
         }
     }
