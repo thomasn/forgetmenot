@@ -33,7 +33,12 @@ class CommonController < ApplicationController
       params[:object][:parent_id] = "0" 
       params[:object][:depth] = "0"
     end
+    
     @object = entity_class.new(params[:object])
+    if @object.respond_to?(:user_id)
+      @object.user_id = session[:user]
+    end
+    
     if request.post? && @object.save
         #@object.move_to_child_of(entity_class.find(parent_id)) unless parent_id.nil? || parent_id.empty?
         #entity_class.find(parent_id).add_child(@object) if is_entity_hierarchical(entity_class)
