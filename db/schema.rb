@@ -2,7 +2,7 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-ActiveRecord::Schema.define(:version => 16) do
+ActiveRecord::Schema.define(:version => 17) do
 
   create_table "activities", :force => true do |t|
     t.column "activity_type_id", :integer
@@ -11,10 +11,16 @@ ActiveRecord::Schema.define(:version => 16) do
     t.column "user_id",          :integer
   end
 
+  add_index "activities", ["activity_type_id"], :name => "index_activities_on_activity_type_id"
+  add_index "activities", ["user_id"], :name => "index_activities_on_user_id"
+
   create_table "activities_contacts", :id => false, :force => true do |t|
     t.column "activity_id", :integer
     t.column "contact_id",  :integer
   end
+
+  add_index "activities_contacts", ["activity_id"], :name => "index_activities_contacts_on_activity_id"
+  add_index "activities_contacts", ["contact_id"], :name => "index_activities_contacts_on_contact_id"
 
   create_table "activity_types", :force => true do |t|
     t.column "name", :string
@@ -48,10 +54,17 @@ ActiveRecord::Schema.define(:version => 16) do
     t.column "lead_source_id", :integer
   end
 
+  add_index "contacts", ["address2_id"], :name => "index_contacts_on_address2_id"
+  add_index "contacts", ["address_id"], :name => "index_contacts_on_address_id"
+  add_index "contacts", ["lead_source_id"], :name => "index_contacts_on_lead_source_id"
+
   create_table "contacts_groups", :id => false, :force => true do |t|
     t.column "contact_id", :integer
     t.column "group_id",   :integer
   end
+
+  add_index "contacts_groups", ["contact_id"], :name => "index_contacts_groups_on_contact_id"
+  add_index "contacts_groups", ["group_id"], :name => "index_contacts_groups_on_group_id"
 
   create_table "group_types", :force => true do |t|
     t.column "name", :string
@@ -74,6 +87,14 @@ ActiveRecord::Schema.define(:version => 16) do
     t.column "depth",               :integer
   end
 
+  add_index "groups", ["billing_address_id"], :name => "index_groups_on_billing_address_id"
+  add_index "groups", ["group_type_id"], :name => "index_groups_on_group_type_id"
+  add_index "groups", ["lft"], :name => "index_groups_on_lft"
+  add_index "groups", ["parent_id"], :name => "index_groups_on_parent_id"
+  add_index "groups", ["rgt"], :name => "index_groups_on_rgt"
+  add_index "groups", ["root_id"], :name => "index_groups_on_root_id"
+  add_index "groups", ["shipping_address_id"], :name => "index_groups_on_shipping_address_id"
+
   create_table "lead_sources", :force => true do |t|
     t.column "name", :string
   end
@@ -88,5 +109,7 @@ ActiveRecord::Schema.define(:version => 16) do
     t.column "remember_token",            :string
     t.column "remember_token_expires_at", :datetime
   end
+
+  add_index "users", ["login", "crypted_password"], :name => "index_users_on_login_and_crypted_password"
 
 end
