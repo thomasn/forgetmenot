@@ -9,6 +9,13 @@
         <%= stylesheet_link_tag 'forgetmenot' %>
     </head>
     <body>
+
+        <div>
+            <% if logged_in? -%>
+            <%= current_user.login %>
+            (<%=link_to 'logout', :controller => 'account', :action => 'logout' -%>)
+            <% end -%>
+        </div>
         
         <div id="main_menu">
             <ul>

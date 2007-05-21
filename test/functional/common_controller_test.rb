@@ -6,7 +6,7 @@ class CommonController; def rescue_action(e) raise e end; end
 
 class CommonControllerTest < Test::Unit::TestCase
   fixtures :groups, :contacts, :contacts_groups, :activities, :activity_types, :activities_contacts
-  
+ 
   def setup
     @controller = CommonController.new
     @request    = ActionController::TestRequest.new
@@ -14,22 +14,22 @@ class CommonControllerTest < Test::Unit::TestCase
   end
 
   def test_index
-    get :index, :table_name => 'activities'
+    get :index, { :table_name => 'activities' }, { :user => 1 }
     assert_response :success
     assert_template 'list'
   end
   
   def test_main_menu
-    get :index, :table_name => 'contacts'
+    get :index, { :table_name => 'contacts' }, { :user => 1 }
     subtest_main_menu 'contacts'
 
-    get :index, :table_name => 'groups'
+    get :index, { :table_name => 'groups' }, { :user => 1 }
     subtest_main_menu 'groups'
     
-    get :index, :table_name => 'activities'
+    get :index, { :table_name => 'activities' }, { :user => 1 }
     subtest_main_menu 'activities'
     
-    get :index, :table_name => 'activity_types'
+    get :index, { :table_name => 'activity_types' }, { :user => 1 }
     subtest_main_menu 'activity_types'
   end
   
@@ -40,7 +40,7 @@ class CommonControllerTest < Test::Unit::TestCase
   end
   
   def test_list__activities
-    get :list, :table_name => 'activities'
+    get :list, { :table_name => 'activities' }, { :user => 1 }
 
     assert_response :success
     assert_template 'list'
@@ -71,7 +71,7 @@ class CommonControllerTest < Test::Unit::TestCase
   end
 
   def test_list__activity_types
-    get :list, :table_name => 'activity_types'
+    get :list, { :table_name => 'activity_types' }, { :user => 1 }
 
     assert_response :success
     assert_template 'list'
@@ -100,7 +100,7 @@ class CommonControllerTest < Test::Unit::TestCase
   end
   
   def test_show__activity
-    get :show, :table_name => 'activities', :id =>  activities(:renat_and_yura_call_out).id
+    get :show, { :table_name => 'activities', :id =>  activities(:renat_and_yura_call_out).id }, { :user => 1 }
 
     assert_response :success
     assert_template 'show'
@@ -120,20 +120,20 @@ class CommonControllerTest < Test::Unit::TestCase
     assert_select 'a[href="/contacts/show/3"]', 'Yury Kotlyarov'
     assert_select 'a[href="/contacts/show/2"]', 'Renat Akhmerov'
 
-    get :show, :table_name => 'activities', :id => activities(:no_contacts_assigned_activity).id
+    get :show, { :table_name => 'activities', :id => activities(:no_contacts_assigned_activity).id }, { :user => 1 }
     assert_response :success
     assert_template 'show'
     assert_select 'h2', 'Contacts'
     assert_select 'a[href^="/contacts/show/"]', false
     
-    get :show, :table_name => 'activities', :id => activities(:no_activity_type_assigned).id
+    get :show, { :table_name => 'activities', :id => activities(:no_activity_type_assigned).id }, { :user => 1 }
     assert_response :success
     assert_template 'show'
     assert_select 'p b', 'Activity type:'
   end
 
   def test_show__activity_type
-    get :show, :table_name => 'activity_types', :id =>  activity_types(:call_out).id
+    get :show, { :table_name => 'activity_types', :id =>  activity_types(:call_out).id }, { :user => 1 }
     assert_response :success
     assert_template 'show'
 
@@ -148,7 +148,7 @@ class CommonControllerTest < Test::Unit::TestCase
     assert_select 'a[href="/activities/show/1"]', activities(:renat_and_yura_call_out).display_name
     assert_select 'a[href="/activities/show/4"]', activities(:no_contacts_assigned_activity).display_name
 
-    get :show, :table_name => 'activity_types', :id => activity_types(:no_assigned_activities).id
+    get :show, { :table_name => 'activity_types', :id => activity_types(:no_assigned_activities).id }, { :user => 1 }
     assert_response :success
     assert_template 'show'
     assert_select 'h2', 'Activities'
@@ -157,7 +157,7 @@ class CommonControllerTest < Test::Unit::TestCase
 
 
   def test_new__activity
-    get :new, :table_name => 'activities'
+    get :new, { :table_name => 'activities' }, { :user => 1 }
     assert_response :success
     assert_template 'new'
     assert_not_nil assigns(:object)
@@ -191,7 +191,7 @@ class CommonControllerTest < Test::Unit::TestCase
   end
 
   def test_new__activity_type
-    get :new, :table_name => 'activity_types'
+    get :new, { :table_name => 'activity_types' }, { :user => 1 }
     assert_response :success
     assert_template 'new'
     assert_not_nil assigns(:object)
@@ -225,7 +225,7 @@ class CommonControllerTest < Test::Unit::TestCase
   def test_create__activity
     count = Activity.count
 
-    post :new, :object => { :notes => 'AAA', :activity_type_id => '2', :contact_ids => ["1", "2"] }, :table_name => 'activities'
+    post :new, { :object => { :notes => 'AAA', :activity_type_id => '2', :contact_ids => ["1", "2"] }, :table_name => 'activities' }, { :user => 1 }
 
     assert_response :redirect
     assert_redirected_to :action => 'list'
@@ -243,7 +243,7 @@ class CommonControllerTest < Test::Unit::TestCase
   def test_create__activity_with_empty_associated
     count = Activity.count
 
-    post :new, :object => { :notes => 'AAA' }, :table_name => 'activities'
+    post :new, { :object => { :notes => 'AAA' }, :table_name => 'activities' }, { :user => 1 }
 
     assert_response :redirect
     assert_redirected_to :action => 'list'
@@ -259,7 +259,7 @@ class CommonControllerTest < Test::Unit::TestCase
   def test_create__activity_type
     count = ActivityType.count
 
-    post :new, :object => { :name => 'AAA', :activity_ids => ["1", "2"] }, :table_name => 'activity_types'
+    post :new, { :object => { :name => 'AAA', :activity_ids => ["1", "2"] }, :table_name => 'activity_types' }, { :user => 1 }
 
     assert_response :redirect
     assert_redirected_to :action => 'list'
@@ -275,7 +275,7 @@ class CommonControllerTest < Test::Unit::TestCase
   def test_create__activity_type_with_empty_associated
     count = ActivityType.count
 
-    post :new, :object => { :name => 'AAA', :activity_ids => [] }, :table_name => 'activity_types'
+    post :new, { :object => { :name => 'AAA', :activity_ids => [] }, :table_name => 'activity_types' }, { :user => 1 }
 
     assert_response :redirect
     assert_redirected_to :action => 'list'
@@ -289,7 +289,7 @@ class CommonControllerTest < Test::Unit::TestCase
   end
   
   def test_edit__activity
-    get :edit, :id => activities(:renat_and_yura_call_out), :table_name => 'activities'
+    get :edit, { :id => activities(:renat_and_yura_call_out), :table_name => 'activities' }, { :user => 1 }
 
     assert_response :success
     assert_template 'edit'
@@ -326,7 +326,7 @@ class CommonControllerTest < Test::Unit::TestCase
   end
 
   def test_edit__activity_with_no_activity_type_assigned
-    get :edit, :id => activities(:no_activity_type_assigned), :table_name => 'activities'
+    get :edit, { :id => activities(:no_activity_type_assigned), :table_name => 'activities' }, { :user => 1 }
 
     assert_response :success
     assert_template 'edit'
@@ -353,7 +353,7 @@ class CommonControllerTest < Test::Unit::TestCase
   end
 
   def test_edit__activity_type
-    get :edit, :id => activity_types(:call_out).id, :table_name => 'activity_types'
+    get :edit, { :id => activity_types(:call_out).id, :table_name => 'activity_types' }, { :user => 1 }
     assert_response :success
     assert_template 'edit'
     assert_not_nil assigns(:object)
@@ -384,7 +384,7 @@ class CommonControllerTest < Test::Unit::TestCase
   end  
   
   def test_edit__activity_type_with_no_assigned_activities
-    get :edit, :id => activity_types(:no_assigned_activities).id, :table_name => 'activity_types'
+    get :edit, { :id => activity_types(:no_assigned_activities).id, :table_name => 'activity_types' }, { :user => 1 }
     assert_response :success
     assert_template 'edit'
     assert_not_nil assigns(:object)
@@ -411,8 +411,8 @@ class CommonControllerTest < Test::Unit::TestCase
     assert_equal 2, Activity.find(activities(:renat_and_yura_call_out).id).contacts.size
     assert_not_nil Activity.find(activities(:renat_and_yura_call_out).id).activity_type
     
-    post :edit, :id => activities(:renat_and_yura_call_out).id, 
-      :object => { :notes => 'new notes', :activity_type_id => ''}, :table_name => 'activities'
+    post :edit, { :id => activities(:renat_and_yura_call_out).id, 
+      :object => { :notes => 'new notes', :activity_type_id => ''}, :table_name => 'activities' }, { :user => 1 }
     assert_response :redirect
     assert_redirected_to :action => 'show', :id => activities(:renat_and_yura_call_out).id
     
@@ -425,8 +425,8 @@ class CommonControllerTest < Test::Unit::TestCase
     assert_not_nil Activity.find(activities(:renat_and_yura_call_out).id).activity_type
     assert_equal 4, Activity.find(activities(:renat_and_yura_call_out).id).activity_type.id
     
-    post :edit, :id => activities(:renat_and_yura_call_out).id, 
-      :object => { :notes => 'new notes', :contact_ids => ["1", "3", "4"], :activity_type_id => '1'}, :table_name => 'activities'
+    post :edit, { :id => activities(:renat_and_yura_call_out).id, 
+      :object => { :notes => 'new notes', :contact_ids => ["1", "3", "4"], :activity_type_id => '1'}, :table_name => 'activities' }, { :user => 1 }
     assert_response :redirect
     assert_redirected_to :action => 'show', :id => activities(:renat_and_yura_call_out).id
     
@@ -438,8 +438,8 @@ class CommonControllerTest < Test::Unit::TestCase
   def test_update__activity_types_with_empty_associated
     assert_equal 2, ActivityType.find(activity_types(:call_out).id).activities.size
     
-    post :edit, :id => activity_types(:call_out).id, 
-      :object => { :name => 'Call blabla' }, :table_name => 'activity_types'
+    post :edit, { :id => activity_types(:call_out).id, 
+      :object => { :name => 'Call blabla' }, :table_name => 'activity_types'}, { :user => 1 }
     assert_response :redirect
     assert_redirected_to :action => 'show', :id => activity_types(:call_out).id
     
@@ -449,8 +449,8 @@ class CommonControllerTest < Test::Unit::TestCase
   def test_update__activities_with_different_associated
     assert_equal 2, ActivityType.find(activity_types(:call_out).id).activities.size
     
-    post :edit, :id => activity_types(:call_out).id,
-      :object => { :name => 'Call blabla', :activity_ids => ["2", "3", "1"] }, :table_name => 'activity_types'
+    post :edit, { :id => activity_types(:call_out).id,
+      :object => { :name => 'Call blabla', :activity_ids => ["2", "3", "1"] }, :table_name => 'activity_types' }, { :user => 1 }
     assert_response :redirect
     assert_redirected_to :action => 'show', :id => activity_types(:call_out).id
     
@@ -462,7 +462,7 @@ class CommonControllerTest < Test::Unit::TestCase
       Activity.find(activities(:renat_and_yura_call_out).id)
     }
 
-    post :destroy, :id => activities(:renat_and_yura_call_out).id, :table_name => 'activities'
+    post :destroy, { :id => activities(:renat_and_yura_call_out).id, :table_name => 'activities' }, { :user => 1 }
     assert_response :redirect
     assert_redirected_to :action => 'list'
 

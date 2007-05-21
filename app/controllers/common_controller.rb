@@ -1,6 +1,7 @@
 class CommonController < ApplicationController
   layout 'forgetmenot'
   include ApplicationHelper
+  before_filter :login_required
   
   helper_method :entity_class_name
   helper_method :entity_class
