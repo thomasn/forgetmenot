@@ -117,10 +117,10 @@ class AccountControllerTest < Test::Unit::TestCase
     User.delete_all
     assert_equal 0, User.count
     
-#    FIXME: it doesn't work, reasons are unknown
-#    get :signup
-#    assert_response :success
-#    assert_template 'signup'
+#   FIXME: it doesn't work, reasons are unknown
+#   get :signup
+#   assert_response :success
+#   assert_template 'signup'
     
     get :index
     assert_response :redirect

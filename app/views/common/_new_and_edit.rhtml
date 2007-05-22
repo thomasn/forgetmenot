@@ -27,7 +27,7 @@ function moveOptions(srcSelect, destSelect, selectedOnly) {
 }
 
 function selectAllOptions() {
-    <% get_multiple_associations(entity_class_name).each do |association| -%>
+    <% @object.get_multiple_associations.each do |association| -%>
     <% select = "select_object_#{association.name.to_s}" -%>
     for (var i = 0; i < $('<%= select %>').options.length; i++) {
     $('<%= select %>').options[i].selected = true;
@@ -42,7 +42,7 @@ function selectAllOptions() {
 <% form_tag :action => params[:action], :id => @object do %>
 <%= render :partial => 'form' %>
 
-<% get_single_associations(entity_class_name).each do |association| %>
+<% @object.get_single_associations.each do |association| %>
     <p><label for="<%= association.name %>"><%= association.name.to_s.humanize %></label><br/>
     <%= select('object', 
             "#{association.name.to_s}_id", 
@@ -50,7 +50,7 @@ function selectAllOptions() {
             { :include_blank => true } ) %></p>
 <% end %>
 
-<% get_multiple_associations(entity_class_name).each do |association| %>
+<% @object.get_multiple_associations.each do |association| %>
 
     <% associated = association.name.to_s %>
     

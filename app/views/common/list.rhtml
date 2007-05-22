@@ -1,6 +1,6 @@
 <h1>Listing <%= entity_human_name.pluralize.downcase  %></h1>
 
-<% if is_entity_hierarchical(entity_class) %>
+<% if entity_class.is_entity_hierarchical %>
 <div>
     <%= get_hierarchy(entity_class) %>
 </div>

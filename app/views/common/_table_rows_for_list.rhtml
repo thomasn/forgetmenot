@@ -1,6 +1,6 @@
 <% for object in @objects %>
 <tr>
-    <% get_entity_columns(entity_class).each do |column| %>
+    <% object.get_entity_columns.each do |column| %>
         <td>
         <% if column.name == 'notes' -%>
             <%= markdown object.send(column.name) -%>
@@ -10,11 +10,11 @@
         </td>
     <% end %>
 
-    <% get_single_associations(entity_class_name, true).each do |association| %>
+    <% object.get_single_associations(true).each do |association| %>
     <td><%= object.send(association.name).display_name unless object.send(association.name).nil? %></td>
     <% end %>
     
-    <% get_multiple_associations(entity_class_name, true).each do |association| %>
+    <% object.get_multiple_associations(true).each do |association| %>
     <%= render :partial => 'association_values', :locals => { :association => association, :object => object }%>
     <% end %>
     

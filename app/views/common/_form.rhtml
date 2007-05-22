@@ -1,5 +1,5 @@
 <%= 
-    get_entity_columns(entity_class).collect{ |column| 
+    @object.get_entity_columns.collect{ |column| 
         result = "<p><label for=\"object_#{column.name}\">#{column.human_name}</label>"
         result += " <i>Markdown available (<a href=\"http://maruku.rubyforge.org/#features\">see syntax details</a>)</i>" if column.name == 'notes'
         result += "<br/>\n#{input('object', column.name)}"
@@ -8,7 +8,7 @@
     }.join("\n")
 %>
     
-<% if is_entity_hierarchical(entity_class) %>
+<% if entity_class.is_entity_hierarchical %>
     <p><label for="object_parent_id">Parent <%= entity_human_name.downcase %></label><br/>
 
     <%=  select('object', 'parent_id', entity_class.find(:all, :order => 'root_id, lft').collect {|e| ["#{('-' * e.depth)}#{e.display_name}", e.id] }, :include_blank => true)%>

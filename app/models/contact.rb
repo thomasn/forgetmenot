@@ -4,6 +4,8 @@ class Contact < ActiveRecord::Base
   belongs_to :address
   belongs_to :address2, :class_name => 'Address', :foreign_key => 'address2_id'
   belongs_to :lead_source
+
+  acts_as_ferret
   
   def display_name
     !self.first_name.nil? || !self.last_name.nil? ? "#{self.first_name} #{self.last_name}".strip : "contact ##{self.id}"

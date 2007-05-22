@@ -5,8 +5,4 @@ class Group < ActiveRecord::Base
   belongs_to :group_type
   
   acts_as_threaded
-  
-  def display_name
-    self.name.nil? ? "group ##{self.id}" : self.name
-  end
 end
