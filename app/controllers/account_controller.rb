@@ -1,12 +1,16 @@
 class AccountController < ApplicationController
   # If you want "remember me" functionality, add this before_filter to Application Controller
-  before_filter :login_from_cookie
+  before_filter :redirect_to_signup_if_no_users, :except => ['signup', 'logout']
   before_filter :login_required, :only => ['signup'] if User.count > 0
+  before_filter :login_from_cookie, :except => ['signup']
 
   # say something nice, you goof!  something sweet.
   def index
-    redirect_to(:action => 'signup') unless logged_in? || User.count > 0
-    redirect_to '/'
+    if logged_in?
+      redirect_to '/'
+    else
+      redirect_to :action => 'login'
+    end
   end
 
   def login
@@ -39,5 +43,12 @@ class AccountController < ApplicationController
     reset_session
     flash[:notice] = "You have been logged out."
     redirect_back_or_default(:controller => '/account', :action => 'index')
+  end
+  
+  def redirect_to_signup_if_no_users
+    return true if User.count > 0
+    
+    redirect_to :action => 'signup'
+    return false
   end
 end

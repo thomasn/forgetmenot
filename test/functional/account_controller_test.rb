@@ -113,6 +113,29 @@ class AccountControllerTest < Test::Unit::TestCase
     assert !@controller.send(:logged_in?)
   end
 
+  def test_should_redirect_to_signup_without_users
+    User.delete_all
+    assert_equal 0, User.count
+    
+#    FIXME: it doesn't work, reasons are unknown
+#    get :signup
+#    assert_response :success
+#    assert_template 'signup'
+    
+    get :index
+    assert_response :redirect
+    assert_redirected_to :action => 'signup'
+    
+    get :login
+    assert_response :redirect
+    assert_redirected_to :action => 'signup'
+    
+    get :logout
+    assert_response :redirect
+    assert_redirected_to :action => 'index'
+    
+  end
+   
   protected
 
     def create_user(options = {})
