@@ -8,7 +8,7 @@
     }.join("\n")
 %>
     
-<% if entity_class.is_entity_hierarchical %>
+<% if entity_class.hierarchical? %>
     <p><label for="object_parent_id">Parent <%= entity_human_name.downcase %></label><br/>
 
     <%=  select('object', 'parent_id', entity_class.find(:all, :order => 'root_id, lft').collect {|e| ["#{('-' * e.depth)}#{e.display_name}", e.id] }, :include_blank => true)%>

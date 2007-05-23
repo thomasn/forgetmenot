@@ -32,17 +32,21 @@ class ActiveRecord::Base
     content_columns.select {|c| !SKIP_COLUMN_LIST.include?(c.name)}
   end  
 
-  def is_entity_hierarchical
-    self.class.is_entity_hierarchical
+  def hierarchical?
+    self.class.hierarchical?
   end
   
-  def self.is_entity_hierarchical
+  def self.hierarchical?
     respond_to? :parent_id
   end
   
-  def is_entity_searchable
-    !self.class.instance_methods.find {|m| m =~ /ferret/}.nil?
+  def searchable?
+    self.class.searchable?
   end
-  
+
+  def self.searchable?
+    !instance_methods.find {|m| m =~ /ferret/}.nil?
+  end
+
 end
 

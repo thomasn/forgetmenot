@@ -36,7 +36,7 @@ module ApplicationHelper
   end
   
   def breadcrumbs(object)
-    return "" unless object.is_entity_hierarchical && !object.lft.nil?
+    return "" unless object.hierarchical? && !object.lft.nil?
     (entity_class.find(:all, { :conditions => "root_id = #{object.root_id} AND (#{object.lft} BETWEEN lft AND rgt)", :order => "lft" }) - [object]).collect { |e|
       link_to e.display_name, :id => e.id
     }.push(object.display_name).join(" > ")

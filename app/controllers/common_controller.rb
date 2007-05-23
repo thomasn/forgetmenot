@@ -17,7 +17,7 @@ class CommonController < ApplicationController
 
   def list
     options = { :per_page => 10 }
-    if entity_class.is_entity_hierarchical
+    if entity_class.hierarchical?
       options[:conditions] = ["parent_id = ? or id = ?", params[:parent_id], params[:parent_id]] unless params[:parent_id].nil?
       options[:order] = "root_id, lft"
     end
@@ -29,7 +29,7 @@ class CommonController < ApplicationController
   end
 
   def new
-    if entity_class.is_entity_hierarchical && !params[:object].nil? && params[:object][:parent_id].empty? && request.post?
+    if entity_class.hierarchical? && !params[:object].nil? && params[:object][:parent_id].empty? && request.post?
       params[:object][:parent_id] = "0" 
       params[:object][:depth] = "0"
     end
@@ -53,7 +53,7 @@ class CommonController < ApplicationController
         associated = (association.name.to_s.singularize + '_ids').to_sym
         params[:object][associated] = [] if params[:object][associated].nil?
       end
-      if @object.is_entity_hierarchical
+      if @object.hierarchical?
         entity_class.find(params[:object].delete(:parent_id)).add_child(@object)
       end
       if @object.update_attributes(params[:object])
