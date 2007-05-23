@@ -7,6 +7,8 @@ class CommonController < ApplicationController
   helper_method :entity_class
   helper_method :entity_human_name
 
+  OBJECTS_PER_PAGE = 10
+  
   def index
     list
     render :action => 'list'
@@ -16,12 +18,28 @@ class CommonController < ApplicationController
   verify :method => :post, :only => [ :destroy], :redirect_to => { :action => :list }
 
   def list
-    options = { :per_page => 10 }
+    options = { :per_page => OBJECTS_PER_PAGE }
     if entity_class.hierarchical?
       options[:conditions] = ["parent_id = ? or id = ?", params[:parent_id], params[:parent_id]] unless params[:parent_id].nil?
       options[:order] = "root_id, lft"
     end
     @object_pages, @objects = paginate(params[:table_name].to_sym, options)
+  end
+
+  def search
+    if params[:query].nil? || params[:query].strip.empty?
+      redirect_to :action => 'list'
+      return
+    end
+     
+    page = (params[:page] ||= 1).to_i
+    
+    offset = (page - 1) * OBJECTS_PER_PAGE
+
+    @objects = entity_class.find_by_contents(params[:query], { :offset => offset, :limit => OBJECTS_PER_PAGE })
+    @object_pages = Paginator.new(self, @objects.total_hits, OBJECTS_PER_PAGE, page)
+
+    render :action => 'list'
   end
 
   def show

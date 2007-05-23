@@ -68,6 +68,11 @@ class CommonControllerTest < Test::Unit::TestCase
       assert_select "td a[href=/activities/edit/#{a.id}]", { :text => 'Edit', :count => 1 }
       assert_select "td a[href=/activities/destroy/#{a.id}]", { :text => 'Delete', :count => 1 } 
     }
+    
+    assert_select 'tr', Activity.count + 1
+    
+    assert_select 'input#query', false
+    assert_select 'input[value=Search]', false
   end
 
   def test_list__activity_types
@@ -97,6 +102,8 @@ class CommonControllerTest < Test::Unit::TestCase
       assert_select "td a[href=/activity_types/edit/#{t.id}]", { :text => 'Edit', :count => 1 }
       assert_select "td a[href=/activity_types/destroy/#{t.id}]", { :text => 'Delete', :count => 1 } 
     }
+    
+    assert_select 'tr', ActivityType.count + 1
   end
   
   def test_show__activity
@@ -470,5 +477,46 @@ class CommonControllerTest < Test::Unit::TestCase
       Activity.find(activities(:renat_and_yura_call_out).id)
     }
   end
- 
+
+  def test_list__for_contacts_search
+    get :list, { :table_name => 'contacts' }, { :user => 1 }
+
+    assert_response :success
+    assert_template 'list'
+
+    assert_select 'input#query', 1
+    assert_select 'input[value=Search]', 1
+  end
+
+  def test_search_contacts
+    Contact.rebuild_index
+    post :search, { :table_name => 'contacts', :query => 'Renat' }, { :user => 1 }
+    assert_response :success
+    assert_template 'list'
+    assert_select 'div', 'Found 1 contact'
+    assert_select 'input#query[value=Renat]', 1
+    assert_select 'input[value=Search]', 1
+    assert_select 'tr', 2
+    assert_select 'td', 'Renat'
+    
+    post :search, { :table_name => 'contacts', :query => '*e*' }, { :user => 1 }
+    assert_response :success
+    assert_template 'list'
+    assert_select 'div', 'Found 3 contacts'
+    assert_select 'input#query[value=*e*]', 1
+    assert_select 'input[value=Search]', 1
+    assert_select 'tr', 4
+    
+    post :search, { :table_name => 'contacts', :query => 'GGGGG' }, { :user => 1 }
+    assert_response :success
+    assert_template 'list'
+    assert_select 'div', 'Found 0 contacts'
+    assert_select 'input#query[value=GGGGG]', 1
+    assert_select 'input[value=Search]', 1
+    assert_select 'tr', 1
+    
+    post :search, { :table_name => 'contacts' }, { :user => 1 }
+    assert_response :redirect
+    assert_redirected_to :action => 'list'
+  end
 end

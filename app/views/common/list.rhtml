@@ -2,7 +2,15 @@
 
 <% if entity_class.searchable? %>
     <div>
-    
+        <% form_tag :action => 'search' do %>
+            <%= text_field_tag('query', params[:query]) %>
+            <%= submit_tag 'Search' %>
+        <% end %>
+        <% if params[:action] == 'search' %>
+            <div>
+            Found <%= pluralize(@objects.total_hits, entity_human_name.downcase) %>
+            </div>
+        <% end %>
     </div>
 <% end %>
 
@@ -17,8 +25,8 @@
     <%= render :partial => 'table_rows_for_list' %>
 </table>
 
-<%= link_to 'Previous page', { :page => @object_pages.current.previous } if @object_pages.current.previous %>
-<%= link_to 'Next page', { :page => @object_pages.current.next } if @object_pages.current.next %> 
+<%= link_to 'Previous page', { :page => @object_pages.current.previous, :query => params[:query] } if @object_pages.current.previous %>
+<%= link_to 'Next page', { :page => @object_pages.current.next, :query => params[:query]  } if @object_pages.current.next %> 
 
 <br />
 
