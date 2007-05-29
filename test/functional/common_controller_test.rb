@@ -49,7 +49,7 @@ class CommonControllerTest < Test::Unit::TestCase
     
     assert_select 'h1', 'Listing activities'
     
-    assert_select 'th', 5
+    assert_select 'th', 6
     assert_select 'th', 'Notes'
     assert_select 'th', 'Activity type'
     assert_select 'th', 'Contacts'
@@ -104,6 +104,18 @@ class CommonControllerTest < Test::Unit::TestCase
     }
     
     assert_select 'tr', ActivityType.count + 1
+    
+    # there are no any hierarchies here
+    assert_select "div:not(#main_menu)>ul", false
+  end
+  
+  def test_list__hierarchy_4_groups
+    get :list, { :table_name => 'groups' }, { :user => 1 }
+
+    assert_response :success
+    assert_template 'list'
+  
+    assert_select "div:not(#main_menu)>ul>li>ul>li>ul>li>a", 1
   end
   
   def test_show__activity
@@ -519,4 +531,67 @@ class CommonControllerTest < Test::Unit::TestCase
     assert_response :redirect
     assert_redirected_to :action => 'list'
   end
+  
+  def test_list__contacts_for_emailing
+    get :list, { :table_name => 'contacts' }, { :user => 1 }
+
+    assert_response :success
+    assert_template 'list'
+
+    assert_select 'input[type=checkbox]', [ Contact.count, 10 ].min
+    assert_select 'input[type=submit][value=Send email]'
+  end
+  
+  def test_edit__group
+    get :edit, { :id => groups(:brainhouse), :table_name => 'groups' }, { :user => 1 }
+
+    assert_response :success
+    assert_template 'edit'
+    assert_not_nil assigns(:object)
+    
+    assert_select 'h1', 'Editing group'
+
+    assert_select 'textarea#object_notes', 1
+
+    assert_select 'select#object_parent_id', 1
+    assert_select 'select#object_parent_id option', Group.count + 1
+    assert_select 'select#object_parent_id option', { :text => '-BrainHouse CRM Division', :count => 1 }
+
+    assert_select 'select#object_group_type_id', 1
+    assert_select 'select#object_group_type_id option', GroupType.count + 1
+    assert_select 'select#object_group_type_id option[selected=selected]', { :text => 'Prospect', :count => 1 }
+    
+    assert_select 'select#object_billing_address_id', 1
+    assert_select 'select#object_billing_address_id option', Address.count + 1
+    assert_select 'select#object_billing_address_id option[selected=selected]', { :text => 'address #2', :count => 1 }
+    
+    assert_select 'select#object_shipping_address_id', 1
+    assert_select 'select#object_shipping_address_id option', Address.count + 1
+    assert_select 'select#object_shipping_address_id option[selected=selected]',
+      { :text => 'Victoria Street, 27, Worcester, Worcestershire, 11111, UK', :count => 1 }
+    
+    assert_select 'h2', 'Manage Contacts'
+    
+    assert_select 'h3', 'Assigned Contacts'
+    assert_select 'select#select_object_contacts[multiple=multiple]', 1
+    assert_select 'select#select_object_contacts[multiple=multiple] option', groups(:brainhouse).contacts.size
+    assert_select 'select#select_object_contacts[multiple=multiple] option', 'Yury Kotlyarov'
+    assert_select 'select#select_object_contacts[multiple=multiple] option', 'Renat Akhmerov'
+    
+    assert_select "input[type=button][value=&lt; Add selected][onclick=?]", /addSelected\('contacts'\);/, :count => 1
+    assert_select "input[type=button][value=&lt;&lt; Add all][onclick=?]", /addAll\('contacts'\);/, :count => 1
+    assert_select "input[type=button][value=Remove selected &gt;][onclick=?]", /removeSelected\('contacts'\);/, :count => 1
+    assert_select "input[type=button][value=Remove all &gt;&gt;][onclick=?]", /removeAll\('contacts'\);/, :count => 1
+    
+    assert_select 'h3', 'Other Contacts'
+    assert_select 'select#select_other_contacts[multiple=multiple]', 1
+    assert_select 'select#select_other_contacts[multiple=multiple] option', Contact.count-groups(:brainhouse).contacts.size
+    assert_select 'select#select_other_contacts[multiple=multiple] option[selected=selected]', 0
+
+    assert_select 'input[type=submit][onclick=selectAllOptions()][value=Update]', 1
+    
+    assert_select 'a[href=/groups/show/1]', 'Show', :count => 1
+    assert_select 'a[href=/groups/list]', 'Back', :count => 1
+  end
+  
 end

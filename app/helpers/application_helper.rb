@@ -30,9 +30,9 @@ module ApplicationHelper
   
   def get_subtree(node)
     content_tag(:li, 
-      (link_to(node.display_name, :action => 'list', :parent_id => node.id) 
-        + node.direct_children.collect {|child| 
-          content_tag(:ul, get_subtree(child))}.join unless node.lft.nil?))
+      %Q{#{link_to node.display_name, :controller => node.class.name.tableize, :action => 'list', :parent_id => node.id} \
+      #{node.direct_children.collect {|child| content_tag(:ul, get_subtree(child))}.join}}.gsub(/\s{2,}/, "")
+    )
   end
   
   def breadcrumbs(object)

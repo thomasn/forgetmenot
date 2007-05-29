@@ -43,6 +43,21 @@ class GroupTest < Test::Unit::TestCase
     assert_not_nil g.group_type
     assert_equal 2, g.group_type.id
   end
+
+  def test_hierarchical
+    assert Group.hierarchical?
+    assert Group.find(:first).hierarchical?
+  end
+
+  def test_searchable
+    assert !Group.find(:first).searchable?
+    assert !Group.searchable?
+  end
+
+  def test_emailable
+    assert !Group.find(:first).emailable?
+    assert !Group.emailable?
+  end
   
   def subtest_contact(contact)
     assert_instance_of Contact, contact

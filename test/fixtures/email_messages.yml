@@ -1,0 +1,10 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+email_to_yura_and_renat:
+  id: 1
+  subject: forgetmenot
+  body: When will you finish forgetmenot?
+  activity_id: 1
+email_to_thomas:
+  id: 2
+  subject: "Re: forgetmenot"
+  body: already done!

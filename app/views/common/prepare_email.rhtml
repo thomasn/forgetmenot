@@ -1,0 +1,10 @@
+<% form_for :email_message, @email_message, :url => { :action => "send_email" } do |f| %>
+
+    <% @contact_ids.each { |id| %>
+        <%= hidden_field_tag 'contact_ids[]', id %>
+    <% } %>
+    To: <%= @to %> <br />
+    Subject: <%= f.text_field :subject %> <br />
+    Body : <%= f.text_area :body %> <br />
+    <%= submit_tag 'Send' %>
+<% end %>

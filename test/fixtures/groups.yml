@@ -5,9 +5,54 @@ brainhouse:
   shipping_address_id: 1
   billing_address_id: 2
   group_type_id: 2
+  root_id: 1
+  parent_id: 
+  lft: 1
+  rgt: 8
+  depth: 0
+brainhouse_crm_division:
+  id: 4
+  name: BrainHouse CRM Division
+  root_id: 1
+  parent_id: 1
+  lft: 2
+  rgt: 3
+  depth: 1
+brainhouse_cms_division:
+  id: 5
+  name: BrainHouse CMS Division
+  root_id: 1
+  parent_id: 1
+  lft: 4
+  rgt: 7
+  depth: 1
+brainhouse_railfrog_cms_team:
+  id: 6
+  name: Railfrog CMS Team
+  root_id: 1
+  parent_id: 5
+  lft: 5
+  rgt: 6
+  depth: 2
+  
 nexus10:
   id: 2
   name: Nexus 10
+  lft: 1
+  rgt: 4
+  root_id: 2
+  parent_id:
+  depth: 0
+nexus10_forgetmenot_project:
+  id: 7
+  name: Forgetmenot Project
+  root_id: 2
+  parent_id: 2
+  lft: 2
+  rgt: 3
+  depth: 2
+  
 empty_group:
   id: 3
   name: Empty
+  depth: 0

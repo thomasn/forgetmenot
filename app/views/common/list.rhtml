@@ -15,15 +15,23 @@
 <% end %>
 
 <% if entity_class.hierarchical? %>
-<div>
-    <%= get_hierarchy(entity_class) %>
-</div>
+    <div>
+      <%= get_hierarchy(entity_class) %>
+    </div>
 <% end %>
 
-<table>
-    <%= render :partial => 'table_header_for_list' %>
-    <%= render :partial => 'table_rows_for_list' %>
-</table>
+<% form_tag :action => 'prepare_email' do %>
+    <% if entity_class.emailable? %>
+        <div>
+        <%= submit_tag 'Send email' %>
+        </div>
+    <% end %>
+
+    <table>
+        <%= render :partial => 'table_header_for_list' %>
+        <%= render :partial => 'table_rows_for_list' %>
+    </table>
+<% end %>
 
 <%= link_to 'Previous page', { :page => @object_pages.current.previous, :query => params[:query] } if @object_pages.current.previous %>
 <%= link_to 'Next page', { :page => @object_pages.current.next, :query => params[:query]  } if @object_pages.current.next %> 

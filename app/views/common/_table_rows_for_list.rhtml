@@ -1,5 +1,10 @@
-<% for object in @objects %>
+<% for object in @objects -%>
 <tr>
+    <% if entity_class.emailable? -%>
+    <td>
+        <%= check_box_tag "contact_ids[]", object.id %>
+    </td>
+    <% end %>
     <% object.get_entity_columns.each do |column| %>
         <td>
         <% if column.name == 'notes' -%>

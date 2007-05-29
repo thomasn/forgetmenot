@@ -1,4 +1,8 @@
 <tr>
+    <% if entity_class.emailable? %>
+    <th>&nbsp;</th>
+    <% end %>
+    
     <% entity_class.get_entity_columns.each do |column| %>
     <th><%= column.human_name %></th>
     <% end %>

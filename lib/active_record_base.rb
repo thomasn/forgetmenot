@@ -29,7 +29,7 @@ class ActiveRecord::Base
   end  
   
   def self.get_entity_columns
-    content_columns.select {|c| !SKIP_COLUMN_LIST.include?(c.name)}
+    content_columns.select { |c| !SKIP_COLUMN_LIST.include?(c.name) }
   end  
 
   def hierarchical?
@@ -37,7 +37,7 @@ class ActiveRecord::Base
   end
   
   def self.hierarchical?
-    respond_to? :parent_id
+    columns.find { |c| c.name == 'parent_id' } ? true : false
   end
   
   def searchable?
@@ -45,7 +45,15 @@ class ActiveRecord::Base
   end
 
   def self.searchable?
-    !instance_methods.find {|m| m =~ /ferret/}.nil?
+    !instance_methods.find { |m| m =~ /ferret/ }.nil?
+  end
+
+  def emailable?
+    self.class.emailable?
+  end
+  
+  def self.emailable?
+    content_columns.find { |c| c.name == 'email' } ? true : false
   end
 
 end

@@ -15,7 +15,7 @@ class CommonController < ApplicationController
   end
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :destroy], :redirect_to => { :action => :list }
+  verify :method => :post, :only => [ :destroy ], :redirect_to => { :action => :list }
 
   def list
     options = { :per_page => OBJECTS_PER_PAGE }
@@ -90,6 +90,26 @@ class CommonController < ApplicationController
     end
   end
   
+  def prepare_email
+    @contact_ids = params[:contact_ids]
+    @email_message = EmailMessage.new
+    @to = Contact.find(params[:contact_ids], :order => 'email').collect { |c| c.email }.join(', ')
+  end
+  
+  def send_email
+    params[:activity] = { :user_id => session[:user] }
+    params[:activity][:activity_type_id] = ActivityType.find_or_create_by_name('Email out').id
+    params[:activity][:contact_ids] = params[:contact_ids]
+    activity = Activity.create(params[:activity])
+
+    params[:email_message][:activity_id] = activity.id
+    email_message = EmailMessage.create(params[:email_message])
+    ContactMailer.deliver_send(email_message)
+    
+    flash[:notice] = "The message was successfully sent to #{email_message.activity.contacts.collect { |c| c.email }.join(', ')}."
+    redirect_to :action => 'list'
+  end
+
   private 
   
   def entity_name

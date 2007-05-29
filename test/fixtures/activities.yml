@@ -23,3 +23,13 @@ no_activity_type_assigned:
   id: 5
   time: 2009-01-02 9:00
   notes: without activity type
+renat_and_yura_email_out:
+  id: 6
+  time: 2007-05-23 13:17
+  activity_type_id: 2
+  notes: about forgetmenot
+thomas_email_out:
+  id: 7
+  time: 2007-05-23 15:00
+  activity_type_id: 2
+  notes: 

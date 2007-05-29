@@ -57,6 +57,21 @@ class ContactTest < Test::Unit::TestCase
     assert_equal 2, yura.lead_source.id
   end
   
+  def test_hierarchical
+    assert !Contact.find(:first).hierarchical?
+    assert !Contact.hierarchical?
+  end
+
+  def test_searchable
+    assert Contact.find(:first).searchable?
+    assert Contact.searchable?
+  end
+
+  def test_emailable
+    assert Contact.find(:first).emailable?
+    assert Contact.emailable?
+  end
+  
   def subtest_group(group)
     assert_instance_of Group, group
     assert_valid group

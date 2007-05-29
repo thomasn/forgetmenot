@@ -10,6 +10,10 @@ thomas_call_in:
 martin_email_in:
   activity_id: 3
   contact_id: 4
-
-
+renat_mail_out:
+  activity_id: 6
+  contact_id: 2
+yura_mail_out:
+  activity_id: 6
+  contact_id: 3
 
