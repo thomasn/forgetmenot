@@ -19,6 +19,14 @@
     <td><%= object.send(association.name).display_name unless object.send(association.name).nil? %></td>
     <% end %>
     
+    <% object.get_has_many_through_associations(true).each do |association| %>
+    <td>
+    <%= object.send(association.name).collect { |c|
+            link_to(c.display_name, :controller => params[:table_name], :action => 'list', :tag => c.name)
+        }.join('<br />') %>
+    </td>
+    <% end %>
+    
     <% object.get_multiple_associations(true).each do |association| %>
     <%= render :partial => 'association_values', :locals => { :association => association, :object => object }%>
     <% end %>

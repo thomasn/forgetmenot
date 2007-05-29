@@ -207,6 +207,8 @@ class CommonControllerTest < Test::Unit::TestCase
     
     assert_select 'a[href=/activities/show]', 'Show', :count => 1
     assert_select 'a[href=/activities/list]', 'Back', :count => 1
+
+    assert_select 'input#object_tag_list', false
   end
 
   def test_new__activity_type
@@ -238,6 +240,8 @@ class CommonControllerTest < Test::Unit::TestCase
     
     assert_select 'a[href=/activity_types/show]', 'Show', :count => 1
     assert_select 'a[href=/activity_types/list]', 'Back', :count => 1
+
+    assert_select 'input#object_tag_list', false
   end  
   
 
@@ -400,6 +404,8 @@ class CommonControllerTest < Test::Unit::TestCase
     
     assert_select 'a[href=/activity_types/show/4]', 'Show', :count => 1
     assert_select 'a[href=/activity_types/list]', 'Back', :count => 1
+    
+    assert_select 'input#object_tag_list', false
   end  
   
   def test_edit__activity_type_with_no_assigned_activities
@@ -592,6 +598,8 @@ class CommonControllerTest < Test::Unit::TestCase
     
     assert_select 'a[href=/groups/show/1]', 'Show', :count => 1
     assert_select 'a[href=/groups/list]', 'Back', :count => 1
+    
+    assert_select 'input#object_tag_list', 1
   end
   
 end

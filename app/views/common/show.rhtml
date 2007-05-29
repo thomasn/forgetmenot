@@ -15,9 +15,16 @@
 <% @object.get_single_associations(true).each do |association| -%>
 <p>
     <b><%= association.name.to_s.humanize %>:</b> <%= @object.send(association.name).display_name unless @object.send(association.name).nil? %>
-</p>
-<% end %>
+    </p>
+    <% end %>
     
+<% @object.get_has_many_through_associations(true).each do |association| %>
+    <b>Tags:</b>
+    <%= @object.send(association.name).collect { |c|
+            link_to(c.display_name, :controller => params[:table_name], :action => 'list', :tag => c.name)
+        }.join(', ') %>
+<% end %>
+
 <% @object.get_multiple_associations(true).each do |association| %>
 <h2><%= association.name.to_s.humanize %></h2>
 <%= link_to "New #{association.name.to_s.singularize.humanize.downcase}", { :controller => association.class_name.tableize, :action => 'new' } %>

@@ -5,4 +5,5 @@ class Group < ActiveRecord::Base
   belongs_to :group_type
   
   acts_as_threaded
+  acts_as_taggable
 end

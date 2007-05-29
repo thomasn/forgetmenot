@@ -20,6 +20,13 @@
     </div>
 <% end %>
 
+<% if entity_class.taggable? %>
+    <div>
+      Tags: <%= entity_class.tag_counts.collect { |tag| "#{link_to tag.name, :controller => params[:table_name], :action => 'list', :tag => tag.name} (#{tag.count})" }.join(', ') %>
+    </div>
+<% end %>
+
+
 <% form_tag :action => 'prepare_email' do %>
     <% if entity_class.emailable? %>
         <div>

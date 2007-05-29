@@ -26,7 +26,7 @@ class ContactMailerTest < Test::Unit::TestCase
     @expected.body    = email_message.body
     @expected.date    = Time.now
     
-    assert_equal @expected.encoded, ContactMailer.create_send(email_message).encoded
+    assert_equal @expected.encoded, ContactMailer.create_email(email_message, @expected.date).encoded
   end
 
   private

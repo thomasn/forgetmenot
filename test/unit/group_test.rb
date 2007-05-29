@@ -58,7 +58,12 @@ class GroupTest < Test::Unit::TestCase
     assert !Group.find(:first).emailable?
     assert !Group.emailable?
   end
-  
+
+  def test_taggable
+    assert Group.find(:first).taggable?
+    assert Group.taggable?
+  end
+
   def subtest_contact(contact)
     assert_instance_of Contact, contact
     assert_valid contact

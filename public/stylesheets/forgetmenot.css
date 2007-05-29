@@ -110,3 +110,13 @@ div.progressBar div.background {
   background: #fff;
 }
 
+table {
+  border: 2px solid #cfcfcf;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+td, th {
+  border: 1px solid #cfcfcf;
+  padding: .1em .25em;
+}

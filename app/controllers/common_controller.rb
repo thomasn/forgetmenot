@@ -18,12 +18,21 @@ class CommonController < ApplicationController
   verify :method => :post, :only => [ :destroy ], :redirect_to => { :action => :list }
 
   def list
-    options = { :per_page => OBJECTS_PER_PAGE }
-    if entity_class.hierarchical?
-      options[:conditions] = ["parent_id = ? or id = ?", params[:parent_id], params[:parent_id]] unless params[:parent_id].nil?
-      options[:order] = "root_id, lft"
+    if params[:tag]
+      page = (params[:page] ||= 1).to_i
+      offset = (page - 1) * OBJECTS_PER_PAGE
+
+      objects = entity_class.find_tagged_with(params[:tag])
+      @object_pages = Paginator.new(self, objects.size, OBJECTS_PER_PAGE, page)
+      @objects = objects[offset...(offset + OBJECTS_PER_PAGE)]
+    else
+      options = { :per_page => OBJECTS_PER_PAGE }
+      if entity_class.hierarchical?
+        options[:conditions] = ["parent_id = ? or id = ?", params[:parent_id], params[:parent_id]] unless params[:parent_id].nil?
+        options[:order] = "root_id, lft"
+      end
+      @object_pages, @objects = paginate(params[:table_name].to_sym, options)
     end
-    @object_pages, @objects = paginate(params[:table_name].to_sym, options)
   end
 
   def search

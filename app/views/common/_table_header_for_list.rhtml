@@ -7,11 +7,9 @@
     <th><%= column.human_name %></th>
     <% end %>
 
-    <% entity_class.get_single_associations(true).each do |association| %>
-    <th><%= association.name.to_s.humanize %></th>
-    <% end %>
-    
-    <% entity_class.get_multiple_associations(true).each do |association| %>
+    <% (entity_class.get_single_associations(true) + 
+        entity_class.get_has_many_through_associations(true) + 
+        entity_class.get_multiple_associations(true)).each do |association| %>
     <th><%= association.name.to_s.humanize %></th>
     <% end %>
 </tr>

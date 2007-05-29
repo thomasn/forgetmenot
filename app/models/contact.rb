@@ -6,6 +6,7 @@ class Contact < ActiveRecord::Base
   belongs_to :lead_source
 
   acts_as_ferret
+  acts_as_taggable
   
   def display_name
     !self.first_name.nil? || !self.last_name.nil? ? "#{self.first_name} #{self.last_name}".strip : "contact ##{self.id}"

@@ -2,7 +2,7 @@ require 'maruku'
 
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
-  SKIP_TABLE_LIST = %w{ schema_info }
+  SKIP_TABLE_LIST = %w{ schema_info taggings tags }
   def get_table_names
     ActiveRecord::Base.establish_connection
     (ActiveRecord::Base.connection.tables - SKIP_TABLE_LIST).select {|table|

@@ -53,6 +53,11 @@ class ActivityTest < Test::Unit::TestCase
     assert a.contacts.include?(contacts(:yura))
   end
 
+  def test_taggable
+    assert !Activity.find(:first).taggable?
+    assert !Activity.taggable?
+  end
+
   def subtest_contact(contact)
     assert_instance_of Contact, contact
     assert_valid contact
