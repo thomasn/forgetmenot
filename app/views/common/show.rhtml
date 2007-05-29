@@ -26,7 +26,6 @@
     <li>
         <%= link_to c.display_name, :controller => association.class_name.tableize, :action => 'show', :id => c.id %> 
         <%= link_to 'Edit', :controller => association.class_name.tableize, :action => 'edit', :id => c.id %>
-        <%= link_to 'Delete', { :controller => association.class_name.tableize, :action => 'destroy', :id => c.id}, :confirm => 'Are you sure?', :method => :post  %>
     </li>
     <% end %>
 </ul>
