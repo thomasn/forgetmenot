@@ -104,7 +104,8 @@ class CommonController < ApplicationController
 
     params[:email_message][:activity_id] = activity.id
     email_message = EmailMessage.create(params[:email_message])
-    ContactMailer.deliver_send(email_message)
+    email = ContactMailer.create_email(email_message)
+    ContactMailer.deliver(email)
     
     flash[:notice] = "The message was successfully sent to #{email_message.activity.contacts.collect { |c| c.email }.join(', ')}."
     redirect_to :action => 'list'
