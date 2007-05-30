@@ -80,7 +80,7 @@ class CommonController < ApplicationController
         associated = (association.name.to_s.singularize + '_ids').to_sym
         params[:object][associated] = [] if params[:object][associated].nil?
       end
-      if @object.hierarchical?
+      if @object.hierarchical? && !params[:object][:parent_id]
         entity_class.find(params[:object].delete(:parent_id)).add_child(@object)
       end
       if @object.update_attributes(params[:object])
