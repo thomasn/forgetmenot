@@ -1,7 +1,7 @@
 <h1>Listing <%= entity_human_name.pluralize.downcase  %></h1>
 
 <% if entity_class.searchable? %>
-    <div>
+    <div id="quick-search">
         <% form_tag :action => 'search' do %>
             <%= text_field_tag('query', params[:query]) %>
             <%= submit_tag 'Search' %>
@@ -21,12 +21,12 @@
 <% end %>
 
 <% if entity_class.taggable? %>
-    <div>
+    <div id="tags">
       Tags: <%= entity_class.tag_counts.collect { |tag| "#{link_to tag.name, :controller => params[:table_name], :action => 'list', :tag => tag.name} (#{tag.count})" }.join(', ') %>
     </div>
 <% end %>
 
-
+<div style="clear:both"></div>
 <% form_tag :action => 'prepare_email' do %>
     <% if entity_class.emailable? %>
         <div>

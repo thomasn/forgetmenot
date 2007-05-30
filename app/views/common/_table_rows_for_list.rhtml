@@ -1,5 +1,5 @@
 <% for object in @objects -%>
-<tr>
+<tr class="<%= cycle("even", "odd") -%>">
     <% if entity_class.emailable? -%>
     <td>
         <%= check_box_tag "contact_ids[]", object.id %>
