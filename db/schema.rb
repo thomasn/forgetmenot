@@ -2,7 +2,7 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-ActiveRecord::Schema.define(:version => 19) do
+ActiveRecord::Schema.define(:version => 21) do
 
   create_table "activities", :force => true do |t|
     t.column "activity_type_id", :integer
@@ -65,6 +65,22 @@ ActiveRecord::Schema.define(:version => 19) do
 
   add_index "contacts_groups", ["contact_id"], :name => "index_contacts_groups_on_contact_id"
   add_index "contacts_groups", ["group_id"], :name => "index_contacts_groups_on_group_id"
+
+  create_table "dynamic_attribute_values", :force => true do |t|
+    t.column "dynamic_attribute_id", :integer
+    t.column "contact_id",           :integer
+    t.column "string_value",         :string
+    t.column "text_value",           :text
+    t.column "integer_value",        :integer
+    t.column "decimal_value",        :decimal
+    t.column "datetime_value",       :datetime
+    t.column "boolean_value",        :boolean
+  end
+
+  create_table "dynamic_attributes", :force => true do |t|
+    t.column "name",      :string
+    t.column "type_name", :string
+  end
 
   create_table "email_messages", :force => true do |t|
     t.column "activity_id", :integer

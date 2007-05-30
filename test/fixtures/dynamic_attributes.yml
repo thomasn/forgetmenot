@@ -1,0 +1,27 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+skype:
+  id: 1
+  name: skype
+  type_name: string
+age:
+  id: 2
+  name: age
+  type_name: integer
+birthdate:
+  id: 3
+  name: birthdate
+  type_name: datetime
+amount:
+  id: 4
+  name: amount
+  type_name: decimal
+bio:
+  id: 5
+  name: bio
+  type_name: text
+smokes:
+  id: 6
+  name: smokes
+  type_name: boolean
+  
+  

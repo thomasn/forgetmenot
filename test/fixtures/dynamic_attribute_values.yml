@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+martin_smokes:
+  id: 1
+  contact_id: 4
+  dynamic_attribute_id: 6
+  boolean_value: true
+yura_skype:
+ id: 2
+ contact_id: 3
+ dynamic_attribute_id: 1
+ string_value: yura__115

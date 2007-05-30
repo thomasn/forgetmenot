@@ -5,7 +5,7 @@ require 'common_controller'
 class CommonController; def rescue_action(e) raise e end; end
 
 class CommonControllerTest < Test::Unit::TestCase
-  fixtures :groups, :contacts, :contacts_groups, :activities, :activity_types, :activities_contacts
+  fixtures :groups, :group_types, :contacts, :contacts_groups, :activities, :activity_types, :activities_contacts
  
   def setup
     @controller = CommonController.new
