@@ -520,10 +520,10 @@ class CommonControllerTest < Test::Unit::TestCase
     post :search, { :table_name => 'contacts', :query => '*e*' }, { :user => 1 }
     assert_response :success
     assert_template 'list'
-    assert_select 'div', 'Found 3 contacts'
+    assert_select 'div', 'Found 4 contacts'
     assert_select 'input#query[value=*e*]', 1
     assert_select 'input[value=Search]', 1
-    assert_select 'tr', 4
+    assert_select 'tr', 5
     
     post :search, { :table_name => 'contacts', :query => 'GGGGG' }, { :user => 1 }
     assert_response :success
