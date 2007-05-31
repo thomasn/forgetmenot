@@ -1,47 +1,8 @@
 require File.dirname(__FILE__) + '/../test_helper'
+require 'ferret'
 
 class ContactTest < Test::Unit::TestCase
   fixtures :dynamic_attributes, :dynamic_attribute_values, :contacts, :groups, :contacts_groups, :activities, :activities_contacts, :lead_sources
-
-=begin  
-  def test_truth
-    Contact.acts_as_ferret :fields => [ :first_name ]
-
-    assert File.exists?('index')
-    assert File.directory?('index')
-    Contact.aaf_index.close
-    FileUtils.rm_rf 'index'
-    assert !File.exists?('index')
-    assert !File.directory?('index')
-
-    assert_equal 1, Contact.aaf_configuration[:ferret_fields].size
-    assert_equal 2, Contact.find(:first).to_doc.size
-    assert Contact.find(:first).respond_to?(:first_name_to_ferret)
-    assert_equal 2, Contact.aaf_index.ferret_index.field_infos.size
-
-    assert_equal 1, Contact.find_by_contents('Y*').total_hits
-    assert_equal 1, Contact.find_by_contents('first_name:Y*').total_hits
-
-    Contact.aaf_index.close
-    FileUtils.rm_rf 'index'
-    assert !File.exists?('index')
-    assert !File.directory?('index')
-    Contact.acts_as_ferret :fields => [ :first_name, :last_name ]
-    assert File.exists?('index')
-    assert File.directory?('index')
-
-    assert Contact.find(:first).respond_to?(:last_name_to_ferret)
-    assert_equal 2, Contact.aaf_configuration[:ferret_fields].size
-    assert_equal 3, Contact.find(:first).to_doc.size
-    assert_equal 3, Contact.aaf_index.ferret_index.field_infos.size
-    assert_equal 1, Contact.find_by_contents('Y*').total_hits
-    assert_equal 1, Contact.find_by_contents('first_name:Y*').total_hits
-
-    assert_equal 1, Contact.find(:all, :conditions => "last_name like 'K%'").size
-    assert_equal 1, Contact.find_by_contents('last_name:K*').total_hits
-    assert_equal 1, Contact.find_by_contents('K*').total_hits # assertion fails here: get 0 instead of 1 !!
-  end
-=end
 
   def test_truth
     thomas = contacts(:thomas)
@@ -193,7 +154,7 @@ class ContactTest < Test::Unit::TestCase
 
     # ... and find by just created attribute
     assert_equal 1, Contact.find_by_contents('jabber:ttttt').total_hits
-    #assert_equal 1, Contact.find_by_contents('ttttt').total_hits
+    assert_equal 1, Contact.find_by_contents('ttttt').total_hits
 
     # one more check of old attributes
     assert_equal 1, Contact.find_by_contents('Yury').total_hits
