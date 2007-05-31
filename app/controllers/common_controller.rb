@@ -100,6 +100,11 @@ class CommonController < ApplicationController
   end
   
   def prepare_email
+    if params[:contact_ids].nil? || params[:contact_ids].empty?
+      flash[:notice] = 'Please check contacts you\'d like to send an email to'
+      redirect_to :action => 'list'
+      return
+    end
     @contact_ids = params[:contact_ids]
     @email_message = EmailMessage.new
     @to = Contact.find(params[:contact_ids], :order => 'email').collect { |c| c.email }.join(', ')

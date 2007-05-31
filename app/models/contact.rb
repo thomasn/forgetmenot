@@ -35,7 +35,10 @@ class Contact < ActiveRecord::Base
       value.update_attribute("#{a.type_name}_value", new_value)
     end
     
-    do_acts_as_ferret if recreate_index
+    if recreate_index
+      do_acts_as_ferret
+      Contact.load
+    end
   end
   
   def self.create_attributes
