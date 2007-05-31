@@ -23,7 +23,6 @@ class Contact < ActiveRecord::Base
     DynamicAttribute.find(:all).each { |a| create_attribute(a) }
   end
   
-  acts_as_ferret
   create_attributes
   acts_as_taggable
   

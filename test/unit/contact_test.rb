@@ -1,8 +1,91 @@
 require File.dirname(__FILE__) + '/../test_helper'
-
+require 'ferret'
+require 'fileutils'
+  
 class ContactTest < Test::Unit::TestCase
+  
+  include Ferret
+  INDEX_PATH = 'ferret-index'
+  
   fixtures :dynamic_attributes, :dynamic_attribute_values, :contacts, :groups, :contacts_groups, :activities, :activities_contacts, :lead_sources
 
+  def setup
+    if File.exists?('index')
+      FileUtils.rm_rf 'index'
+      assert !File.exists?('index')
+    end
+  end
+
+  def test_aaf
+   Contact.acts_as_ferret :fields => [ :first_name ]
+   assert Contact.find(:first).respond_to?(:first_name_to_ferret)
+
+   assert_equal 1, Contact.find_by_contents('Y*').total_hits
+   assert_equal 1, Contact.find_by_contents('first_name:Y*').total_hits
+   
+   assert File.exists?('index')
+   Contact.aaf_index.ferret_index.close
+   Contact.aaf_index.close
+   FileUtils.rm_rf 'index'
+   assert !File.exists?('index')
+
+   Contact.acts_as_ferret :fields => [ :first_name, :last_name ]
+   assert Contact.find(:first).respond_to?(:last_name_to_ferret)
+
+   assert_equal 1, Contact.find_by_contents('Y*').total_hits
+   assert_equal 1, Contact.find_by_contents('first_name:Y*').total_hits
+
+   assert_equal 1, Contact.find_by_contents('last_name:K*').total_hits
+   assert_equal 1, Contact.find_by_contents('first_name:Y* AND last_name:K*').total_hits
+   assert_equal 1, Contact.find_by_contents('Kotlyarov').total_hits # assertion    
+   assert_equal 1, Contact.find_by_contents('K*').total_hits # assertion    
+  end
+  
+=begin
+  def test_ferret
+    if File.exists?(INDEX_PATH)
+      FileUtils.rm_rf(INDEX_PATH)
+      assert !File.exists?(INDEX_PATH)
+    end
+    index = Index::Index.new(:path => INDEX_PATH)  
+    Contact.find(:all).each { |c| index << { :id => c.id, :first_name => c.first_name}; puts c.first_name }
+    assert_equal 1, index.search('Y*').total_hits
+    assert_equal 1, index.search('first_name:Y*').total_hits
+    assert_equal 3, index.search('*a*').total_hits
+    assert_equal 3, index.search('first_name:*a*').total_hits
+    assert_equal 0, index.search('K*').total_hits
+    assert_equal 0, index.search('last_name:K*').total_hits
+    
+    index.field_infos.add_field(:last_name)
+    assert_equal 1, index.search('Y*').total_hits
+    assert_equal 1, index.search('first_name:Y*').total_hits
+    assert_equal 3, index.search('*a*').total_hits
+    assert_equal 3, index.search('first_name:*a*').total_hits
+    
+    if File.exists?(INDEX_PATH)
+      index.close
+      FileUtils.rm_rf(INDEX_PATH)
+      assert !File.exists?(INDEX_PATH)
+    end
+    index = Index::Index.new(:path => INDEX_PATH) 
+    
+    Contact.find(:all).each { |c| index << { :id => c.id, :first_name => c.first_name, :last_name => c.last_name }; puts c.first_name }
+
+   
+    (0..3).each { |i| index[i].load; puts "#{index[i][:id]}: #{index[i][:first_name]} #{index[i][:last_name]}" }
+    
+    
+    assert_equal 1, index.search('last_name:K*').total_hits
+    assert_equal 1, index.search('K*').total_hits
+
+    assert_equal 1, index.search('first_name:Y* AND last_name:K*').total_hits
+    assert_equal 1, index.search('first_name:R* AND last_name:A*').total_hits
+    assert_equal 1, index.search('first_name:M* AND last_name:G*').total_hits
+    
+  end
+=end
+
+=begin
   def test_truth
     thomas = contacts(:thomas)
     assert_not_nil thomas
@@ -116,7 +199,18 @@ class ContactTest < Test::Unit::TestCase
     assert_equal 1, result.size 
     assert_equal contacts(:yura).id, result[0].id
     
+    
+    count = Contact.aaf_index.ferret_index.field_infos.size
     jid = DynamicAttribute.create :name => 'jabber_id', :type_name => 'string'
+    assert_equal count+1, Contact.aaf_index.ferret_index.field_infos.size
+    
+    yura = contacts(:yura)
+    assert_equal 'yura__115', yura.skype
+    result = Contact.find_by_contents('yura__115')
+    assert_not_nil result
+    assert_equal 1, result.size 
+    assert_equal contacts(:yura).id, result[0].id
+    
     thomas = Contact.find(contacts(:thomas).id)
     thomas.jabber_id = 'thomas@jabber.org'
     result = Contact.find_by_contents('thomas@jabber.org')
@@ -141,5 +235,6 @@ class ContactTest < Test::Unit::TestCase
     assert_valid activity
     assert activity.errors.empty?
   end
-
+=end
+  
 end
