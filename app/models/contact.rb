@@ -57,4 +57,27 @@ class Contact < ActiveRecord::Base
   def display_name
     !self.first_name.nil? || !self.last_name.nil? ? "#{self.first_name} #{self.last_name}".strip : "contact ##{self.id}"
   end
+  
+  alias_method :old_column_for_attribute, :column_for_attribute
+  def column_for_attribute(method_name)
+    obj = old_column_for_attribute(method_name)
+    obj.nil? ? DynamicAttribute.find_by_name(method_name) : obj
+  end
+  
+  alias_method :old_update_attributes, :update_attributes
+  def update_attributes(attrs)
+    dynamic_time_attrs = {}
+    attrs.each_pair { |k, v|
+      if k =~ /(\w+)\W(\d)i/
+        dynamic_time_attrs[$1.to_sym] = [] if dynamic_time_attrs[$1.to_sym].nil?
+        dynamic_time_attrs[$1.to_sym][$2.to_i - 1] = v
+      else
+        update_attribute(k, v) if !v.nil? && !v.to_s.strip.empty?
+      end
+    }
+    dynamic_time_attrs.each_pair { |k, v|
+      update_attribute(k, Time.mktime(v[0], v[1], v[2], v[3], v[4]))
+    }
+  end
+  
 end

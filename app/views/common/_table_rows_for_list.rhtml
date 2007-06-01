@@ -5,7 +5,7 @@
         <%= check_box_tag "contact_ids[]", object.id %>
     </td>
     <% end %>
-    <% object.get_entity_columns.each do |column| %>
+    <% (object.get_entity_columns + @dynamic_attributes).each do |column| %>
         <td>
         <% if column.name == 'notes' -%>
             <%= markdown object.send(column.name) -%>

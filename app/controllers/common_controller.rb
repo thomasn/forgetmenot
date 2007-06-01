@@ -2,6 +2,7 @@ class CommonController < ApplicationController
   layout 'forgetmenot'
   include ApplicationHelper
   before_filter :login_required
+  before_filter :load_dynamic_attributes, :only => [ :index, :list, :search, :show, :new, :edit ]
   
   helper_method :entity_class_name
   helper_method :entity_class
@@ -141,6 +142,10 @@ class CommonController < ApplicationController
 
   def entity_human_name
     entity_name.humanize
+  end
+  
+  def load_dynamic_attributes
+    @dynamic_attributes = params[:table_name] == 'contacts' ? DynamicAttribute.find(:all) : []
   end
   
 end

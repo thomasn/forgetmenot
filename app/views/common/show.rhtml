@@ -1,12 +1,12 @@
 <%= breadcrumbs(@object) %>
 
-<% @object.get_entity_columns.each do |column| -%>
+<% (@object.get_entity_columns + @dynamic_attributes).each do |column| -%>
 <p>
     <% if column.name == 'notes' -%>
-        <b><%= column.human_name %>:</b> 
+        <b><%= column.name.humanize %>:</b> 
         <%= markdown @object.send(column.name) -%>
     <% else %>
-        <b><%= column.human_name %>:</b> 
+        <b><%= column.name.humanize %>:</b> 
         <%= h @object.send(column.name) -%>
     <% end -%>
 </p>

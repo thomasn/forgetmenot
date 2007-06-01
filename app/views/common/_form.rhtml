@@ -1,10 +1,10 @@
 <%= 
-    @object.get_entity_columns.collect{ |column| 
-        result = "<p><label for=\"object_#{column.name}\">#{column.human_name}</label>"
+    (@object.get_entity_columns + @dynamic_attributes).collect{ |column| 
+        result = "<p><label for=\"object_#{column.name}\">#{column.name.humanize}</label>"
         result += " <i>Markdown available (<a href=\"http://maruku.rubyforge.org/#features\">see syntax details</a>)</i>" if column.name == 'notes'
         result += "<br/>\n#{input('object', column.name)}"
     result +="</p>\n"
-    result
+    result  
     }.join("\n")
 %>
     

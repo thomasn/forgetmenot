@@ -9,27 +9,19 @@
         <%= stylesheet_link_tag 'forgetmenot' %>
     </head>
     <body>
-
         <div>
             <% if logged_in? -%>
-            <%= current_user.login %>
-            (<%=link_to 'logout', :controller => 'account', :action => 'logout' -%>)
+            <%= current_user.login -%> (<%=link_to 'logout', :controller => 'account', :action => 'logout' -%>)
             <% end -%>
         </div>
-        
         <div id="main_menu">
             <ul>
-                <% get_table_names.each { |c| %>
-                <li <%= "class='active'" if params[:table_name]  == c %>>
-                    <%= link_to c.humanize, :controller => c %>
-                </li>
-                <% } %>
+                <% get_table_names.each { |c| -%>
+                <li<%= " class='active'" if params[:table_name]  == c -%>><%= link_to c.humanize, :controller => c -%></li>
+                <% } -%>
             </ul>
         </div>   
-        
-        <p style="color: green"><%= flash[:notice] %></p>
-        
-        <%= yield  %>
-        
+        <p style="color: green"><%= flash[:notice] -%></p>
+        <%= yield  -%>
     </body>
 </html>
