@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class ActivityTypeTest < Test::Unit::TestCase
-  fixtures :activities, :activity_types
+  fixtures :dynamic_attributes, :dynamic_attribute_values, :activities, :activity_types
   
   def test_truth
     t = ActivityType.find(activity_types(:call_out).id)

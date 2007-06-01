@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class AddressTest < Test::Unit::TestCase
-  fixtures :addresses
+  fixtures :dynamic_attributes, :dynamic_attribute_values, :addresses
   
   def test_truth
     a = Address.find(addresses(:full_address).id)

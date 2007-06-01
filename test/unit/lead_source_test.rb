@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class LeadSourceTest < Test::Unit::TestCase
-  fixtures :lead_sources, :contacts
+  fixtures :dynamic_attributes, :dynamic_attribute_values, :lead_sources, :contacts
 
   def test_truth
     s = LeadSource.find(lead_sources(:internet).id)

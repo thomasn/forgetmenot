@@ -3,7 +3,12 @@ require 'ferret'
 
 class ContactTest < Test::Unit::TestCase
   fixtures :dynamic_attributes, :dynamic_attribute_values, :contacts, :groups, :contacts_groups, :activities, :activities_contacts, :lead_sources
-
+    
+  def setup
+    # we have to do this because of unknown order of classes loading
+    Contact.create_attributes
+  end
+  
   def test_truth
     thomas = contacts(:thomas)
     assert_not_nil thomas

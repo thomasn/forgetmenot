@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class GroupTypeTest < Test::Unit::TestCase
-  fixtures :group_types, :groups
+  fixtures :dynamic_attributes, :dynamic_attribute_values, :group_types, :groups
 
   def test_truth
     t = GroupType.find(group_types(:prospect).id)

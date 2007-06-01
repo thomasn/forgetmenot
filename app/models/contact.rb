@@ -26,14 +26,15 @@ class Contact < ActiveRecord::Base
     end
   end
 
+  public
+
+  # moved from private part of class for test only
   def self.create_attributes
     attrs = DynamicAttribute.find(:all)
     attrs.each { |a| create_attribute(a, false) }
     do_acts_as_ferret attrs
   end
-
-  public
-
+  
   def self.create_attribute(a, recreate_index = true)
     define_method a.name do
       value = DynamicAttributeValue.find_by_dynamic_attribute_id_and_contact_id(a.id, self.id) 
@@ -42,8 +43,7 @@ class Contact < ActiveRecord::Base
     end
 
     define_method "#{a.name}=" do |new_value|
-      value = DynamicAttributeValue.find_by_dynamic_attribute_id_and_contact_id(a.id, self.id) 
-      value = DynamicAttributeValue.new(:contact_id => self.id, :dynamic_attribute_id => a.id) if value.nil?
+      value = DynamicAttributeValue.find_or_create_by_dynamic_attribute_id_and_contact_id(a.id, self.id) 
       value.update_attribute("#{a.type_name}_value", new_value)
       ferret_update
     end

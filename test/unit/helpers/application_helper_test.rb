@@ -4,7 +4,7 @@ class ApplicationHelperTest < HelperTestCase
 
   include ApplicationHelper
 
-  fixtures :groups, :contacts
+  fixtures :dynamic_attributes, :dynamic_attribute_values, :contacts, :groups
 
   def setup
     super

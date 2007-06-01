@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class EmailMessageTest < Test::Unit::TestCase
-  fixtures :email_messages, :activities, :activity_types, :activities_contacts, :contacts
+  fixtures :dynamic_attributes, :dynamic_attribute_values, :email_messages, :activities, :activity_types, :activities_contacts, :contacts
 
   def test_truth
     message = email_messages(:email_to_yura_and_renat)

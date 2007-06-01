@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class ActivityTest < Test::Unit::TestCase
-  fixtures :contacts, :activities, :activities_contacts, :activity_types, :email_messages
+  fixtures :dynamic_attributes, :dynamic_attribute_values, :contacts, :activities, :activities_contacts, :activity_types, :email_messages
   
   def test_truth
     a = Activity.find(activities(:renat_and_yura_call_out).id)
