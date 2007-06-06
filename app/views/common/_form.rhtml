@@ -2,7 +2,11 @@
     (@object.get_entity_columns + @dynamic_attributes).collect{ |column| 
         result = "<p><label for=\"object_#{column.name}\">#{column.name.humanize}</label>"
         result += " <i>Markdown available (<a href=\"http://maruku.rubyforge.org/#features\">see syntax details</a>)</i>" if column.name == 'notes'
-        result += "<br/>\n#{input('object', column.name)}"
+        if params[:table_name] == 'dynamic_attributes' && column.name == 'type_name'
+            result += "<br/>\n#{select('object', column.name, get_dynamic_attribute_type_names)}"
+        else
+            result += "<br/>\n#{input('object', column.name)}"
+        end
     result +="</p>\n"
     result  
     }.join("\n")

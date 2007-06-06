@@ -131,6 +131,7 @@ class ContactTest < Test::Unit::TestCase
     jid = DynamicAttribute.create :name => 'jabber_id', :type_name => 'string'
     assert_nil thomas.jabber_id
     assert_nothing_raised { thomas.jabber_id = 'thomas@jabber.org' }
+    assert_nothing_raised { thomas.save! }
     assert_equal 'thomas@jabber.org', Contact.find(thomas.id).jabber_id
   end
 
@@ -155,7 +156,9 @@ class ContactTest < Test::Unit::TestCase
     assert_equal 1, Contact.find_by_contents('skype:yura__115').total_hits
 
     # now assign some value to new attribute ...
-    Contact.find(contacts(:thomas).id).jabber = 'ttttt'
+    thomas = Contact.find contacts(:thomas).id
+    thomas.jabber = 'ttttt'
+    thomas.save!
 
     # ... and find by just created attribute
     assert_equal 1, Contact.find_by_contents('jabber:ttttt').total_hits
@@ -164,6 +167,41 @@ class ContactTest < Test::Unit::TestCase
     # one more check of old attributes
     assert_equal 1, Contact.find_by_contents('Yury').total_hits
   end
+  
+   def test_dynamic_attributes_for_new_object
+     values_count = DynamicAttributeValue.count
+     
+     # creating new contact
+     yura = Contact.new :first_name => 'Yury', :last_name => 'Kazantsev', :skype => 'yukazan'
+     assert_equal 'yukazan', yura.skype
+     assert_equal values_count, DynamicAttributeValue.count
+     
+     # saving it
+     assert_nothing_raised { yura.save! }
+     assert_equal values_count + DynamicAttribute.count, DynamicAttributeValue.count
+     
+     # verifing dyn attr value
+     yura = Contact.find_by_last_name('Kazantsev')
+     assert_equal 'yukazan', yura.skype
+     
+     # searching by attr value
+     assert_equal 1, Contact.find_by_contents('yukazan').total_hits
+     
+     # changing attribute value without saving...
+     yura.skype = 'yurakazan'
+     assert_equal 'yurakazan', yura.skype
+     # ...should be no changes in the db ...
+     assert_equal 'yukazan', Contact.find(yura.id).skype
+     # ... as well as no changes in ferret index
+     assert_equal 1, Contact.find_by_contents('yukazan').total_hits
+     assert_equal 0, Contact.find_by_contents('yurakazan').total_hits
+     
+     yura.save!
+     
+     assert_equal 'yurakazan', Contact.find(yura.id).skype
+     assert_equal 0, Contact.find_by_contents('yukazan').total_hits
+     assert_equal 1, Contact.find_by_contents('yurakazan').total_hits
+   end
 
   def subtest_group(group)
     assert_instance_of Group, group

@@ -41,4 +41,8 @@ module ApplicationHelper
       link_to e.display_name, :id => e.id
     }.push(object.display_name).join(" > ")
   end
+  
+  def get_dynamic_attribute_type_names
+    DynamicAttributeValue.content_columns.collect { |c| $1 if c.name =~ /(\w+)_value/ }.compact
+  end
 end
