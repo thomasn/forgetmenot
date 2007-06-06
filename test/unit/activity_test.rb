@@ -14,8 +14,11 @@ class ActivityTest < Test::Unit::TestCase
 
   def test_display_name
     a = Activity.find(activities(:renat_and_yura_call_out).id)
-    assert_equal "#{a.activity_type.display_name} at #{a.time.strftime('%d/%m/%y %H:%M')}", a.display_name
-    
+    assert_equal "[multiple contacts]: #{a.activity_type.display_name} at #{a.time.strftime('%d/%m/%y %H:%M')}", a.display_name
+
+    a = Activity.find(activities(:thomas_call_in).id)
+    assert_equal "Thomas Nichols: #{a.activity_type.display_name} at #{a.time.strftime('%d/%m/%y %H:%M')}", a.display_name
+
     a = Activity.create
     assert_equal "activity ##{a.id} at #{a.time.strftime('%d/%m/%y %H:%M')}", a.display_name
     now = Time.now
