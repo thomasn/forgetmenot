@@ -138,7 +138,13 @@ td, th {
   padding: 5px;
   margin-left: 15px;
   margin-bottom: 15px;
+  width: 70em;
 }
+
+#quick-search input#query { 
+  width: 70em;
+}
+
 
 tr.odd {
     
