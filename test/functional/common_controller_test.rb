@@ -174,7 +174,6 @@ class CommonControllerTest < Test::Unit::TestCase
     assert_select 'a[href^="/activities/show/"]', false
   end
 
-
   def test_new__activity
     get :new, { :table_name => 'activities' }, { :user => 1 }
     assert_response :success
@@ -602,4 +601,25 @@ class CommonControllerTest < Test::Unit::TestCase
     assert_select 'input#object_tag_list', 1
   end
   
+  def test_new__contact
+    get :new, { :table_name => 'contacts' }, { :user => 1 }
+    assert_response :success
+    assert_template 'new'
+    assert_not_nil assigns(:object)
+    
+    # we will skip all the standard fields and associations and will check only belongs_to object creation
+    assert_select 'h1', 'New contact'
+    assert_select 'textarea#object_notes', 1
+    assert_select 'select#object_address_id', 1
+    assert_select 'select#object_address_id option', Address.count + 1
+    assert_select 'select#object_address_id option[selected=selected]', 0
+    
+    assert_select 'input#create_new_address[name=create_new_address]', 'Create new address', :count => 1
+    assert_select 'input#create_new_address[name=create_new_address]', 'Use existing address', :count => 1
+    
+    assert_select 'a[href=/contacts/show]', 'Show', :count => 1
+    assert_select 'a[href=/contacts/list]', 'Back', :count => 1
+
+    assert_select 'input#object_tag_list', 1
+  end
 end

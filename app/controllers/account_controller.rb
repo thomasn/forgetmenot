@@ -3,8 +3,8 @@ class AccountController < ApplicationController
   before_filter :redirect_to_signup_if_no_users, :except => ['signup', 'logout']
   before_filter :login_required, :only => ['signup'] if User.count > 0
   before_filter :login_from_cookie, :except => ['signup']
-
   # say something nice, you goof!  something sweet.
+
   def index
     if logged_in?
       redirect_to '/'
