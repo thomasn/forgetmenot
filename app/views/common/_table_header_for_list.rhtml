@@ -8,7 +8,7 @@
   <% end -%>
 
   <% @dynamic_attributes.each do |a| -%>
-    <th><%= a.name.humanize %></th>
+    <th><%= a.name %></th>
   <% end -%>
   
   <% (entity_class.get_single_associations(true) + 

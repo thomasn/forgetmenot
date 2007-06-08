@@ -1,5 +1,5 @@
 <%= 
-    (@object.get_entity_columns + @dynamic_attributes).collect{ |column| 
+    @object.get_entity_columns.collect{ |column| 
         result = "<p><label for=\"object_#{column.name}\">#{column.name.humanize}</label>"
         result += " <i>Markdown available (<a href=\"http://maruku.rubyforge.org/#features\">see syntax details</a>)</i>" if column.name == 'notes'
         if params[:table_name] == 'dynamic_attributes' && column.name == 'type_name'
@@ -11,7 +11,12 @@
     result  
     }.join("\n")
 %>
-    
+
+<% @dynamic_attributes.each { |column| %>
+    <p><label for="object_<%= column.name %>"><%= column.name %></label><br/><%= input('object', column.name) %></p>
+<% } %>
+
+
 <% if params[:table_name] == 'contacts' %>
     <%= render :partial => 'form_associated', :locals => { :associated_name => 'address'} %>
     <%= render :partial => 'form_associated', :locals => { :associated_name => 'address2'} %>

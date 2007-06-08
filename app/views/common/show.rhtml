@@ -1,6 +1,6 @@
 <%= breadcrumbs(@object) %>
 
-<% (@object.get_entity_columns + @dynamic_attributes).each do |column| -%>
+<% @object.get_entity_columns.each do |column| -%>
 <p>
     <% if column.name == 'notes' -%>
         <b><%= column.name.humanize %>:</b> 
@@ -11,7 +11,14 @@
     <% end -%>
 </p>
 <% end %>
-  
+
+<% @dynamic_attributes.each do |column| -%>
+<p>
+    <b><%= column.name %>:</b> 
+    <%= h @object.send(column.name) -%>
+</p>
+<% end %>
+
 <% @object.get_single_associations(true).each do |association| -%>
 <p>
     <b><%= association.name.to_s.humanize %>:</b> <%= @object.send(association.name).display_name unless @object.send(association.name).nil? %>
