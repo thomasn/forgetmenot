@@ -1,3 +1,7 @@
+# Author:: Renat Akhmerov (mailto:renat@brainhouse.ru)
+# Author:: Yury Kotlyarov (mailto:yura@brainhouse.ru)
+# License:: MIT License
+
 class CreateDynamicAttributeValues < ActiveRecord::Migration
   def self.up
     create_table :dynamic_attribute_values do |t|

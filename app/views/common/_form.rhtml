@@ -1,3 +1,9 @@
+<%# 
+# Author:: Renat Akhmerov (mailto:renat@brainhouse.ru)
+# Author:: Yury Kotlyarov (mailto:yura@brainhouse.ru)
+# License:: MIT License
+%>
+
 <%= 
     @object.get_entity_columns.collect{ |column| 
         result = "<p><label for=\"object_#{column.name}\">#{column.name.humanize}</label>"

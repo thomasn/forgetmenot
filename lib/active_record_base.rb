@@ -1,3 +1,7 @@
+# Author:: Renat Akhmerov (mailto:renat@brainhouse.ru)
+# Author:: Yury Kotlyarov (mailto:yura@brainhouse.ru)
+# License:: MIT License
+
 class ActiveRecord::Base
   SKIP_COLUMN_LIST = %w{ lft rgt parent_id root_id depth taggings }
   

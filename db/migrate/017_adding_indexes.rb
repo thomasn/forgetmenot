@@ -1,3 +1,7 @@
+# Author:: Renat Akhmerov (mailto:renat@brainhouse.ru)
+# Author:: Yury Kotlyarov (mailto:yura@brainhouse.ru)
+# License:: MIT License
+
 class AddingIndexes < ActiveRecord::Migration
   def self.up
     add_index :activities, :activity_type_id

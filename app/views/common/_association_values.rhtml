@@ -1,3 +1,9 @@
+<%# 
+# Author:: Renat Akhmerov (mailto:renat@brainhouse.ru)
+# Author:: Yury Kotlyarov (mailto:yura@brainhouse.ru)
+# License:: MIT License
+%>
+
 <td>
     <% id = "#{params[:table_name]}_#{object.id}_#{association.name.to_s}" %>
     <%= link_to_function "Show #{association.name.to_s.humanize}", "$('#{id}').show(); this.hide()", :id => "link_#{id}" %>

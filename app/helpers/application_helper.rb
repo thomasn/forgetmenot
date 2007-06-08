@@ -1,3 +1,7 @@
+# Author:: Renat Akhmerov (mailto:renat@brainhouse.ru)
+# Author:: Yury Kotlyarov (mailto:yura@brainhouse.ru)
+# License:: MIT License
+
 require 'maruku'
 
 # Methods added to this helper will be available to all templates in the application.

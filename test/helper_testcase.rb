@@ -1,3 +1,7 @@
+# Author:: Renat Akhmerov (mailto:renat@brainhouse.ru)
+# Author:: Yury Kotlyarov (mailto:yura@brainhouse.ru)
+# License:: MIT License
+
 # TODO Add this to your test_helper.rb
 #require File.expand_path(File.dirname(__FILE__) + '/helper_testcase')
 

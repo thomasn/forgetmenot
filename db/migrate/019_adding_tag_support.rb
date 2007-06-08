@@ -1,3 +1,7 @@
+# Author:: Renat Akhmerov (mailto:renat@brainhouse.ru)
+# Author:: Yury Kotlyarov (mailto:yura@brainhouse.ru)
+# License:: MIT License
+
 class AddingTagSupport < ActiveRecord::Migration
   def self.up
     create_table :tags, :force => true do |t|
