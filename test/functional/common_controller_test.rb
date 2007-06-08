@@ -573,7 +573,7 @@ class CommonControllerTest < Test::Unit::TestCase
     assert_select 'select#object_shipping_address_id', 1
     assert_select 'select#object_shipping_address_id option', Address.count + 1
     assert_select 'select#object_shipping_address_id option[selected=selected]',
-      { :text => 'Victoria Street, 27, Worcester, Worcestershire, 11111, UK', :count => 1 }
+      { :text => 'Worcester: Victoria Street, 27, Worcester, Worcestershire, 11111, UK', :count => 1 }
     
     assert_select 'h2', 'Manage Contacts'
     

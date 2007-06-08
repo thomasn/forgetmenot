@@ -14,7 +14,7 @@ class AddressTest < Test::Unit::TestCase
 
   def test_display_name
     a = Address.find(addresses(:full_address).id)
-    assert_equal "Victoria Street, 27, Worcester, Worcestershire, 11111, UK", a.display_name
+    assert_equal "Worcester: Victoria Street, 27, Worcester, Worcestershire, 11111, UK", a.display_name
     
     a = Address.find(addresses(:empty_address).id)
     assert_equal "address ##{a.id}", a.display_name
