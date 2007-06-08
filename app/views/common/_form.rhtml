@@ -12,6 +12,16 @@
     }.join("\n")
 %>
     
+<% if params[:table_name] == 'contacts' %>
+    <%= render :partial => 'form_associated', :locals => { :associated_name => 'address'} %>
+    <%= render :partial => 'form_associated', :locals => { :associated_name => 'address2'} %>
+<% end %>
+
+<% if params[:table_name] == 'groups' %>
+    <%= render :partial => 'form_associated', :locals => { :associated_name => 'billing_address'} %>
+    <%= render :partial => 'form_associated', :locals => { :associated_name => 'shipping_address'} %>
+<% end %>
+
 <% if entity_class.hierarchical? %>
     <p><label for="object_parent_id">Parent <%= entity_human_name.downcase %></label><br/>
     <%= select('object', 'parent_id', entity_class.find(:all, :order => 'root_id, lft').collect {|e| ["#{('-' * e.depth)}#{e.display_name}", e.id] }, :include_blank => true) %>

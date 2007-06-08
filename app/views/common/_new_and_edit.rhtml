@@ -39,10 +39,11 @@ function selectAllOptions() {
 
 <h1><%= params[:action] == 'new' ? 'New' : 'Editing' %> <%= entity_human_name.downcase %></h1>
 
-<% form_tag :action => params[:action], :id => @object do %>
-<%= render :partial => 'form' %>
+<% form_for :object, :url => { :action => params[:action] } do |form| %>
+<%= render :partial => 'form', :locals => { :form => form } %>
 
 <% @object.get_single_associations.each do |association| %>
+    <% next if association.name.to_s =~ /address/ %>
     <p><label for="<%= association.name %>"><%= association.name.to_s.humanize %></label><br/>
     <%= select('object', 
             "#{association.name.to_s}_id", 

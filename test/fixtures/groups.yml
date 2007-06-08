@@ -56,3 +56,4 @@ empty_group:
   id: 3
   name: Empty
   depth: 0
+  root_id: 3

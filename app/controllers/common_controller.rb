@@ -66,15 +66,23 @@ class CommonController < ApplicationController
     if @object.respond_to?(:user_id)
       @object.user_id = session[:user]
     end
+ 
+    create_associated
     
-    if request.post? && @object.save
-      flash[:notice] = "#{entity_human_name} was successfully created."
-      redirect_to :action => 'list'
+    if request.post?
+      entity_class.transaction do
+        save_associated
+        @object.save!
+        flash[:notice] = "#{entity_human_name} was successfully created."
+        redirect_to :action => 'list'
+      end
     end
   end
 
   def edit
     @object = entity_class.find(params[:id])
+    create_associated
+    
     if request.post?
       # if there is no contact_ids params then we drop all contacts from the group
       @object.get_multiple_associations.each do |association|
@@ -84,9 +92,14 @@ class CommonController < ApplicationController
       if @object.hierarchical? && !params[:object][:parent_id]
         entity_class.find(params[:object].delete(:parent_id)).add_child(@object)
       end
-      if @object.update_attributes(params[:object])
-        flash[:notice] = "#{entity_human_name} was successfully updated."
-        redirect_to :action => 'show', :id => @object
+      
+      entity_class.transaction do
+        save_associated
+      
+        if @object.update_attributes(params[:object])
+          flash[:notice] = "#{entity_human_name} was successfully updated."
+          redirect_to :action => 'show', :id => @object
+        end
       end
     end
   end
@@ -148,4 +161,38 @@ class CommonController < ApplicationController
     @dynamic_attributes = params[:table_name] == 'contacts' ? DynamicAttribute.find(:all) : []
   end
   
+  def create_associated
+    if params[:table_name] == 'contacts'
+      @address = Address.new(params[:address])
+      @address2 = Address.new(params[:address2])
+    end
+    if params[:table_name] == 'groups'
+      @billing_address = Address.new(params[:billing_address])
+      @shipping_address = Address.new(params[:shipping_address])
+    end
+  end
+
+  def save_associated
+    if params[:table_name] == 'contacts'
+      if params[:address_radio] == 'create_new_address'
+        @object.address = @address
+        @address.save!
+      end
+      if params[:address2_radio] == 'create_new_address2'
+        @object.address2 = @address2
+        @address2.save!
+      end
+    end
+    
+    if params[:table_name] == 'groups'
+      if params[:billing_address_radio] == 'create_new_billing_address'
+        @object.billing_address = @billing_address
+        @billing_address.save!
+      end
+      if params[:shipping_address_radio] == 'create_new_shipping_address'
+        @object.shipping_address = @shipping_address
+        @shipping_address.save!
+      end
+    end
+  end
 end

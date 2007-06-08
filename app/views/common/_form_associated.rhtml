@@ -1,0 +1,24 @@
+<p><label for="<%= associated_name %>"><%= associated_name.humanize %></label><br />
+
+<% is_new_action = params[:action] == 'new' %>
+
+<%= radio_button_tag(associated_name + '_radio', 'create_new_' + associated_name, is_new_action, :onclick => "$('use_existing_#{associated_name}').hide(); $('create_new_#{associated_name}').show()")%> Create new <%= associated_name.humanize %> <br/>
+<%= radio_button_tag(associated_name + '_radio', 'use_existing_' + associated_name, !is_new_action, :onclick => "$('create_new_#{associated_name}').hide(); $('use_existing_#{associated_name}').show()")%> Use existing <%= associated_name.humanize %> <br/>
+
+<div id="create_new_<%= associated_name %>" <%= is_new_action ? "" : "style='display: none'" %>>
+<%= eval('@' + associated_name).get_entity_columns.collect{ |column| 
+    result = "<p><label for=\"object_#{column.name}\">#{column.name.humanize}</label>"
+    result += "<br/>\n#{input(associated_name, column.name)}"
+    result +="</p>\n"
+    result  
+    }.join("\n")
+%>
+</div>
+
+<div id="use_existing_<%= associated_name %>"  <%= is_new_action ? "style='display: none'" : "" %>>
+    <%= select('object', 
+            "#{associated_name}_id", 
+            eval('@' + associated_name).class.find(:all).collect{|o| [o.display_name, o.id]}, 
+            { :include_blank => true } ) %>
+</div>
+</p>   

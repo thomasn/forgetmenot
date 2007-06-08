@@ -609,13 +609,22 @@ class CommonControllerTest < Test::Unit::TestCase
     
     # we will skip all the standard fields and associations and will check only belongs_to object creation
     assert_select 'h1', 'New contact'
-    assert_select 'textarea#object_notes', 1
-    assert_select 'select#object_address_id', 1
-    assert_select 'select#object_address_id option', Address.count + 1
-    assert_select 'select#object_address_id option[selected=selected]', 0
+    assert_select 'div#use_existing_address' do
+      assert_select 'select#object_address_id', 1
+      assert_select 'select#object_address_id option', Address.count + 1
+      assert_select 'select#object_address_id option[selected=selected]', 0
+    end
     
-    assert_select 'input#create_new_address[name=create_new_address]', 'Create new address', :count => 1
-    assert_select 'input#create_new_address[name=create_new_address]', 'Use existing address', :count => 1
+    assert_select 'input[type=radio][name=address_radio]', 2
+    
+    assert_select 'div#create_new_address' do
+      assert_select 'input#address_address1', 1
+      assert_select 'input#address_address2', 1
+      assert_select 'input#address_city', 1
+      assert_select 'input#address_country', 1
+      assert_select 'input#address_state', 1
+      assert_select 'input#address_zip', 1
+    end
     
     assert_select 'a[href=/contacts/show]', 'Show', :count => 1
     assert_select 'a[href=/contacts/list]', 'Back', :count => 1
