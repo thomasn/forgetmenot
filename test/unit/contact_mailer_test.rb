@@ -24,13 +24,13 @@ class ContactMailerTest < Test::Unit::TestCase
 
   def test_send
     email_message = EmailMessage.find(email_messages(:email_to_yura_and_renat).id)
-    @expected.from = "renat@brainhouse.ru"
-    @expected.to = "renat@brainhouse.ru, yura@brainhouse.ru"
+    @expected.from = "sales@penrhos.com"
+    @expected.to = "renat@brainhouse.ru"
     @expected.subject = email_message.subject
     @expected.body    = email_message.body
     @expected.date    = Time.now
     
-    assert_equal @expected.encoded, ContactMailer.create_email(email_message, @expected.date).encoded
+    assert_equal @expected.encoded, ContactMailer.create_email(email_message, @expected.to, @expected.date).encoded
   end
 
   private

@@ -7,13 +7,13 @@ class CommonController < ApplicationController
   include ApplicationHelper
   before_filter :login_required
   before_filter :load_dynamic_attributes, :only => [ :index, :list, :search, :show, :new, :edit ]
-  
+
   helper_method :entity_class_name
   helper_method :entity_class
   helper_method :entity_human_name
 
   OBJECTS_PER_PAGE = 10
-  
+
   def index
     list
     render :action => 'list'
@@ -45,9 +45,9 @@ class CommonController < ApplicationController
       redirect_to :action => 'list'
       return
     end
-     
+
     page = (params[:page] ||= 1).to_i
-    
+
     offset = (page - 1) * OBJECTS_PER_PAGE
 
     @objects = entity_class.find_by_contents(params[:query], { :offset => offset, :limit => OBJECTS_PER_PAGE })
@@ -62,17 +62,17 @@ class CommonController < ApplicationController
 
   def new
     if entity_class.hierarchical? && !params[:object].nil? && params[:object][:parent_id].empty? && request.post?
-      params[:object][:parent_id] = "0" 
+      params[:object][:parent_id] = "0"
       params[:object][:depth] = "0"
     end
-    
+
     @object = entity_class.new(params[:object])
     if @object.respond_to?(:user_id)
       @object.user_id = session[:user]
     end
- 
+
     create_associated
-    
+
     if request.post?
       entity_class.transaction do
         save_associated
@@ -86,7 +86,7 @@ class CommonController < ApplicationController
   def edit
     @object = entity_class.find(params[:id])
     create_associated
-    
+
     if request.post?
       # if there is no contact_ids params then we drop all contacts from the group
       @object.get_multiple_associations.each do |association|
@@ -96,10 +96,10 @@ class CommonController < ApplicationController
       if @object.hierarchical? && !params[:object][:parent_id]
         entity_class.find(params[:object].delete(:parent_id)).add_child(@object)
       end
-      
+
       entity_class.transaction do
         save_associated
-      
+
         if @object.update_attributes(params[:object])
           flash[:notice] = "#{entity_human_name} was successfully updated."
           redirect_to :action => 'show', :id => @object
@@ -116,7 +116,7 @@ class CommonController < ApplicationController
       redirect_to :action => 'list'
     end
   end
-  
+
   def prepare_email
     if params[:contact_ids].nil? || params[:contact_ids].empty?
       flash[:notice] = 'Please check contacts you\'d like to send an email to'
@@ -127,7 +127,7 @@ class CommonController < ApplicationController
     @email_message = EmailMessage.new
     @to = Contact.find(params[:contact_ids], :order => 'email').collect { |c| c.email }.join(', ')
   end
-  
+
   def send_email
     params[:activity] = { :user_id => session[:user] }
     params[:activity][:activity_type_id] = ActivityType.find_or_create_by_name('Email out').id
@@ -136,19 +136,21 @@ class CommonController < ApplicationController
 
     params[:email_message][:activity_id] = activity.id
     email_message = EmailMessage.create(params[:email_message])
-    email = ContactMailer.create_email(email_message)
-    ContactMailer.deliver(email)
-    
+    email_message.activity.contacts.each { |c|
+      email = ContactMailer.create_email(email_message, c.email)
+      ContactMailer.deliver(email)
+    }
+
     flash[:notice] = "The message was successfully sent to #{email_message.activity.contacts.collect { |c| c.email }.join(', ')}."
     redirect_to :action => 'list'
   end
 
-  private 
-  
+  private
+
   def entity_name
     params[:table_name].singularize
   end
-  
+
   def entity_class_name
     entity_name.camelize
   end
@@ -160,11 +162,11 @@ class CommonController < ApplicationController
   def entity_human_name
     entity_name.humanize
   end
-  
+
   def load_dynamic_attributes
     @dynamic_attributes = params[:table_name] == 'contacts' ? DynamicAttribute.find(:all) : []
   end
-  
+
   def create_associated
     if params[:table_name] == 'contacts'
       @address = Address.new(params[:address])
@@ -178,25 +180,39 @@ class CommonController < ApplicationController
 
   def save_associated
     if params[:table_name] == 'contacts'
+      logger.debug "========= address: #{@address.inspect}"
+      logger.debug "========= address2: #{@address2.inspect}"
       if params[:address_radio] == 'create_new_address'
-        @object.address = @address
-        @address.save!
+        unless empty_object?(@address)
+          @object.address = @address
+          @address.save!
+        end
       end
       if params[:address2_radio] == 'create_new_address2'
-        @object.address2 = @address2
-        @address2.save!
+        unless empty_object?(@address2)
+          @object.address2 = @address2
+          @address2.save!
+        end
       end
     end
-    
+
     if params[:table_name] == 'groups'
       if params[:billing_address_radio] == 'create_new_billing_address'
-        @object.billing_address = @billing_address
-        @billing_address.save!
+        unless empty_object?(@billing_address)
+          @object.billing_address = @billing_address
+          @billing_address.save!
+        end
       end
       if params[:shipping_address_radio] == 'create_new_shipping_address'
-        @object.shipping_address = @shipping_address
-        @shipping_address.save!
+        unless empty_object?(@shipping_address)
+          @object.shipping_address = @shipping_address
+          @shipping_address.save!
+        end
       end
     end
+  end
+
+  def empty_object?(obj)
+    obj.attributes.values.select { |a| !a.empty? }.compact.empty?
   end
 end

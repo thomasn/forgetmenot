@@ -28,7 +28,7 @@ details: &details
   #min_messages: warning
 
 development:
-  database: forgetmenot_development
+  database: fmn_development
   <<: *details
 
 
@@ -36,9 +36,9 @@ development:
 # re-generated from your development database when you run 'rake'.
 # Do not set this db to the same as development or production.
 test:
-  database: forgetmenot_test
+  database: fmn_test
   <<: *details
 
 production:
-  database: forgetmenot_production
+  database: fmn_production
   <<: *details
