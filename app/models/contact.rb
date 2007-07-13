@@ -1,6 +1,5 @@
 # Author:: Renat Akhmerov (mailto:renat@brainhouse.ru)
 # Author:: Yury Kotlyarov (mailto:yura@brainhouse.ru)
-# License:: MIT License
 
 require 'fileutils'
 
@@ -10,6 +9,8 @@ class Contact < ActiveRecord::Base
   belongs_to :address
   belongs_to :address2, :class_name => 'Address', :foreign_key => 'address2_id'
   belongs_to :lead_source
+
+  ADDITIONAL_SEARCH_ATTRS = [ :contact_id, :zip, :postcode, :group, :parent_group ]
 
   private
 
@@ -24,18 +25,43 @@ class Contact < ActiveRecord::Base
     else
       if new_dynamic_attribute_values.has_key?(a.name.to_sym) 
         value = new_dynamic_attribute_values[a.name.to_sym]
-      else 
-        value = DynamicAttributeValue.find_by_dynamic_attribute_id_and_contact_id(a.id, self.id)   
+      else
+        value = DynamicAttributeValue.find_by_dynamic_attribute_id_and_contact_id(a.id, self.id)
         value = DynamicAttributeValue.new :dynamic_attribute_id => a.id, :contact_id => self.id if value.nil?
         new_dynamic_attribute_values[a.name.to_sym] = value
       end
     end
     value
   end
-  
+
+  # Additional fields for search
+  def contact_id
+    self.id
+  end
+
+  def zip
+    codes = []
+    codes << self.address.zip if self.address
+    codes << self.address2.zip if self.address2
+    codes
+  end
+
+  alias :postcode :zip
+
+  def group
+    groups.collect(&:name)
+  end
+
+  def parent_group
+    groups.collect { |g|
+      Group.find(:all, :conditions => "root_id = #{g.root_id} AND (#{g.lft} BETWEEN lft AND rgt)", :order => 'lft' ) - [g] if !g.lft.nil? && !g.lft.zero?
+    }.flatten.compact.uniq.collect(&:name)
+  end
+
   def self.do_acts_as_ferret(attrs = DynamicAttribute.find(:all))
-    acts_as_ferret :additional_fields => attrs.collect { |a| a.name.to_sym }
-    # FIXME: workaround here - drop following line
+    additional_fields = attrs.collect { |a| a.name.to_sym } + ADDITIONAL_SEARCH_ATTRS
+    acts_as_ferret :additional_fields => additional_fields
+    # FIXME: Bug in the acts_as_ferret. Workaround here - drop following line when bug will be fixed
     attrs.each { |a| aaf_index.ferret_index.options[:default_field] << a.name }
     drop_index_dir
   end
@@ -55,7 +81,7 @@ class Contact < ActiveRecord::Base
   def new_dynamic_attribute_values
     @new_dynamic_attribute_values ||= {}
   end
-  
+
   # moved from private part of class for test only
   def self.create_attributes
     attrs = DynamicAttribute.find(:all)

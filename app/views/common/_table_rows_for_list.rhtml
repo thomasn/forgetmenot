@@ -12,6 +12,9 @@
    </td>
     <% end %>
     <td><%= link_to 'Show', :action => 'show', :id => object %></td>
+    <% if params[:table_name] == 'contacts' -%>
+      <td><%= object.id %></td>
+    <% end -%>
     <% (object.get_entity_columns + @dynamic_attributes).each do |column| %>
         <td>
         <% if column.name == 'notes' -%>
@@ -25,7 +28,7 @@
     <% object.get_single_associations(true).each do |association| %>
     <td><%= object.send(association.name).display_name unless object.send(association.name).nil? %></td>
     <% end %>
-    
+
     <% object.get_has_many_through_associations(true).each do |association| %>
     <td>
     <%= object.send(association.name).collect { |c|
