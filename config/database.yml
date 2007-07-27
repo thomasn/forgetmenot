@@ -28,7 +28,7 @@ details: &details
   #min_messages: warning
 
 development:
-  database: fmn_development
+  database: forgetmenot_development
   <<: *details
 
 
@@ -40,5 +40,5 @@ test:
   <<: *details
 
 production:
-  database: fmn_production
+  database: forgetmenot_development
   <<: *details
