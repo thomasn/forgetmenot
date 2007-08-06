@@ -43,64 +43,68 @@ function selectAllOptions() {
 
 </script>
 
-<h1><%= params[:action] == 'new' ? 'New' : 'Editing' %> <%= entity_human_name.downcase %></h1>
+<div class="form">
+	<h1><%= params[:action] == 'new' ? 'New' : 'Editing' %> <%= entity_human_name.downcase %></h1>
 
-<% form_for :object, :url => { :action => params[:action] } do |form| %>
-<%= render :partial => 'form', :locals => { :form => form } %>
+	<% form_for :object, :url => { :action => params[:action] } do |form| %>
+	<%= render :partial => 'form', :locals => { :form => form } %>
 
-<% @object.get_single_associations.each do |association| %>
-    <% next if association.name.to_s =~ /address/ %>
-    <p><label for="<%= association.name %>"><%= association.name.to_s.humanize %></label><br/>
-    <%= select('object', 
-            "#{association.name.to_s}_id", 
-            association.class_name.constantize.find(:all).collect{|o| [o.display_name, o.id]}, 
-            { :include_blank => true } ) %></p>
-<% end %>
+	<% @object.get_single_associations.each do |association| %>
+	    <% next if association.name.to_s =~ /address/ %>
+	    <p><label for="<%= association.name %>"><%= association.name.to_s.humanize %></label><br/>
+	    <%= select('object', 
+	            "#{association.name.to_s}_id", 
+	            association.class_name.constantize.find(:all).collect{|o| [o.display_name, o.id]}, 
+	            { :include_blank => true } ) %></p>
+	<% end %>
 
-<% @object.get_multiple_associations.each do |association| %>
+	<% @object.get_multiple_associations.each do |association| %>
 
-    <% associated = association.name.to_s %>
-    
-    <h2>Manage <%= association.name.to_s.humanize %></h2>
-    <% 
-        assigned = @object.send(association.name)
-        other = association.class_name.constantize.find(:all)-@object.send(association.name)
-        if !referer.nil? && association.class_name == referer.class.to_s
-          assigned += [referer]
-          other -= [referer]
-        end
-    %>
-    
-    <div style="float: left;">
-        <h3><%= "Assigned #{association.name.to_s.humanize}" %></h3>
-        <%= select('object', "#{association.name.to_s.singularize}_ids",
-            assigned.collect {|c| [c.display_name, c.id]}, {},
-            { :multiple => true, :size => 10, :id => "select_object_#{association.name}" })
-        %>
-    </div>
-    
-    <div style="float:left; position:relative; text-align:center; margin-top:60px; margin-right:20px; margin-left:20px;">
-        <%= button_to_function "< Add selected", "addSelected('#{associated}')" %><br />
-        <%= button_to_function "<< Add all", "addAll('#{associated}')" %><br />
-        <%= button_to_function "Remove selected >", "removeSelected('#{associated}')" %><br />
-        <%= button_to_function "Remove all >>", "removeAll('#{associated}')" %>
-    </div>
-    
-    <div style="float: left;">
-        <h3>Other <%= association.name.to_s.humanize %></h3>
-        <%= select_tag("other_#{association.name}",
-            other.collect {|c|
-                "<option value='#{c.id}'>#{c.display_name}</option>"}.join,
-            { :multiple => true, :size => 10, :id => "select_other_#{association.name}" })
-        %>
-    </div>
+	    <% associated = association.name.to_s %>
+	    
+	    <h2>Manage <%= association.name.to_s.humanize %></h2>
+	    <% 
+	        assigned = @object.send(association.name)
+	        other = association.class_name.constantize.find(:all)-@object.send(association.name)
+	        if !referer.nil? && association.class_name == referer.class.to_s
+	          assigned += [referer]
+	          other -= [referer]
+	        end
+	    %>
+	    
+	    <div style="float: left;">
+	        <h3><%= "Assigned #{association.name.to_s.humanize}" %></h3>
+	        <%= select('object', "#{association.name.to_s.singularize}_ids",
+	            assigned.collect {|c| [c.display_name, c.id]}, {},
+	            { :multiple => true, :size => 10, :id => "select_object_#{association.name}" })
+	        %>
+	    </div>
+	    
+	    <div style="float:left; position:relative; text-align:center; margin-top:60px; margin-right:20px; margin-left:20px;">
+	        <%= button_to_function "< Add selected", "addSelected('#{associated}')" %><br />
+	        <%= button_to_function "<< Add all", "addAll('#{associated}')" %><br />
+	        <%= button_to_function "Remove selected >", "removeSelected('#{associated}')" %><br />
+	        <%= button_to_function "Remove all >>", "removeAll('#{associated}')" %>
+	    </div>
+	    
+	    <div style="float: left;">
+	        <h3>Other <%= association.name.to_s.humanize %></h3>
+	        <%= select_tag("other_#{association.name}",
+	            other.collect {|c|
+	                "<option value='#{c.id}'>#{c.display_name}</option>"}.join,
+	            { :multiple => true, :size => 10, :id => "select_other_#{association.name}" })
+	        %>
+	    </div>
 
-    <div style="clear:both"></div>
-<% end %>
+	    <div style="clear:both"></div>
+	<% end %>
 
+	<br />
+<div style="text-align: center; width:100px; margin: 0 auto 0 auto;">
+	<%= submit_tag (params[:action] == 'new' ? 'Create' : 'Update'), :onclick => "selectAllOptions()" %>
+	<% end %>
 <br />
-<%= submit_tag (params[:action] == 'new' ? 'Create' : 'Update'), :onclick => "selectAllOptions()" %>
-<% end %>
-
-<%= link_to 'Show', :action => 'show', :id => @object %> |
-<%= link_to 'Back', :action => 'list' %>
+	<%= link_to 'Show', :action => 'show', :id => @object %> |
+	<%= link_to 'Back', :action => 'list' %>
+</div>
+</div>

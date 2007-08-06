@@ -3,6 +3,7 @@
 # License:: MIT License
 
 class AccountController < ApplicationController
+	layout 'account'
   # If you want "remember me" functionality, add this before_filter to Application Controller
   before_filter :redirect_to_signup_if_no_users, :except => ['signup', 'logout']
   before_filter :login_required, :only => ['signup'] if User.count > 0

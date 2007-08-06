@@ -49,4 +49,5 @@ module ApplicationHelper
   def get_dynamic_attribute_type_names
     DynamicAttributeValue.content_columns.collect { |c| $1 if c.name =~ /(\w+)_value/ }.compact
   end
+  		
 end

@@ -151,5 +151,47 @@ tr.odd {
 }
 
 tr.even {
-   background-color: #FBFFCF
+  background-color: #FBFFCF
+}
+
+legend {
+	background: #cfcfcf;
+	font-size: 20px;
+}
+
+fieldset {
+	position: relative;
+	top: 20px;
+	width: 500px;
+	margin: 10px auto 10px auto;
+}
+
+
+/**********
+ *   ID   *
+ **********/
+ 
+#login {
+}
+
+#address {
+	position: relative;
+	width: 250px;
+	float: left;
+}
+
+#col{
+position: relative;
+margin:10px;
+width: 200px;
+float: left;
+}
+
+
+/***********
+ *  CLASS  *
+ ***********/
+ 
+.form {
+	width: 700px;
 }

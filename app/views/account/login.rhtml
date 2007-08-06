@@ -1,6 +1,9 @@
+<div id="login">
+<fieldset style="width:680px;">
+<legend>Login</legend>
 <% form_tag do -%>
 <p><label for="login">Login</label><br/>
-<%= text_field_tag 'login' %></p>
+<%= text_field_tag "login" %></p>
 
 <p><label for="password">Password</label><br/>
 <%= password_field_tag 'password' %></p>
@@ -12,3 +15,5 @@
 
 <p><%= submit_tag 'Log in' %></p>
 <% end -%>
+</fieldset>
+</div>

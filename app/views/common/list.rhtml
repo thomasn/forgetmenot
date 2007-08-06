@@ -39,6 +39,16 @@
         <%= submit_tag 'Send email' %>
         </div>
     <% end %>
+    
+    <%= link_to 'Previous page', { :page => @object_pages.current.previous, :query => params[:query] } if @object_pages.current.previous %>
+		<%= link_to 'Next page', { :page => @object_pages.current.next, :query => params[:query]  } if @object_pages.current.next %> 
+
+		<%= 
+	    options = { :action => 'new' }
+	    options['object[parent_id]'] = params[:parent_id] if params[:parent_id]
+	    link_to "New #{entity_human_name.downcase}",  options
+		%>
+
 
     <table>
         <%= render :partial => 'table_header_for_list' %>
@@ -51,8 +61,3 @@
 
 <br />
 
-<%= 
-    options = { :action => 'new' }
-    options['object[parent_id]'] = params[:parent_id] if params[:parent_id]
-    link_to "New #{entity_human_name.downcase}",  options
-%>

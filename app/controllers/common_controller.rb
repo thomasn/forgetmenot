@@ -78,7 +78,7 @@ class CommonController < ApplicationController
         save_associated
         @object.save!
         flash[:notice] = "#{entity_human_name} was successfully created."
-        redirect_to :action => 'list'
+        redirect_to :action => 'new'
       end
     end
   end

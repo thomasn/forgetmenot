@@ -17,6 +17,9 @@
         <%= stylesheet_link_tag 'forgetmenot' %>
     </head>
     <body>
+    		<div>
+    			<img style="margin:0px;"src="/images/forget-title.jpg" />
+    		</div>
         <div>
             <% if logged_in? -%>
             <%= current_user.login -%> (<%=link_to 'logout', :controller => 'account', :action => 'logout' -%>)
