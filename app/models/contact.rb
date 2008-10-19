@@ -60,10 +60,10 @@ class Contact < ActiveRecord::Base
 
   def self.do_acts_as_ferret(attrs = DynamicAttribute.find(:all))
     additional_fields = attrs.collect { |a| a.name.to_sym } + ADDITIONAL_SEARCH_ATTRS
-    acts_as_ferret :additional_fields => additional_fields
+    # acts_as_ferret :additional_fields => additional_fields
     # FIXME: Bug in the acts_as_ferret. Workaround here - drop following line when bug will be fixed
-    attrs.each { |a| aaf_index.ferret_index.options[:default_field] << a.name }
-    drop_index_dir
+    # attrs.each { |a| aaf_index.ferret_index.options[:default_field] << a.name }
+    # drop_index_dir
   end
 
   def self.drop_index_dir
@@ -77,6 +77,10 @@ class Contact < ActiveRecord::Base
   end
 
   public
+  
+  def searchable?
+    true
+  end
 
   def new_dynamic_attribute_values
     @new_dynamic_attribute_values ||= {}
@@ -86,10 +90,10 @@ class Contact < ActiveRecord::Base
   def self.create_attributes
     attrs = DynamicAttribute.find(:all)
     attrs.each { |a| create_attribute(a, false) }
-    do_acts_as_ferret attrs
+    # do_acts_as_ferret attrs
   end
 
-  def self.create_attribute(a, recreate_index = true)
+  def self.create_attribute(a, recreate_index = false)
     # defining getter method
     define_method a.name do
       dynamic_attribute_value(a).send("#{a.type_name}_value")
@@ -102,14 +106,17 @@ class Contact < ActiveRecord::Base
 
     do_acts_as_ferret if recreate_index
   end
-
+ 
+    # Sphinx indexing
+  is_indexed :fields => [ 'first_name', 'last_name', 'email', 'notes' ],
+             :include => [ {:class_name => 'Address', :field => 'address1'} ]
   create_attributes
   acts_as_taggable
   after_create { |c| c.new_dynamic_attribute_values.values.each { |v| v.contact_id = c.id; v.save }  }
   after_update { |c| c.new_dynamic_attribute_values.values.each { |v| v.save }  }
 
   def display_name
-    !self.first_name.nil? || !self.last_name.nil? ? "#{self.first_name} #{self.last_name}".strip : "contact ##{self.id}"
+    !self.first_name.nil? || !self.last_name.nil? ? "#{self.last_name}, #{self.first_name}".strip : "contact ##{self.id}"
   end
 
   alias_method :old_column_for_attribute, :column_for_attribute

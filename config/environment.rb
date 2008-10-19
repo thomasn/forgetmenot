@@ -5,7 +5,7 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '1.2.3' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.1.1' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -42,6 +42,11 @@ Rails::Initializer.run do |config|
   # config.active_record.default_timezone = :utc
   
   # See Rails::Configuration for more options
+  config.action_controller.session = {
+    :session_key => '_fmn_session',
+    :secret      => '7a96ffdg5rs6yeye67a7da748c913c36fb036f406777a90b355470415d053a0d0077013ac3d668d176e54b42f3e4d4ff47cebb895bb40c4b3c885e1371bd3555'
+  }
+
 end
 
 # Add new inflection rules using the following format 

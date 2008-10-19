@@ -12,31 +12,40 @@ class CommonController < ApplicationController
   helper_method :entity_class
   helper_method :entity_human_name
 
-  OBJECTS_PER_PAGE = 10
+  OBJECTS_PER_PAGE = 20
 
   def index
     list
     render :action => 'list'
   end
-
+  
+  def index_test
+    @attr = DynamicAttribute.find(:all)
+    
+  end
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :destroy ], :redirect_to => { :action => :list }
 
   def list
     if params[:tag]
       page = (params[:page] ||= 1).to_i
-      offset = (page - 1) * OBJECTS_PER_PAGE
+      # offset = (page - 1) * OBJECTS_PER_PAGE
 
+      # Find all objects from class with given tag
       objects = entity_class.find_tagged_with(params[:tag])
-      @object_pages = Paginator.new(self, objects.size, OBJECTS_PER_PAGE, page)
-      @objects = objects[offset...(offset + OBJECTS_PER_PAGE)]
+      @objects = objects.paginate(:pages =>page, :per_page => OBJECTS_PER_PAGE)
+      
+      # Old paginator -- DEPRICATED as of Rails 2 --
+      # @object_pages = Paginator.new(self, objects.size, OBJECTS_PER_PAGE, page)
+      # @objects = objects[offset...(offset + OBJECTS_PER_PAGE)]
     else
       options = { :per_page => OBJECTS_PER_PAGE }
       if entity_class.hierarchical?
         options[:conditions] = ["parent_id = ? or id = ?", params[:parent_id], params[:parent_id]] unless params[:parent_id].nil?
         options[:order] = "root_id, lft"
       end
-      @object_pages, @objects = paginate(params[:table_name].to_sym, options)
+      # Using will_paginate plugin
+      @objects = entity_class.paginate(:page => params[:page], :per_page => OBJECTS_PER_PAGE)
     end
   end
 
@@ -48,10 +57,8 @@ class CommonController < ApplicationController
 
     page = (params[:page] ||= 1).to_i
 
-    offset = (page - 1) * OBJECTS_PER_PAGE
-
-    @objects = entity_class.find_by_contents(params[:query], { :offset => offset, :limit => OBJECTS_PER_PAGE })
-    @object_pages = Paginator.new(self, @objects.total_hits, OBJECTS_PER_PAGE, page)
+    @objects = Ultrasphinx::Search.new(:query => params[:query], :page => params[:page], :per_page => OBJECTS_PER_PAGE)
+    @objects.run
 
     render :action => 'list'
   end

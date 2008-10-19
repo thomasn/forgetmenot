@@ -31,6 +31,15 @@ module CommonHelper
   		"right"
   	end
   end
+ 
+  # Orders by the correct field in the database
+  def order_by(class_name)
+    if class_name == 'Group'
+      'name'
+    else 
+      'last_name'
+    end
+  end
 
 	def build_form
 		i = 0

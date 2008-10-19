@@ -58,7 +58,7 @@ class ActiveRecord::Base
   end
 
   def self.searchable?
-    !instance_methods.find { |m| m =~ /ferret/ }.nil?
+    !instance_methods.find { |m| m =~ /indexed/ }.nil?
   end
 
   def emailable?
