@@ -61,19 +61,19 @@ class Contact < ActiveRecord::Base
   def self.do_acts_as_ferret(attrs = DynamicAttribute.find(:all))
     additional_fields = attrs.collect { |a| a.name.to_sym } + ADDITIONAL_SEARCH_ATTRS
     acts_as_ferret :additional_fields => additional_fields
-    # FIXME: Bug in the acts_as_ferret. Workaround here - drop following line when bug will be fixed
-    attrs.each { |a| aaf_index.ferret_index.options[:default_field] << a.name }
+    # # FIXME: Bug in the acts_as_ferret. Workaround here - drop following line when bug will be fixed
+    # ## FIXME - testing removal 2009-04-25 ## attrs.each { |a| aaf_index.ferret_index.options[:default_field] << a.name }
     drop_index_dir
   end
 
   def self.drop_index_dir
-    if File.exists?(aaf_index.ferret_index.options[:path])
-      begin
-        aaf_index.close
-      rescue
-      end
-      FileUtils.rm_rf(aaf_index.ferret_index.options[:path])
-    end
+    if File.exists?("#{RAILS_ROOT}/index")    # aaf_index.ferret_index.options[:path])
+       begin
+         aaf_index.close
+       rescue
+       end
+                    FileUtils.rm_rf("#{RAILS_ROOT}/index")    # aaf_index.ferret_index.options[:path])
+     end
   end
 
   public
