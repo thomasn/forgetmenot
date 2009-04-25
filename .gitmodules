@@ -1,0 +1,3 @@
+[submodule "vendor/plugins/acts_as_ferret"]
+	path = vendor/plugins/acts_as_ferret
+	url = git://github.com/jkraemer/acts_as_ferret
