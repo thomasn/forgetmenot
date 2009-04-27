@@ -6,3 +6,4 @@ tmp/pids/*
 tmp/cache/*
 tmp/sockets/*
 tmp/sessions/*
+*~
