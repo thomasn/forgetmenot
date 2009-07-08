@@ -8,3 +8,4 @@ tmp/sockets/*
 tmp/sessions/*
 *~
 config/database.yml
+log/*.log
