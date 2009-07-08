@@ -1,0 +1,23 @@
+Other than a general face life the following changes have been made while 
+updating FMN to Rails 2.2.1
+
+~Ben
+
+-- Major Changes --
+1) Ferret & acts_as_ferret have been replaced by Sphinx & Ultrasphinx
+2) Implemented will_paginate plugin
+
+-- Minor Improvements --
+1) All listings are now alphabetised, rather than chronological or ordered by id. 
+See helper method order_by
+
+-- Minor Bug Fixes --
+1) This code has been removed from list.rhtml
+
+<% if entity_class.hierarchical? %>
+    <div>
+      <%= get_hierarchy(entity_class) %>
+    </div>
+<% end %>-->
+
+It appeared to break when listing groups. 

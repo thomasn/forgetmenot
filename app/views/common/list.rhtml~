@@ -1,0 +1,63 @@
+<%# 
+# Author:: Renat Akhmerov (mailto:renat@brainhouse.ru)
+# Author:: Yury Kotlyarov (mailto:yura@brainhouse.ru)
+# License:: MIT License
+%>
+
+<h1>Listing <%= entity_human_name.pluralize.downcase  %></h1>
+
+<% if entity_class.searchable? %>
+    <div id="quick-search">
+        <% form_tag :action => 'search' do %>
+            <%= text_field_tag('query', params[:query]) %>
+            <%= submit_tag 'Search' %>
+        <% end %>
+        <% if params[:action] == 'search' %>
+            <div>
+            Found <%= pluralize(@objects.total_hits, entity_human_name.downcase) %>
+            </div>
+        <% end %>
+    </div>
+<% end %>
+
+<% if entity_class.hierarchical? %>
+    <div>
+      <%= get_hierarchy(entity_class) %>
+    </div>
+<% end %>
+
+<% if entity_class.taggable? %>
+    <div id="tags">
+      Tags: <%= entity_class.tag_counts.collect { |tag| "#{link_to tag.name, :controller => params[:table_name], :action => 'list', :tag => tag.name} (#{tag.count})" }.join(', ') %>
+    </div>
+<% end %>
+
+<div style="clear:both"></div>
+<% form_tag :action => 'prepare_email' do %>
+    <% if entity_class.emailable? %>
+        <div>
+        <%= submit_tag 'Send email' %>
+        </div>
+    <% end %>
+    
+    <%= link_to 'Previous page', { :page => @object_pages.current.previous, :query => params[:query] } if @object_pages.current.previous %>
+		<%= link_to 'Next page', { :page => @object_pages.current.next, :query => params[:query]  } if @object_pages.current.next %> 
+
+		<%= 
+	    options = { :action => 'new' }
+	    options['object[parent_id]'] = params[:parent_id] if params[:parent_id]
+	    link_to "New #{entity_human_name.downcase}",  options
+		%>
+
+
+    <table>
+        <%= render :partial => 'table_header_for_list' %>
+        <%= render :partial => 'table_rows_for_list' %>
+    </table>
+<% end %>
+
+<%= link_to 'Previous page', { :page => @object_pages.current.previous, :query => params[:query] } if @object_pages.current.previous %>
+<%= link_to 'Next page', { :page => @object_pages.current.next, :query => params[:query]  } if @object_pages.current.next %> 
+
+<br />
+

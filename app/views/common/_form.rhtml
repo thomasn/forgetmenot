@@ -9,7 +9,7 @@
 <% if entity_class.taggable? %>
 <fieldset><legend>Step 3</legend>
 <% @dynamic_attributes.each { |column| %>
-    <p><label for="object_<%= column.name %>"><%= column.name %></label><br/><%= input('object', column.name) %></p>
+    <p><label for="object_<%=h column.name %>"><%=h column.name %></label><br/><%= input('object', column.name) %></p>
 <% } %>
 </fieldset>
 <% end %>
