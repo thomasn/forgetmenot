@@ -12,7 +12,7 @@ class CommonController < ApplicationController
   helper_method :entity_class
   helper_method :entity_human_name
 
-  OBJECTS_PER_PAGE = 20
+  OBJECTS_PER_PAGE = 20 if not defined? OBJECTS_PER_PAGE
 
   def index
     list

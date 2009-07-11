@@ -9,7 +9,7 @@ require 'common_controller'
 class CommonController; def rescue_action(e) raise e end; end
 
 class CommonControllerTest < Test::Unit::TestCase
-  fixtures :dynamic_attributes, :dynamic_attribute_values, :groups, :group_types, :contacts, :contacts_groups, :activities, :activity_types, :activities_contacts
+  # FIXME all fixtures preloaded # fixtures :dynamic_attributes, :dynamic_attribute_values, :groups, :group_types, :contacts, :contacts_groups, :activities, :activity_types, :activities_contacts
  
   def setup
     @controller = CommonController.new

@@ -6,7 +6,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 require 'ferret'
 
 class ContactTest < Test::Unit::TestCase
-  fixtures :dynamic_attributes, :dynamic_attribute_values, :contacts, :groups, :contacts_groups, :activities, :activities_contacts, :lead_sources
+  ## CLEANUP - all fixtures preloaded ## fixtures :dynamic_attributes, :dynamic_attribute_values, :contacts, :groups, :contacts_groups, :activities, :activities_contacts, :lead_sources
     
   def setup
     # we have to do this because of unknown order of classes loading

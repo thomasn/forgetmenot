@@ -8,7 +8,7 @@ class ContactMailerTest < Test::Unit::TestCase
   FIXTURES_PATH = File.dirname(__FILE__) + '/../fixtures'
   CHARSET = "utf-8"
   
-  fixtures :dynamic_attributes, :dynamic_attribute_values, :email_messages, :activities, :contacts, :activities_contacts, :activity_types
+  ## CLEANUP - all fixtures preloaded ## fixtures :dynamic_attributes, :dynamic_attribute_values, :email_messages, :activities, :contacts, :activities_contacts, :activity_types
 
   include ActionMailer::Quoting
 

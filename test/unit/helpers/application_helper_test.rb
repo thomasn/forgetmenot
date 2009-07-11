@@ -8,7 +8,7 @@ class ApplicationHelperTest < HelperTestCase
 
   include ApplicationHelper
 
-  fixtures :dynamic_attributes, :dynamic_attribute_values, :contacts, :groups
+  ## CLEANUP - all fixtures preloaded ## fixtures :dynamic_attributes, :dynamic_attribute_values, :contacts, :groups
 
   def setup
     super

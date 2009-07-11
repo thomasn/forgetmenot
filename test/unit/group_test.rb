@@ -5,7 +5,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class GroupTest < Test::Unit::TestCase
-  fixtures :dynamic_attributes, :dynamic_attribute_values, :groups, :contacts, :contacts_groups, :group_types
+  ## CLEANUP - all fixtures preloaded ## fixtures :dynamic_attributes, :dynamic_attribute_values, :groups, :contacts, :contacts_groups, :group_types
 
   def test_truth
     nexus10 = groups(:nexus10)
