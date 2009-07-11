@@ -1,3 +1,4 @@
+*~
 index
 log/*
 config/database.yml
@@ -6,6 +7,6 @@ tmp/pids/*
 tmp/cache/*
 tmp/sockets/*
 tmp/sessions/*
-*~
+tmp/.tasks-cache
 config/database.yml
-log/*.log
+
