@@ -38,11 +38,15 @@ class ActiveSupport::TestCase
   # Note: You'll currently still have to declare fixtures explicitly in integration tests
   # -- they do not yet inherit this setting
 
-  fixtures :all
+  # TODO - Find out why fixtures fail if loaded as ':all'
+  # fixtures :all
 
   # Add more helper methods to be used by all tests here...
+
+  def assert_valid(expr)
+    assert expr.valid?
+  end
+
 end
-
-
 
 ENV["RAILS_ENV"] = "test"

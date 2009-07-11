@@ -4,14 +4,14 @@
 
 require File.dirname(__FILE__) + '/../test_helper'
 
-class ActivityTest < Test::Unit::TestCase
-  ## CLEANUP - all fixtures preloaded ## fixtures :dynamic_attributes, :dynamic_attribute_values, :contacts, :activities, :activities_contacts, :activity_types, :email_messages
+class ActivityTest < ActiveSupport::TestCase
+  fixtures :dynamic_attributes, :dynamic_attribute_values, :contacts, :activities, :activities_contacts, :activity_types, :email_messages
   
   def test_truth
     a = Activity.find(activities(:renat_and_yura_call_out).id)
     assert_not_nil a
     assert_instance_of Activity, a
-    assert_valid a
+    assert a.valid?
     assert a.errors.empty?
     assert_equal activities(:renat_and_yura_call_out), a
   end                          
@@ -67,13 +67,13 @@ class ActivityTest < Test::Unit::TestCase
 
   def subtest_contact(contact)
     assert_instance_of Contact, contact
-    assert_valid contact
+    assert contact.valid?
     assert contact.errors.empty?
   end
   
   def subtest_email_message(message)
     assert_instance_of EmailMessage, message
-    assert_valid message
+    assert message.valid?
     assert message.errors.empty?
   end
 end

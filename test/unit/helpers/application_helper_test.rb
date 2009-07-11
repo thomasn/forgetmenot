@@ -2,11 +2,13 @@
 # Author:: Yury Kotlyarov (mailto:yura@brainhouse.ru)
 # License:: MIT License
 
+# Using ActionView::TestCase as per http://technicalpickles.com/posts/helper-testing-using-actionview-testcase
+
 require File.dirname(__FILE__) + '/../../test_helper'
-
-class ApplicationHelperTest < HelperTestCase
-
-  include ApplicationHelper
+require 'action_view/test_case'
+class ApplicationHelperTest < ActionView::TestCase
+  ### tests ApplicationHelper
+  ### include ApplicationHelper
 
   ## CLEANUP - all fixtures preloaded ## fixtures :dynamic_attributes, :dynamic_attribute_values, :contacts, :groups
 
