@@ -4,11 +4,11 @@
 
 require File.dirname(__FILE__) + '/../test_helper'
 
-class ContactMailerTest < Test::Unit::TestCase
+class ContactMailerTest < ActiveSupport::TestCase
   FIXTURES_PATH = File.dirname(__FILE__) + '/../fixtures'
   CHARSET = "utf-8"
   
-  ## CLEANUP - all fixtures preloaded ## fixtures :dynamic_attributes, :dynamic_attribute_values, :email_messages, :activities, :contacts, :activities_contacts, :activity_types
+   fixtures :dynamic_attributes, :dynamic_attribute_values, :email_messages, :activities, :contacts, :activities_contacts, :activity_types
 
   include ActionMailer::Quoting
 

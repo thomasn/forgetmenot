@@ -10,7 +10,7 @@ class ApplicationHelperTest < ActionView::TestCase
   ### tests ApplicationHelper
   ### include ApplicationHelper
 
-  ## CLEANUP - all fixtures preloaded ## fixtures :dynamic_attributes, :dynamic_attribute_values, :contacts, :groups
+   fixtures :dynamic_attributes, :dynamic_attribute_values, :contacts, :groups
 
   def setup
     super

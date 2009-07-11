@@ -4,7 +4,7 @@
 
 require File.dirname(__FILE__) + '/../test_helper'
 
-class DynamicAttributeTest < Test::Unit::TestCase
+class DynamicAttributeTest < ActiveSupport::TestCase
   
   # FIXME all fixtures loaded by test_helper # fixtures :dynamic_attributes, :dynamic_attribute_values
 

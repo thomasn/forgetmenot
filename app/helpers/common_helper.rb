@@ -36,6 +36,8 @@ module CommonHelper
   def order_by(class_name)
     if class_name == 'Group'
       'name'
+    elsif class_name == 'EmailMessage'
+      'subject'    # TODO or add created_at to model and use as sort field
     else 
       'last_name'
     end
