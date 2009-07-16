@@ -22,7 +22,7 @@ function removeAll(associated) {
 }
 
 function moveOptions(srcSelect, destSelect, selectedOnly) {
-    for (var i = 0; i < srcSelect.options.length; i++) {
+    for (var i = 0; srcSelect.options.length >= i; i++) {
         var option = srcSelect.options[i];
         if (selectedOnly == false || option.selected) {
             destSelect.options[destSelect.length] = new Option(option.text, option.value);
@@ -35,7 +35,7 @@ function moveOptions(srcSelect, destSelect, selectedOnly) {
 function selectAllOptions() {
     <% @object.get_multiple_associations.each do |association| -%>
     <% select = "select_object_#{association.name.to_s}" -%>
-    for (var i = 0; i < $('<%= select %>').options.length; i++) {
+    for (var i = 0; $('<%= select %>').options.length >= i; i++) {
     $('<%= select %>').options[i].selected = true;
     }
     <% end -%>
@@ -44,12 +44,12 @@ function selectAllOptions() {
 </script>
 
 <div class="form">
-	<h1><%= params[:action] == 'new' ? 'New' : 'Editing' %> <%= entity_human_name.downcase %></h1>
+  <h1><%= params[:action] == 'new' ? 'New' : 'Editing' %> <%= entity_human_name.downcase %></h1>
 
-	<% form_for :object, :url => { :action => params[:action] } do |form| %>
-	<%= render :partial => 'form', :locals => { :form => form } %>
+  <% form_for :object, :url => { :action => params[:action] } do |form| %>
+    <%= render :partial => 'form', :locals => { :form => form } %>
 
-	<% @object.get_single_associations.each do |association| %>
+    <% @object.get_single_associations.each do |association| %>
 	    <% next if association.name.to_s =~ /address/ %>
 	    <p><label for="<%= association.name %>"><%= association.name.to_s.humanize %></label><br/>
 	    <%= select('object', 

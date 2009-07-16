@@ -55,7 +55,7 @@ module CommonHelper
       	end
       else
       	result = "<br /></fieldset>\n<fieldset><legend>Step 2</legend>\n<p><label for=\"object_#{column.name}\">#{column.name.humanize}</label>"
-      	result += "<br /><i>Markdown available (<a href=\"http://maruku.rubyforge.org/#features\">see syntax details</a>)</i>"
+      	result += "<br /><i>Markdown available (<a href=\"http://maruku.rubyforge.org/#features\">syntax reference</a>)</i>"
       end 
       
       if params[:table_name] == 'dynamic_attributes' && column.name == 'type_name'
