@@ -22,13 +22,13 @@ class ContactTest < ActiveSupport::TestCase
   end
 
   def test_display_name
-    assert_equal contacts(:yura).first_name + ' ' + contacts(:yura).last_name, Contact.find(contacts(:yura).id).display_name
+    assert_equal contacts(:yura).last_name + ', ' + contacts(:yura).first_name, Contact.find(contacts(:yura).id).display_name
     c = Contact.create 
     assert_equal "contact ##{c.id}", c.display_name
     c = Contact.create :last_name => 'last_name'
-    assert_equal 'last_name', c.display_name
+    assert_equal 'last_name, --', c.display_name
     c = Contact.create :first_name => 'first_name'
-    assert_equal 'first_name', c.display_name
+    assert_equal '--, first_name', c.display_name
   end
 
   def test_habtm_groups

@@ -13,7 +13,7 @@ class Activity < ActiveRecord::Base
 
   def display_name
     result = self.activity_type_id.nil? ? "activity ##{self.id}" : self.activity_type.display_name
-    result += ' at ' + self.time.strftime('%d/%m/%y %H:%M') unless self.time.nil?
+    result += ' at ' + self.time.getutc.strftime('%d/%m/%y %H:%M') unless self.time.nil?
     result = '[multiple contacts]: ' + result if self.contacts.size > 1
     result = self.contacts[0].display_name + ': ' + result if self.contacts.size == 1
     result

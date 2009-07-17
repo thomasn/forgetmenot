@@ -21,13 +21,13 @@ class ActivityTest < ActiveSupport::TestCase
     assert_equal "[multiple contacts]: #{a.activity_type.display_name} at #{a.time.strftime('%d/%m/%y %H:%M')}", a.display_name
 
     a = Activity.find(activities(:thomas_call_in).id)
-    assert_equal "Thomas Nichols: #{a.activity_type.display_name} at #{a.time.strftime('%d/%m/%y %H:%M')}", a.display_name
+    assert_equal "Nichols, Thomas: #{a.activity_type.display_name} at #{a.time.strftime('%d/%m/%y %H:%M')}", a.display_name
 
     a = Activity.create
     assert_equal "activity ##{a.id} at #{a.time.strftime('%d/%m/%y %H:%M')}", a.display_name
     now = Time.now
     a = Activity.create :time => now
-    assert_equal "activity ##{a.id} at #{now.strftime('%d/%m/%y %H:%M')}", a.display_name
+    assert_equal "activity ##{a.id} at #{now.getutc.strftime('%d/%m/%y %H:%M')}", a.display_name  # TODO use local times
     a = Activity.create :activity_type_id => 1
     assert_equal "Email in at #{a.time.strftime('%d/%m/%y %H:%M')}", a.display_name
   end

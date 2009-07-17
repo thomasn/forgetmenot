@@ -111,13 +111,16 @@ class Contact < ActiveRecord::Base
     # Sphinx indexing
   is_indexed :fields => [ 'first_name', 'last_name', 'email', 'notes' ],
              :include => [ {:class_name => 'Address', :field => 'address1'} ]
-  create_attributes
+  ## FIXME breaks initial migration with empty DB ## create_attributes
   acts_as_taggable
   after_create { |c| c.new_dynamic_attribute_values.values.each { |v| v.contact_id = c.id; v.save }  }
   after_update { |c| c.new_dynamic_attribute_values.values.each { |v| v.save }  }
 
   def display_name
-    !self.first_name.nil? || !self.last_name.nil? ? "#{self.last_name}, #{self.first_name}".strip : "contact ##{self.id}"
+    fname = self.first_name.blank?  ? "--" : self.first_name.strip
+    lname = self.last_name.blank?  ? "--" : self.last_name.strip
+
+    self.first_name.nil? && self.last_name.nil? ? "contact ##{self.id}" : "#{lname}, #{fname}"
   end
 
   alias_method :old_column_for_attribute, :column_for_attribute

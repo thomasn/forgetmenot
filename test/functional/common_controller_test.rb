@@ -177,6 +177,7 @@ class CommonControllerTest < ActionController::TestCase
     assert_select 'h2', 'Activities'
     assert_select 'a[href^="/activities/show/"]', false
   end
+  
 
   def test_new__activity
     get :new, { :table_name => 'activities' }, { :user => 1 }
@@ -214,6 +215,7 @@ class CommonControllerTest < ActionController::TestCase
     assert_select 'input#object_tag_list', false
   end
 
+  
   def test_new__activity_type
     get :new, { :table_name => 'activity_types' }, { :user => 1 }
     assert_response :success
@@ -247,14 +249,14 @@ class CommonControllerTest < ActionController::TestCase
     assert_select 'input#object_tag_list', false
   end  
   
-
+  
   def test_create__activity
     count = Activity.count
 
     post :new, { :object => { :notes => 'AAA', :activity_type_id => '2', :contact_ids => ["1", "2"] }, :table_name => 'activities' }, { :user => 1 }
 
     assert_response :redirect
-    assert_redirected_to :action => 'list'
+    assert_redirected_to :action => 'new'
 
     assert_equal count + 1, Activity.count
     a = Activity.find_by_notes('AAA')
@@ -272,7 +274,7 @@ class CommonControllerTest < ActionController::TestCase
     post :new, { :object => { :notes => 'AAA' }, :table_name => 'activities' }, { :user => 1 }
 
     assert_response :redirect
-    assert_redirected_to :action => 'list'
+    assert_redirected_to :action => 'new'
 
     assert_equal count + 1, Activity.count
     a = Activity.find_by_notes('AAA')
@@ -288,7 +290,7 @@ class CommonControllerTest < ActionController::TestCase
     post :new, { :object => { :name => 'AAA', :activity_ids => ["1", "2"] }, :table_name => 'activity_types' }, { :user => 1 }
 
     assert_response :redirect
-    assert_redirected_to :action => 'list'
+    assert_redirected_to :action => 'new'
 
     assert_equal count + 1, ActivityType.count
     a = ActivityType.find_by_name('AAA')
@@ -304,7 +306,7 @@ class CommonControllerTest < ActionController::TestCase
     post :new, { :object => { :name => 'AAA', :activity_ids => [] }, :table_name => 'activity_types' }, { :user => 1 }
 
     assert_response :redirect
-    assert_redirected_to :action => 'list'
+    assert_redirected_to :action => 'new'
 
     assert_equal count + 1, ActivityType.count
     a = ActivityType.find_by_name('AAA')
@@ -635,4 +637,5 @@ class CommonControllerTest < ActionController::TestCase
 
     assert_select 'input#object_tag_list', 1
   end
+
 end

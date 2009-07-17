@@ -49,7 +49,7 @@ module CommonHelper
       i += 1
       if column.name != 'notes'
       	if i == 1 && ( params[:table_name] == 'contacts' || params[:table_name] == 'addresses' || params[:table_name] == 'groups' || params[:table_name] == 'dynamic_attributes' || params[:table_name] == 'users' || params[:table_name] == 'activities' )
-          result = "<div id=\"col\"><p><label for=\"object_#{column.name}\">#{column.name.humanize}</label>"
+          result = "<div class=\"columnar\"><p><label for=\"object_#{column.name}\">#{column.name.humanize}</label>"
       	else
           result = "<p><label for=\"object_#{column.name}\">#{column.name.humanize}</label>"
       	end
@@ -64,8 +64,8 @@ module CommonHelper
         result += "<br/>\n#{input('object', column.name)}"       
       end
       result +="</p>\n"
-      result += "\n</div>\n<div id=\"col\">\n" if i == number_of_columns/2
-      result += "</fieldset>" if column.name == 'notes'
+      result += "\n</div>\n<div class=\"columnar\" />\n" if i == number_of_columns/2    # FIXME TN - closing as empty div - check
+    ## FIXME CHECK!      result += "</fieldset>" if column.name == 'notes'
       result  
     }.join("\n")
   end

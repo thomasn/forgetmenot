@@ -99,12 +99,13 @@ function selectAllOptions() {
 	    <div style="clear:both"></div>
 	<% end %>
 
-	<br />
+	<!-- TN <br /> -->
 <div style="text-align: center; width:100px; margin: 0 auto 0 auto;">
 	<%= submit_tag (params[:action] == 'new' ? 'Create' : 'Update'), :onclick => "selectAllOptions()" %>
+        <!-- TN: added --> </div>
 	<% end %>
 <br />
 	<%= link_to 'Show', :action => 'show', :id => @object %> |
 	<%= link_to 'Back', :action => 'list' %>
 </div>
-</div>
+<!-- TN </div> -->

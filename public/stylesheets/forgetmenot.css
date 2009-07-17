@@ -180,13 +180,6 @@ fieldset {
 	float: left;
 }
 
-#col{
-position: relative;
-margin:10px;
-width: 200px;
-float: left;
-}
-
 
 /***********
  *  CLASS  *
@@ -195,3 +188,11 @@ float: left;
 .form {
 	width: 700px;
 }
+
+.columnar {
+position: relative;
+margin:10px;
+width: 200px;
+float: left;
+}
+
