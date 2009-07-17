@@ -26,18 +26,25 @@ module ApplicationHelper
 
   # methods for hierarchical entities support
  
-  def get_hierarchy(entity_class)
-    content_tag(:ul, 
-      entity_class.find(:all, :conditions => 'parent_id IS NULL or parent_id = 0', :order => 'root_id, lft').collect {|root|
-        get_subtree(root) }.join)
-  end
+  # FIXME cleanup obsolete code
+
+  # def get_hierarchy(entity_class)
+  #   content_tag(:ul, 
+  #     entity_class.find(:all, :conditions => 'parent_id IS NULL or parent_id = 0', :order => 'root_id, lft').collect {|root|
+  #       get_subtree(root) }.join)
+  # end
   
-  def get_subtree(node)
-    content_tag(:li, 
-      %Q{#{link_to node.display_name, :controller => node.class.name.tableize, :action => 'list', :parent_id => node.id} \
-      #{node.direct_children.collect {|child| content_tag(:ul, get_subtree(child))}.join}}.gsub(/\s{2,}/, "")
-    )
-  end
+  # def get_subtree(node)
+  #   debugger
+  #   dn = node.display_name
+  #   cn = node.class.name.tableize
+  #   nid = node.id
+  #   ndch = node.direct_children
+  #   content_tag(:li, 
+  #     %Q{#{link_to node.display_name, :controller => node.class.name.tableize, :action => 'list', :parent_id => node.id} \
+  #     #{node.direct_children.collect {|child| content_tag(:ul, get_subtree(child))}.join}}.gsub(/\s{2,}/, "")  # TODO why is it trimming double-spaces?
+  #   )
+  # end
   
   def breadcrumbs(object)
     return "" unless object.hierarchical? && !object.lft.nil?
