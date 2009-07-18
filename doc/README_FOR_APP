@@ -7,11 +7,12 @@ that you only ever send them what they want to see. At present it is usable by R
 aren't too fussed about user interfaces ;-)
 
 == Installation
-  * Requires: Rails 1.2.6 or higher, PostgreSQL 8.x or MySQL 5.x
+  * Requires: Rails 2.3.2 or higher, PostgreSQL 8.x or MySQL 5.x
   * Get the code (!) - see http://github.com/thomasn/forgetmenot/tree/master or GettingStarted on the wiki
   * Set up databases forgetmenot_development, forgetmenot_production, forgetmenot_test
   * Check settings in config/database.yml (for MySQL, change adapter, see a standard Rails install for examples)
   * sudo gem install maruku - Maruku is used for Markdown support (drop 'sudo' on Windows machines)
+  * sudo gem install BlueCloth
   * rake db:migrate - create initial dev database
   * rake test - run all tests
   * ruby script/server -p 3333 - start the Mongrel server on port 3333

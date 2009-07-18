@@ -79,7 +79,7 @@ class Contact < ActiveRecord::Base
 
   public
   
-  def searchable?
+  def self.searchable?
     true
   end
 
