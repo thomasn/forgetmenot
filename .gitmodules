@@ -1,3 +1,6 @@
 [submodule "vendor/plugins/acts_as_ferret"]
 	path = vendor/plugins/acts_as_ferret
 	url = git://github.com/jkraemer/acts_as_ferret
+[submodule "vendor/plugins/thinking-sphinx"]
+	path = vendor/plugins/thinking-sphinx
+	url = git://github.com/freelancing-god/thinking-sphinx.git

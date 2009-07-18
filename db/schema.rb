@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090715152826) do
+ActiveRecord::Schema.define(:version => 20090718134257) do
 
   create_table "activities", :force => true do |t|
     t.integer  "activity_type_id"
@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(:version => 20090715152826) do
     t.integer "address_id"
     t.integer "address2_id"
     t.integer "lead_source_id"
+    t.boolean "delta",          :default => true, :null => false
   end
 
   add_index "contacts", ["address2_id"], :name => "index_contacts_on_address2_id"

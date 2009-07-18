@@ -10,3 +10,4 @@ tmp/sessions/*
 tmp/.tasks-cache
 config/database.yml
 
+db/sphinx

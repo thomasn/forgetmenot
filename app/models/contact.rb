@@ -105,13 +105,30 @@ class Contact < ActiveRecord::Base
       dynamic_attribute_value(a).send("#{a.type_name}_value=", new_value)
     end
 
-    do_acts_as_ferret if recreate_index
+    # do_acts_as_ferret if recreate_index
   end
  
-    # Sphinx indexing
-  is_indexed :fields => [ 'first_name', 'last_name', 'email', 'notes' ],
-             :include => [ {:class_name => 'Address', :field => 'address1'} ]
+    # UltraSphinx indexing - FIXME clanup
+  # is_indexed :fields => [ 'first_name', 'last_name', 'email', 'notes' ],
+  #            :include => [ {:class_name => 'Address', :field => 'address1'} ]
   ## FIXME breaks initial migration with empty DB ## create_attributes
+  
+  # ThinkingSphinx indexing
+  define_index do
+    indexes first_name, :sortable => true
+    indexes last_name, :sortable => true
+    indexes email, :sortable => true
+    indexes notes
+
+    set_property :enable_star => 1
+    set_property :min_infix_len => 3
+    set_property :delta => true
+    
+    # attributes - used for sorting results etc:
+    # has created_at, updated_at # FIXME add timestamp migration
+  end
+  
+  
   acts_as_taggable
   after_create { |c| c.new_dynamic_attribute_values.values.each { |v| v.contact_id = c.id; v.save }  }
   after_update { |c| c.new_dynamic_attribute_values.values.each { |v| v.save }  }
