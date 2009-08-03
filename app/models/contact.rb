@@ -148,3 +148,4 @@ class Contact < ActiveRecord::Base
 
 end
 
+Contact::create_attributes

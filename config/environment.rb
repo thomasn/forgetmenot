@@ -68,3 +68,4 @@ end
 
 # Include your application configuration below
 ActionMailer::Base.delivery_method = :smtp
+Contact.create_attributes

@@ -13,3 +13,5 @@ config/database.yml
 db/sphinx
 config/development.sphinx.conf
 config/test.sphinx.conf
+sphinx_development_index
+sphinx_test_index

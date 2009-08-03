@@ -18,8 +18,13 @@
     <% (object.get_entity_columns + @dynamic_attributes).each do |column| %>
         <td>
         <% if column.name == 'notes' -%>
+            <% logger.debug("###-002 notes column... ### FIXME ###") %>
             <%= markdown object.send(column.name) -%>
         <% else %>
+            <% Contact.create_attributes %> <!-- FIXME -->
+            <% logger.debug("###-003  #{column.name} column... ### FIXME ###") if column.name == 'website' %>
+            <% logger.debug("###-004  <<#{object.send(column.name)}>> ### FIXME ###") if column.name == 'website' %>
+            <% logger.debug("###-005  <<#{object.send(column.name)}>> ### FIXME ###") if column.name == 'website' %>
             <%= h object.send(column.name) -%>
         <% end -%>
         </td>
