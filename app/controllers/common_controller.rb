@@ -55,12 +55,14 @@ class CommonController < ApplicationController
       return
     end
 
+    if params[:table_name] != 'contacts'
+      @objects = []
+      return
+    end
     page = (params[:page] ||= 1).to_i
 
-    ## FIXME @objects = Ultrasphinx::Search.new(:query => params[:query], :page => params[:page], :per_page => OBJECTS_PER_PAGE)
-    ## FIXME Check - parse query to do:    Contact.search(:conditions => {:first_name => 'Renat'}, :page => '1', :per_page => 9999)    ???
+    ## TODO: parse query to do:    Contact.search(:conditions => {:first_name => 'Renat'}, :page => '1', :per_page => 9999)
     @objects = Contact.search(params[:query], :page => params[:page], :per_page => OBJECTS_PER_PAGE) || []
-    ### FIXME@objects.run
 
     render :action => 'list'
   end
