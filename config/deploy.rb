@@ -73,6 +73,7 @@ end
 
 desc "Live deployment config after cap:deploy."
 task :after_update_code, :roles => [:app] do
+  run "git submodule update --init"
   run "ln -nsf #{release_path}/config/database.yml.#{application} #{release_path}/config/database.yml"
   run "chmod -R g+w #{release_path}/public/*"
   # sass needs to write to public/stylesheets and g+w is insufficient!??!! :
