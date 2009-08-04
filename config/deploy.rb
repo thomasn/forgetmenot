@@ -14,7 +14,7 @@ set :deploy_via, :remote_cache
 
 
 # Use staging settings by default - override these in farm-specific tasks.
-set :domain, ENV["TARGET_DOMAIN"]  ||  Proc.new { Capistrano::CLI.password_prompt("Target domain for #{repository}: ") }
+set :domain, ENV["TARGET_DOMAIN"]  ||  Proc.new { Capistrano::CLI.password_prompt("Target domain: ") }
 role :web, domain
 role :app, domain
 role :db,  domain, :primary => true
