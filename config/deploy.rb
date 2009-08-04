@@ -14,7 +14,7 @@ set :deploy_via, :remote_cache
 
 
 # Use staging settings by default - override these in farm-specific tasks.
-set :domain, Proc.new { Capistrano::CLI.password_prompt("Target domain for #{repository}: ") }
+set :domain, ENV["TARGET_DOMAIN"]  ||  Proc.new { Capistrano::CLI.password_prompt("Target domain for #{repository}: ") }
 role :web, domain
 role :app, domain
 role :db,  domain, :primary => true
@@ -35,6 +35,7 @@ task :aws do
 end
 
 # == BOILERPLATE == #
+
 
 
 namespace :deploy do
@@ -64,7 +65,7 @@ task :helper_demo do
 
   buffer = render("maintenance.rhtml", :deadline => ENV['UNTIL'])
   put buffer, "#{shared_path}/system/maintenance.html", :mode => 0644
-  sudo "killall -USR1 dispatch.fcgi"
+  run "touch #{current_path}/tmp/restart.txt"
   run "#{release_path}/script/spin"
   delete "#{shared_path}/system/maintenance.html"
 end
@@ -72,7 +73,7 @@ end
 
 desc "Live deployment config after cap:deploy."
 task :after_update_code, :roles => [:app] do
-  run "ln -nsf #{release_path}/config/database.yml.livecorr #{release_path}/config/database.yml"
+  run "ln -nsf #{release_path}/config/database.yml.#{application} #{release_path}/config/database.yml"
   run "chmod -R g+w #{release_path}/public/*"
   # sass needs to write to public/stylesheets and g+w is insufficient!??!! :
   run "chmod -R o+w #{release_path}/public/stylesheets"
@@ -80,18 +81,12 @@ task :after_update_code, :roles => [:app] do
   # set setgid bit - files created within this dir will have group of parent dir (i.e. apache/mongrel), not of process:
   # log files are sensitive - make certain they are invisible to 'other' and have SETGID set on directories:
   # FIXME: Passenger refuses to start unless shared/log is o+x and *.log is o+rw...
-  run "cat /dev/null > #{shared_path}/log/development.log"
-  run "cat /dev/null > #{shared_path}/log/production.log"
+  run "touch #{shared_path}/log/development.log"
+  run "touch #{shared_path}/log/production.log"
   run "ln -s #{release_path}/.git/refs/heads/deploy #{release_path}/public/version"
   run "chmod 2777 #{release_path}/log"
   run "chmod 2777 #{shared_path}/log"
   run "chmod 0666 #{shared_path}/log/*"
-  # Set db/export to use shared dir:
-  run "mkdir -p #{shared_path}/db/export" if not File.exists?("#{shared_path}/db/export")
-  run "chmod -R 0777 #{shared_path}/db/export"
-  run "rm #{release_path}/db/export/.keep"
-  run "rmdir #{release_path}/db/export"
-  run "ln -nsf #{shared_path}/db/export #{release_path}/db/export"
   run "chown -R apache:apache #{release_path}"
   run "chown -R apache:apache #{shared_path}"
 

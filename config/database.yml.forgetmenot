@@ -1,0 +1,22 @@
+login: &login
+  adapter: postgresql
+  host: localhost
+  username: postgres
+  password: xxx
+
+<% project = "forgetmenot" %>
+
+development:
+  database: <%= project %>_development
+  <<: *login
+
+# Warning: The database defined as 'test' will be erased and
+# re-generated from your development database when you run 'rake'.
+# Do not set this db to the same as development or production.
+test:
+  database: <%= project %>_test
+  <<: *login
+
+production:
+  database: <%= project %>_production
+  <<: *login
