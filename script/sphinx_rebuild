@@ -1,0 +1,3 @@
+#!/bin/bash
+cd /var/www/rails/forgetmenot/current
+/usr/bin/rake RAILS_ENV=production ts:rebuild > /tmp/ts-rebuild.log 2>&1
