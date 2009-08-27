@@ -126,7 +126,7 @@ class Contact < ActiveRecord::Base
     Contact.create_attributes
     puts "#### #{Contact.find(2032).enquiry_codes}" # FIXME
     # Add DynamicAttribute fields to index. Note that some Sphinx docs use the term "dynamic attributes" with a different meaning.
-    ## FIXME ## indexes enquiry_codes, :as => :enquiry_codes # ts:rebuild gives: undefined method `enquiry_codes' for #<Contact:0xb6eacef8>
+    # indexes enquiry_codes, :as => :enquiry_codes
     
     set_property :enable_star => 1
     set_property :min_infix_len => 3
