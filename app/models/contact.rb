@@ -11,7 +11,7 @@ class Contact < ActiveRecord::Base
   belongs_to :lead_source
 
   ADDITIONAL_SEARCH_ATTRS = [ :contact_id, :zip, :postcode, :group, :parent_group ]
-
+  
   private
 
   def dynamic_attribute_value(a)
@@ -87,10 +87,12 @@ class Contact < ActiveRecord::Base
     @new_dynamic_attribute_values ||= {}
   end
 
-  # moved from private part of class for test only
+  # FIXME: make private
   def self.create_attributes
+    return if defined? @@attributes_created and @@attributes_created
     attrs = DynamicAttribute.find(:all)
     attrs.each { |a| create_attribute(a, false) }
+    @@attributes_created = true
     # do_acts_as_ferret attrs
   end
 
@@ -120,6 +122,12 @@ class Contact < ActiveRecord::Base
     indexes email, :sortable => true
     indexes notes
 
+    # FIXME...
+    Contact.create_attributes
+    puts "#### #{Contact.find(2032).enquiry_codes}" # FIXME
+    # Add DynamicAttribute fields to index. Note that some Sphinx docs use the term "dynamic attributes" with a different meaning.
+    ## FIXME ## indexes enquiry_codes, :as => :enquiry_codes # ts:rebuild gives: undefined method `enquiry_codes' for #<Contact:0xb6eacef8>
+    
     set_property :enable_star => 1
     set_property :min_infix_len => 3
     set_property :delta => true
