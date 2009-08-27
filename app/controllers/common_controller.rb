@@ -61,8 +61,7 @@ class CommonController < ApplicationController
     end
     page = (params[:page] ||= 1).to_i
 
-    ## TODO: parse query to do:    Contact.search(:conditions => {:first_name => 'Renat'}, :page => '1', :per_page => 9999)
-    @objects = Contact.search(params[:query], :page => params[:page], :per_page => OBJECTS_PER_PAGE) || []
+    @objects = Contact.search(params[:query], :match_mode => :extended, :page => params[:page], :per_page => OBJECTS_PER_PAGE) || []
 
     render :action => 'list'
   end
