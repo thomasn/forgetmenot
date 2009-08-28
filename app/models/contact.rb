@@ -126,7 +126,8 @@ class Contact < ActiveRecord::Base
     Contact.create_attributes
     puts "#### #{Contact.find(2032).enquiry_codes}" # FIXME
     # Add DynamicAttribute fields to index. Note that some Sphinx docs use the term "dynamic attributes" with a different meaning.
-    # indexes enquiry_codes, :as => :enquiry_codes
+    indexes "(SELECT string_value FROM dynamic_attribute_values WHERE (dynamic_attribute_values.contact_id = 2032 AND
+dynamic_attribute_values.dynamic_attribute_id = 16) LIMIT 1)", :as => :enquiry_codes
     
     set_property :enable_star => 1
     set_property :min_infix_len => 3
