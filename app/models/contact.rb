@@ -88,11 +88,13 @@ class Contact < ActiveRecord::Base
   end
 
   # FIXME: make private
-  def self.create_attributes
-    return if defined? @@attributes_created and @@attributes_created
-    attrs = DynamicAttribute.find(:all)
-    attrs.each { |a| create_attribute(a, false) }
-    @@attributes_created = true
+  # options: :force (boolean)
+  def self.create_attributes(options = {})
+    if options[:force]
+      DynamicAttribute.find(:all).each { |a| destroy_attribute(a) }
+      @@attributes_created = nil
+    end
+    @@attributes_created ||= !!(DynamicAttribute.find(:all).each { |a| create_attribute(a, false) })
     # do_acts_as_ferret attrs
   end
 
@@ -110,10 +112,18 @@ class Contact < ActiveRecord::Base
     # do_acts_as_ferret if recreate_index
   end
  
-    # UltraSphinx indexing - FIXME clanup
+  def self.destroy_attribute(a)
+    # undefine getter method
+    undef_method a.name if method_defined? a.name
+    # undefine setter method
+    undef_method "#{a.name}=" if method_defined? "#{a.name}="
+    # do_acts_as_ferret if recreate_index
+  end
+ 
+
+  # UltraSphinx indexing - FIXME clanup
   # is_indexed :fields => [ 'first_name', 'last_name', 'email', 'notes' ],
   #            :include => [ {:class_name => 'Address', :field => 'address1'} ]
-  ## FIXME breaks initial migration with empty DB ## create_attributes
   
   # ThinkingSphinx indexing
   define_index do
@@ -123,11 +133,19 @@ class Contact < ActiveRecord::Base
     indexes notes
 
     # FIXME...
-    Contact.create_attributes
-    puts "#### #{Contact.find(2032).enquiry_codes}" # FIXME
     # Add DynamicAttribute fields to index. Note that some Sphinx docs use the term "dynamic attributes" with a different meaning.
-    indexes "(SELECT string_value FROM dynamic_attribute_values WHERE (dynamic_attribute_values.contact_id = 2032 AND
-dynamic_attribute_values.dynamic_attribute_id = 16) LIMIT 1)", :as => :enquiry_codes
+    Contact.create_attributes
+###    DynamicAttribute.find(:all).each do |da|
+      cmd = "(SELECT string_value FROM dynamic_attribute_values WHERE (dynamic_attribute_values.contact_id = " +
+      "2032" +
+      " AND dynamic_attribute_values.dynamic_attribute_id = " +
+      "16" +
+      ") LIMIT 1)"
+      indexes "#{cmd}", :as => :enquiry_codes
+      
+###    end
+###    indexes "(SELECT string_value FROM dynamic_attribute_values WHERE (dynamic_attribute_values.contact_id = 2032 AND
+### dynamic_attribute_values.dynamic_attribute_id = 16) LIMIT 1)", :as => :enquiry_codes
     
     set_property :enable_star => 1
     set_property :min_infix_len => 3
