@@ -7,5 +7,5 @@ test:
   searchd_file_path: sphinx_test_index
 
 production:
-  port: 3312
-  searchd_file_path: sphinx_index
+  port: 3314
+  searchd_file_path: sphinx_production_index

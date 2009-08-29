@@ -67,7 +67,7 @@ class Contact < ActiveRecord::Base
     drop_index_dir
   end
 
-  def self.drop_index_dir
+  def self.drop_index_dir # FIXME obsolete
     if File.exists?("#{RAILS_ROOT}/index")    # aaf_index.ferret_index.options[:path])
        begin
          aaf_index.close
@@ -76,6 +76,7 @@ class Contact < ActiveRecord::Base
                     FileUtils.rm_rf("#{RAILS_ROOT}/index")    # aaf_index.ferret_index.options[:path])
      end
   end
+  
 
   public
   
@@ -83,6 +84,13 @@ class Contact < ActiveRecord::Base
     true
   end
 
+  def self.reindex(rails_env = nil)    # TODO implement without invoking rake
+    rails_env ||= ENV["RAILS_ENV"]
+    puts "rebuilding sphinx index for #{rails_env} environment"
+    system "rake RAILS_ENV=#{rails_env} ts:rebuild > /tmp/rake-ts-rebuild.log"
+  end
+  
+  
   def new_dynamic_attribute_values
     @new_dynamic_attribute_values ||= {}
   end
@@ -134,16 +142,16 @@ class Contact < ActiveRecord::Base
 
     # FIXME...
     # Add DynamicAttribute fields to index. Note that some Sphinx docs use the term "dynamic attributes" with a different meaning.
-    Contact.create_attributes
-###    DynamicAttribute.find(:all).each do |da|
+    Contact.create_attributes # FIXME obsolete?
+    DynamicAttribute.find(:all).each do |da|
       cmd = "(SELECT string_value FROM dynamic_attribute_values WHERE (dynamic_attribute_values.contact_id = " +
-      "2032" +
+      "contacts.id" +
       " AND dynamic_attribute_values.dynamic_attribute_id = " +
-      "16" +
+        "#{da.id}" +
       ") LIMIT 1)"
-      indexes "#{cmd}", :as => :enquiry_codes
+      indexes "#{cmd}", :as => "#{da.name}".to_sym
       
-###    end
+    end
 ###    indexes "(SELECT string_value FROM dynamic_attribute_values WHERE (dynamic_attribute_values.contact_id = 2032 AND
 ### dynamic_attribute_values.dynamic_attribute_id = 16) LIMIT 1)", :as => :enquiry_codes
     

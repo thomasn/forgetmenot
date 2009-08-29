@@ -10,7 +10,7 @@ class ContactTest < ActiveSupport::TestCase
     
   def setup
     # we have to do this because of unknown order of classes loading
-    Contact.create_attributes
+    Contact.create_attributes(:force => true)
   end
   
   def test_truth
@@ -147,17 +147,18 @@ class ContactTest < ActiveSupport::TestCase
     assert_equal 'yura__115', Contact.search('Yury')[0].skype
 
     # find by dymanic attribute value
-    # FIXME-NOW assert_equal 1, Contact.search('yura__115').size
+    assert_equal 1, Contact.search('yura__115').size
 
-    # a bit advanced version of the find by dymanic attribute value
-    # FIXME-NOW assert_equal 1, Contact.find_by_contents('skype:yura__115').size
+    # a more advanced version of searching by dynamic attribute value, using a named field
+    assert_equal 1, Contact.search('@skype yura__115', :match_mode => :extended).size
 
     # let's create new attribute ...
     jid = DynamicAttribute.create :name => 'jabber', :type_name => 'string'
 
     # ... and check old index attributes still works fine
     assert_equal 1, Contact.search('Yury').size
-    # FIXME-NOW assert_equal 1, Contact.search('skype:yura__115').size
+    assert_equal 1, Contact.search('yura__115').size
+    assert_equal 1, Contact.search('@skype yura__115', :match_mode => :extended).size
 
     # now assign some value to new attribute ...
     thomas = Contact.find contacts(:thomas).id
@@ -165,7 +166,10 @@ class ContactTest < ActiveSupport::TestCase
     thomas.save!
 
     # ... and find by just created attribute
-    # FIXME-NOW assert_equal 1, Contact.search('jabber:ttttt').size
+    # Rebuild index because there is a new dynamic attribute
+    Contact.create_attributes(:force => true)
+    Contact.reindex
+    assert_equal 1, Contact.search('@jabber ttttt', :match_mode => :extended).size
     assert_equal 1, Contact.search('ttttt').size
 
     # one more check of old attributes
@@ -189,9 +193,12 @@ class ContactTest < ActiveSupport::TestCase
      
      # verifing dyn attr value
      yura = Contact.find_by_last_name('Kazantsev')
+     assert_equal 'Yury', yura.first_name
      assert_equal 'yukazan', yura.skype
      
      # searching by attr value
+     assert_equal 1, Contact.search('Kazantsev').size
+     # searching by dynattr value
      assert_equal 1, Contact.search('yukazan').size
      
      # changing attribute value without saving...
@@ -199,15 +206,15 @@ class ContactTest < ActiveSupport::TestCase
      assert_equal 'yurakazan', yura.skype
      # ...should be no changes in the db ...
      assert_equal 'yukazan', Contact.find(yura.id).skype
-     # ... as well as no changes in ferret index
+     # ... as well as no changes in sphinx index
      assert_equal 1, Contact.search('yukazan').size
      assert_equal 0, Contact.search('yurakazan').size
      
      yura.save!
      
      assert_equal 'yurakazan', Contact.find(yura.id).skype
-     assert_equal 0, Contact.find_by_contents('yukazan').total_hits
-     assert_equal 1, Contact.find_by_contents('yurakazan').total_hits
+     assert_equal 0, Contact.search('yukazan').total_hits
+     assert_equal 1, Contact.search('yurakazan').total_hits
    end
 
   def subtest_group(group)
