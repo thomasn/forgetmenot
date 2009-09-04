@@ -1,4 +1,5 @@
 # Deployment recipe for forgetmenot on Passenger
+# Invoke as: TARGET_DOMAIN=foo.myvps.com cap deploy
 # Thanks: http://www.zorched.net/2008/06/17/capistrano-deploy-with-git-and-passenger/
 
 set :application, "forgetmenot"
@@ -90,5 +91,6 @@ task :after_update_code, :roles => [:app] do
   run "chmod 0666 #{shared_path}/log/*"
   run "chown -R apache:apache #{release_path}"
   run "chown -R apache:apache #{shared_path}"
+  run "cd #{release_path} && rake RAILS_ENV=production ts:rebuild"
 
 end
