@@ -12,7 +12,7 @@ class CommonController < ApplicationController
   helper_method :entity_class
   helper_method :entity_human_name
 
-  OBJECTS_PER_PAGE = 20 if not defined? OBJECTS_PER_PAGE
+  OBJECTS_PER_PAGE = 250 if not defined? OBJECTS_PER_PAGE
 
   def index
     list
@@ -61,7 +61,7 @@ class CommonController < ApplicationController
     end
     page = (params[:page] ||= 1).to_i
 
-    @objects = Contact.search(params[:query], :match_mode => :extended, :page => params[:page], :per_page => OBJECTS_PER_PAGE) || []
+    @objects = Contact.search(params[:query], :match_mode => :extended, :page => params[:page], :per_page => OBJECTS_PER_PAGE)
 
     render :action => 'list'
   end
