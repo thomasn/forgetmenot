@@ -6,6 +6,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 require 'ferret'
 
 class ContactTest < ActiveSupport::TestCase
+  self.use_transactional_fixtures = false
   fixtures :dynamic_attributes, :dynamic_attribute_values, :contacts, :groups, :contacts_groups, :activities, :activities_contacts, :lead_sources
     
   def setup
@@ -141,24 +142,25 @@ class ContactTest < ActiveSupport::TestCase
 
   def test_search_by_dynamic_attributes
     # find by a regular AR attribute value
-    assert_equal 1, Contact.search('Yury').size
+    # delta index may return spurious nil values so need to compact
+    assert_equal 1, Contact.search('Yury').compact.size
 
     # verify dynamic attribute value
     assert_equal 'yura__115', Contact.search('Yury')[0].skype
 
     # find by dymanic attribute value
-    assert_equal 1, Contact.search('yura__115').size
+    assert_equal 1, Contact.search('yura__115').compact.size
 
     # a more advanced version of searching by dynamic attribute value, using a named field
-    assert_equal 1, Contact.search('@skype yura__115', :match_mode => :extended).size
+    assert_equal 1, Contact.search('@skype yura__115', :match_mode => :extended).compact.size
 
     # let's create new attribute ...
     jid = DynamicAttribute.create :name => 'jabber', :type_name => 'string'
 
     # ... and check old index attributes still works fine
-    assert_equal 1, Contact.search('Yury').size
-    assert_equal 1, Contact.search('yura__115').size
-    assert_equal 1, Contact.search('@skype yura__115', :match_mode => :extended).size
+    assert_equal 1, Contact.search('Yury').compact.size
+    assert_equal 1, Contact.search('yura__115').compact.size
+    assert_equal 1, Contact.search('@skype yura__115', :match_mode => :extended).compact.size
 
     # now assign some value to new attribute ...
     thomas = Contact.find contacts(:thomas).id
@@ -169,11 +171,11 @@ class ContactTest < ActiveSupport::TestCase
     # Rebuild index because there is a new dynamic attribute
     Contact.create_attributes(:force => true)
     Contact.reindex
-    assert_equal 1, Contact.search('@jabber ttttt', :match_mode => :extended).size
-    assert_equal 1, Contact.search('ttttt').size
+    assert_equal 1, Contact.search('@jabber ttttt', :match_mode => :extended).compact.size
+    assert_equal 1, Contact.search('ttttt').compact.size
 
     # one more check of old attributes
-    assert_equal 1, Contact.search('Yury').size
+    assert_equal 1, Contact.search('Yury').compact.size
   end
   
    def test_dynamic_attributes_for_new_object
@@ -197,9 +199,15 @@ class ContactTest < ActiveSupport::TestCase
      assert_equal 'yukazan', yura.skype
      
      # searching by attr value
-     assert_equal 1, Contact.search('Kazantsev').size
+     ## puts "### FIXME transactional_fixtures == #{self.use_transactional_fixtures}"
+     ## puts "### FIXME instantiated_fixtures == #{self.use_instantiated_fixtures}"
+     ## puts "### FIXME 001: deltas_enabled == #{ ThinkingSphinx.deltas_enabled? } -- hit <Enter>"
+     ## gets ### FIXME
+     assert_equal 1, Contact.search('Kazantsev').compact.size
+     ## puts "### FIXME 002:  -- hit <Enter>"
+     ## gets ### FIXME
      # searching by dynattr value
-     assert_equal 1, Contact.search('yukazan').size
+     assert_equal 1, Contact.search('yukazan').compact.size
      
      # changing attribute value without saving...
      yura.skype = 'yurakazan'
@@ -207,14 +215,14 @@ class ContactTest < ActiveSupport::TestCase
      # ...should be no changes in the db ...
      assert_equal 'yukazan', Contact.find(yura.id).skype
      # ... as well as no changes in sphinx index
-     assert_equal 1, Contact.search('yukazan').size
-     assert_equal 0, Contact.search('yurakazan').size
+     assert_equal 1, Contact.search('yukazan').compact.size
+     assert_equal 0, Contact.search('yurakazan').compact.size
      
      yura.save!
      
      assert_equal 'yurakazan', Contact.find(yura.id).skype
-     assert_equal 0, Contact.search('yukazan').total_hits
-     assert_equal 1, Contact.search('yurakazan').total_hits
+     assert_equal 0, Contact.search('yukazan').compact.size
+     assert_equal 1, Contact.search('yurakazan').compact.size
    end
 
   def subtest_group(group)

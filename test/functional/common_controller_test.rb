@@ -513,7 +513,7 @@ class CommonControllerTest < ActionController::TestCase
   end
 
   def test_search_contacts
-    Contact.create_attributes   # FIXME obsolete?
+    # Contact.create_attributes   # FIXME obsolete?
     post :search, { :table_name => 'contacts', :query => 'Renat' }, { :user => 1 }
     assert_response :success
     assert_template 'list'

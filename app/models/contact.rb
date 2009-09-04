@@ -98,6 +98,8 @@ class Contact < ActiveRecord::Base
   # FIXME: make private
   # options: :force (boolean)
   def self.create_attributes(options = {})
+    # If schema is just being created, this method is a no-op:
+    return if not ActiveRecord::Base.connection.tables.include?("dynamic_attributes")
     if options[:force]
       DynamicAttribute.find(:all).each { |a| destroy_attribute(a) }
       @@attributes_created = nil
@@ -134,6 +136,9 @@ class Contact < ActiveRecord::Base
   #            :include => [ {:class_name => 'Address', :field => 'address1'} ]
   
   # ThinkingSphinx indexing
+  ThinkingSphinx.deltas_enabled = true
+  ThinkingSphinx.updates_enabled = true
+  # ThinkingSphinx.suppress_delta_output = true # FIXME uncomment once tested in production
   define_index do
     indexes first_name, :sortable => true
     indexes last_name, :sortable => true
