@@ -91,6 +91,6 @@ task :after_update_code, :roles => [:app] do
   run "chmod 0666 #{shared_path}/log/*"
   run "chown -R apache:apache #{release_path}"
   run "chown -R apache:apache #{shared_path}"
-  run "cd #{release_path} && rake RAILS_ENV=production ts:rebuild"
+  # FIXME # run "cd #{release_path} && rake RAILS_ENV=production ts:rebuild"
 
 end
